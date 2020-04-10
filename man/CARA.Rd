@@ -32,7 +32,7 @@ theta <- 0.8
 mu <- 2
 sigma <- 2
 x <- seq(mu - 5 * sigma, mu + 5 * sigma, length.out = 10000)
-# two CE calculation methods
+# two CE calculation methods for random variables of normal distribution
 CARA(x, theta, dnorm(x, mean = mu, sd = sigma))
 mu - theta * sigma^2 / 2
 }

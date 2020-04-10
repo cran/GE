@@ -1,5 +1,5 @@
 #' @export
-#' @title A Leontief-type General Equilibrium Model based on An Input-Output Table.
+#' @title A Leontief-type General Equilibrium Model based on an Input-Output Table
 #' @aliases gemInputOutputTable_Leontief_3_3
 #' @description Given a 3x3 input-output table (e.g., see Zhang Xin, 2017, Table 2.2.2), this model can be
 #' used to calculate the corresponding equilibrium.

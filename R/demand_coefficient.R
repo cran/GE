@@ -4,7 +4,7 @@
 #' @aliases demand_coefficient
 #' @description Given a price vector, this function computes the demand coefficients of a sector with a demand structural tree. The class of a demand structural tree is Node defined by the package data.tree.
 #' For a CES function, this function always assume that it has a standard form such as
-#' alpha * (beta1 * (x1 / beta1)^sigma + beta2 * (x2 / beta2)^sigma)^(1 / sigma).
+#' alpha * (beta1 * (x1 / beta1)^sigma + beta2 * (x2 / beta2)^sigma)^(1 / sigma) wherein beta1 + beta2 == 1.
 #' @param node the demand structural tree.
 #' @param p the price vector with names of commodities.
 #' @return A vector consisting of demand coefficients.
@@ -103,7 +103,7 @@ demand_coefficient <- function(node, p) {
         },
         "FIN" = ,
         "money" = ,
-        "divident" = ,
+        "dividend" = ,
         "bond" = ,
         "tax" = {
           if (length(node$rate) == length(the.input.p)) {

@@ -27,6 +27,6 @@ sigma <- mu * csv
 x <- seq(mu - 5 * sigma, mu + 5 * sigma, length.out = 10000)
 pd <- dnorm(x, mean = mu, sd = sigma)
 theta <- 0.8
-# the ratio of risk premium to expected return (relative risk premium).
+# the ratio of risk premium to expected return (i.e. the relative risk premium).
 (mu - CRRA(x, theta, pd)[2]) / mu
 }

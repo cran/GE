@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_5_4.R
 \name{gemInputOutputTable_5_4}
 \alias{gemInputOutputTable_5_4}
-\title{A General Equilibrium Model based on A 5x4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1).}
+\title{A General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1)}
 \usage{
 gemInputOutputTable_5_4(
   dstl,
@@ -31,7 +31,7 @@ This is a general equilibrium model based on a 5x4 input-output table (see Zhang
 }
 \details{
 Given a 5x4 input-output table (e.g., see Zhang Xin, 2017, Table 8.6.1), this model calculates
-the corresponding generalequilibrium.
+the corresponding general equilibrium.
 This input-output table contains 3 production sectors and one household.
 The household consumes products and supplies labor and capital.
 }
@@ -52,7 +52,7 @@ d.hh <- c(635, 600, 385, 0, 0)
 
 D <- cbind(d.agri, d.manu, d.serv, d.hh)
 
-ds.agri <- Node$new("sector.agri",
+dst.agri <- Node$new("sector.agri",
   type = "CES", sigma = 1 - 1 / rhoq.agri,
   alpha = 1,
   beta = prop.table(c(
@@ -60,13 +60,13 @@ ds.agri <- Node$new("sector.agri",
     sum(d.agri[4:5])
   ))
 )
-ds.agri$AddChild("cc1.agri",
+dst.agri$AddChild("cc1.agri",
   type = "Leontief",
   a = prop.table(d.agri[1:3])
 )$
   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
   parent$
-  AddSibling("cc1.2.agri",
+  AddSibling("cc2.agri",
   type = "CES", sigma = 1 - 1 / rhoVA.agri,
   alpha = 1,
   beta = prop.table(d.agri[4:5])
@@ -74,7 +74,7 @@ ds.agri$AddChild("cc1.agri",
   AddChild("lab")$AddSibling("cap")
 
 ##
-ds.manu <- Node$new("sector.manu",
+dst.manu <- Node$new("sector.manu",
   type = "CES", sigma = 1 - 1 / rhoq.manu,
   alpha = 1,
   beta = prop.table(c(
@@ -82,13 +82,13 @@ ds.manu <- Node$new("sector.manu",
     sum(d.manu[4:5])
   ))
 )
-ds.manu$AddChild("cc1.manu",
+dst.manu$AddChild("cc1.manu",
   type = "Leontief",
   a = prop.table(d.manu[1:3])
 )$
   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
   parent$
-  AddSibling("cc1.2.manu",
+  AddSibling("cc2.manu",
   type = "CES", sigma = 1 - 1 / rhoVA.manu,
   alpha = 1,
   beta = prop.table(d.manu[4:5])
@@ -96,7 +96,7 @@ ds.manu$AddChild("cc1.manu",
   AddChild("lab")$AddSibling("cap")
 
 ##
-ds.serv <- Node$new("sector.serv",
+dst.serv <- Node$new("sector.serv",
   type = "CES", sigma = 1 - 1 / rhoq.serv,
   alpha = 1,
   beta = prop.table(c(
@@ -104,13 +104,13 @@ ds.serv <- Node$new("sector.serv",
     sum(d.serv[4:5])
   ))
 )
-ds.serv$AddChild("cc1.serv",
+dst.serv$AddChild("cc1.serv",
   type = "Leontief",
   a = prop.table(d.serv[1:3])
 )$
   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
   parent$
-  AddSibling("cc1.2.serv",
+  AddSibling("cc2.serv",
   type = "CES", sigma = 1 - 1 / rhoVA.serv,
   alpha = 1,
   beta = prop.table(d.serv[4:5])
@@ -118,18 +118,18 @@ ds.serv$AddChild("cc1.serv",
   AddChild("lab")$AddSibling("cap")
 
 ##
-ds.hh <- Node$new("sector.hh",
+dst.hh <- Node$new("sector.hh",
   type = "CES", sigma = -1,
   alpha = 1,
   beta = prop.table(d.hh[1:3])
 )
-ds.hh$AddChild("agri")$AddSibling("manu")$AddSibling("serv")
+dst.hh$AddChild("agri")$AddSibling("manu")$AddSibling("serv")
 
 dstl <- list(
-  ds.agri,
-  ds.manu,
-  ds.serv,
-  ds.hh
+  dst.agri,
+  dst.manu,
+  dst.serv,
+  dst.hh
 )
 
 ge <- gemInputOutputTable_5_4(dstl)

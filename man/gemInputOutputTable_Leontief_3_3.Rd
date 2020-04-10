@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_Leontief_3_3.R
 \name{gemInputOutputTable_Leontief_3_3}
 \alias{gemInputOutputTable_Leontief_3_3}
-\title{A Leontief-type General Equilibrium Model based on An Input-Output Table.}
+\title{A Leontief-type General Equilibrium Model based on an Input-Output Table}
 \usage{
 gemInputOutputTable_Leontief_3_3(
   input = matrix(c(200, 300, 100, 150, 320, 530, 250, 380, 0), 3, 3, TRUE),
