@@ -64,9 +64,15 @@
 #'   AddSibling("money")
 #' plot(dst)
 #' demand_coefficient(dst, p)
-
-
-
+#'
+#' ## the same as above
+#' dst <- Node$new("firm", type = "Leontief", a = c(0.8, 0.2))
+#' dst$AddChild("cc1", type = "FIN", rate = c(0.75, 1/3))$
+#'   AddChild("product")$AddSibling("money")
+#' dst$AddChild("cc2", type = "FIN", rate = c(0.75, 1/3))$
+#'   AddChild("labor")$AddSibling("money")
+#' plot(dst)
+#' demand_coefficient(dst, p)
 
 demand_coefficient <- function(node, p) {
   compute.price_dc <- function(node, p) {
@@ -85,7 +91,7 @@ demand_coefficient <- function(node, p) {
     child.dc <- lapply(p_dc, function(x) x$dc)
 
     if (!is.null(node$func)) {
-      the.input.coef <- node$func(the.input.p)
+      the.input.coef <- node$func(the.input.p) # the.input.coef is the direct demand coefficient for children.
     } else {
       switch(
         {
@@ -93,7 +99,8 @@ demand_coefficient <- function(node, p) {
         },
         "CES" = {
           the.input.coef <- SCES_A(
-            node$sigma, node$alpha, node$beta, the.input.p)
+            node$sigma, node$alpha, node$beta, the.input.p
+          )
         },
         "CD" = {
           the.input.coef <- CD_A(node$alpha, node$beta, the.input.p)
@@ -108,8 +115,10 @@ demand_coefficient <- function(node, p) {
         "tax" = {
           if (length(node$rate) == length(the.input.p)) {
             tmp.input.value <- the.input.p[1] * node$rate[1]
-            the.input.coef <- c(node$rate[1],
-                                tmp.input.value *node$rate[-1] / the.input.p[-1])
+            the.input.coef <- c(
+              node$rate[1],
+              tmp.input.value * node$rate[-1] / the.input.p[-1]
+            )
           } else if (length(node$rate) == length(the.input.p) - 1) {
             the.input.coef <- c(1, the.input.p[1] * node$rate / the.input.p[-1])
           } else {
@@ -122,9 +131,10 @@ demand_coefficient <- function(node, p) {
 
     price <- sum(the.input.p * the.input.coef)
 
-    dc <- c()
+    dc <- p * 0
     for (k in 1:length(the.input.coef)) {
-      dc <- c(dc, unlist(child.dc[[k]]) * the.input.coef[k])
+      tmp <- unlist(child.dc[[k]]) * the.input.coef[k]
+      dc[names(tmp)] <- dc[names(tmp)] + tmp
     }
 
     return(list(
@@ -134,8 +144,5 @@ demand_coefficient <- function(node, p) {
   }
 
   p_dc <- compute.price_dc(node, p)
-  dc <- p_dc$dc
-  result <- p * 0
-  result[names(dc)] <- dc
-  return(result)
+  return(p_dc$dc)
 }

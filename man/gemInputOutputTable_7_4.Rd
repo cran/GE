@@ -126,6 +126,24 @@ geTP2 <- gemInputOutputTable_7_4(
 geTP2$z / ge$z
 geTP2$p / ge$p
 
+##
+IT.TP3 <- IT17
+IT.TP3 ["lab", "sector.manu"] <-
+  IT.TP3 ["lab", "sector.manu"] * 0.9
+IT.TP3 ["lab", "sector.agri"] <-
+  IT.TP3 ["lab", "sector.agri"] * 0.8
+
+geTP3 <- gemInputOutputTable_7_4(
+  IT = IT.TP3,
+  product.output = product.output,
+  supply.labor = 42.33,
+  supply.capital = 11.04
+)
+
+colSums(geTP3$ITV[4:7, 1:3]) / colSums(ge$ITV[4:7, 1:3]) # change in added value
+prop.table(colSums(geTP3$ITV[4:7, 1:3])) -
+  prop.table(colSums(ge$ITV[4:7, 1:3]))
+
 #### demand structure change
 IT.DSC <- IT17
 IT.DSC["serv", "sector.hh"] <- IT.DSC ["serv", "sector.hh"] * 1.2
@@ -168,4 +186,5 @@ geTC2 <- gemInputOutputTable_7_4(
 geTC2$z / ge$z
 geTC2$p / ge$p
 }
+
 }

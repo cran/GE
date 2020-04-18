@@ -4,10 +4,12 @@
 \alias{growth_rate}
 \title{Compute the Growth Rate}
 \usage{
-growth_rate(x, first.na = FALSE)
+growth_rate(x, log = FALSE, first.na = FALSE)
 }
 \arguments{
 \item{x}{a vector or a matrix.}
+
+\item{log}{If log == TRUE, the logarithmic growth rate will be computed.}
 
 \item{first.na}{If first.na==FALSE, the result doesn't contain the first NA.}
 }
@@ -22,4 +24,5 @@ Compute the growth rates for a vector or each column of a matrix.
 x <- matrix(1:8, 4, 2)
 growth_rate(x)
 }
+
 }

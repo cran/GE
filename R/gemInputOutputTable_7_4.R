@@ -93,6 +93,24 @@
 #' geTP2$z / ge$z
 #' geTP2$p / ge$p
 #'
+#' ##
+#' IT.TP3 <- IT17
+#' IT.TP3 ["lab", "sector.manu"] <-
+#'   IT.TP3 ["lab", "sector.manu"] * 0.9
+#' IT.TP3 ["lab", "sector.agri"] <-
+#'   IT.TP3 ["lab", "sector.agri"] * 0.8
+#'
+#' geTP3 <- gemInputOutputTable_7_4(
+#'   IT = IT.TP3,
+#'   product.output = product.output,
+#'   supply.labor = 42.33,
+#'   supply.capital = 11.04
+#' )
+#'
+#' colSums(geTP3$ITV[4:7, 1:3]) / colSums(ge$ITV[4:7, 1:3]) # change in added value
+#' prop.table(colSums(geTP3$ITV[4:7, 1:3])) -
+#'   prop.table(colSums(ge$ITV[4:7, 1:3]))
+#'
 #' #### demand structure change
 #' IT.DSC <- IT17
 #' IT.DSC["serv", "sector.hh"] <- IT.DSC ["serv", "sector.hh"] * 1.2
@@ -135,7 +153,7 @@
 #' geTC2$z / ge$z
 #' geTC2$p / ge$p
 #' }
-
+#'
 gemInputOutputTable_7_4 <- function(IT,
                                     product.output,
                                     supply.labor,
@@ -157,10 +175,6 @@ gemInputOutputTable_7_4 <- function(IT,
   d.manu <- IT[, 2]
   d.serv <- IT[, 3]
   d.hh <- IT[, 4]
-  ec.agri <- prop.table(IT[, 1]) / product.output[1]
-  ec.manu <- prop.table(IT[, 2]) / product.output[2]
-  ec.serv <- prop.table(IT[, 3]) / product.output[3]
-  ec.hh <- prop.table(IT[, 4])
 
   tmp.tax <- IT["tax", ]
   supply.tax <- sum(tmp.tax[tmp.tax > 0])
@@ -200,7 +214,7 @@ gemInputOutputTable_7_4 <- function(IT,
   tmp <- FindNode(dst.agri, "industry")
   tmp$type <- "CES"
   tmp$sigma <- 1 - 1 / rhoq.agri
-  tmp$alpha <- 1
+  tmp$alpha <- product.output[1] / sum(d.agri)
   tmp$beta <- prop.table(c(
     sum(d.agri[1:3]),
     sum(d.agri[4:7])
@@ -213,7 +227,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.agri, "cc2")
   tmp$type <- "FIN"
-  tmp$rate <- c(sum(ec.agri[4:5]) / sum(ec.agri[4:7]), tax.rate.agri, dividend.rate.agri)
+  tmp$rate <- c(sum(d.agri[4:5]) / sum(d.agri[4:7]), tax.rate.agri, dividend.rate.agri)
 
 
   tmp <- FindNode(dst.agri, "cc2.1")
@@ -228,7 +242,7 @@ gemInputOutputTable_7_4 <- function(IT,
   tmp <- FindNode(dst.manu, "industry")
   tmp$type <- "CES"
   tmp$sigma <- 1 - 1 / rhoq.manu
-  tmp$alpha <- 1
+  tmp$alpha <- product.output[2] / sum(d.manu)
   tmp$beta <- prop.table(c(
     sum(d.manu[1:3]),
     sum(d.manu[4:7])
@@ -241,7 +255,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.manu, "cc2")
   tmp$type <- "FIN"
-  tmp$rate <- c(sum(ec.manu[4:5]) / sum(ec.manu[4:7]), tax.rate.manu, dividend.rate.manu)
+  tmp$rate <- c(sum(d.manu[4:5]) / sum(d.manu[4:7]), tax.rate.manu, dividend.rate.manu)
 
 
   tmp <- FindNode(dst.manu, "cc2.1")
@@ -256,7 +270,7 @@ gemInputOutputTable_7_4 <- function(IT,
   tmp <- FindNode(dst.serv, "industry")
   tmp$type <- "CES"
   tmp$sigma <- 1 - 1 / rhoq.serv
-  tmp$alpha <- 1
+  tmp$alpha <- product.output[3] / sum(d.serv)
   tmp$beta <- prop.table(c(
     sum(d.serv[1:3]),
     sum(d.serv[4:7])
@@ -269,7 +283,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.serv, "cc2")
   tmp$type <- "FIN"
-  tmp$rate <- c(sum(ec.serv[4:5]) / sum(ec.serv[4:7]), tax.rate.serv, dividend.rate.serv)
+  tmp$rate <- c(sum(d.serv[4:5]) / sum(d.serv[4:7]), tax.rate.serv, dividend.rate.serv)
 
 
   tmp <- FindNode(dst.serv, "cc2.1")

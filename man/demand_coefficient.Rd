@@ -75,4 +75,13 @@ dst$AddChild("cc1", type = "Leontief", a = c(0.6, 0.15))$
   AddSibling("money")
 plot(dst)
 demand_coefficient(dst, p)
+
+## the same as above
+dst <- Node$new("firm", type = "Leontief", a = c(0.8, 0.2))
+dst$AddChild("cc1", type = "FIN", rate = c(0.75, 1/3))$
+  AddChild("product")$AddSibling("money")
+dst$AddChild("cc2", type = "FIN", rate = c(0.75, 1/3))$
+  AddChild("labor")$AddSibling("money")
+plot(dst)
+demand_coefficient(dst, p)
 }
