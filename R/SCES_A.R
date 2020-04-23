@@ -3,13 +3,15 @@
 #' @aliases SCES_A
 #' @description This function computes the standard CES demand
 #' coefficient matrix (i.e. Theta==Beta), which is a wrapper of CES_A of CGE package.
-#' @param sigma a numeric m-vector or m-by-1 matrix.
+#' @param sigma a numeric m-vector or m-by-1 matrix. 1/(1-sigma) is the elasticity of substitution.
 #' @param alpha a nonnegative numeric m-vector or m-by-1 matrix.
 #' @param Beta a nonnegative numeric n-by-m matrix.
-#' @param p	a nonnegative numeric n-vector or n-by-1 matrix.
+#' @param p a nonnegative numeric n-vector or n-by-1 matrix.
+#' @param es a numeric m-vector or m-by-1 matrix of elasticity of substitution. If es is not NA, the value of sigma will be ignored.
 #' @return A demand coefficient n-by-m matrix.
 #' @examples
 #' SCES_A(-1, 1, c(0.9, 0.1), c(1, 1))
+#' SCES_A(alpha = 1, Beta = c(0.9, 0.1), p = c(1, 1), es = 0.5)
 #' SCES_A(0, 1, c(0.9, 0.1), c(1, 1))
 #' beta <- c(0.9, 0.1)
 #' CD_A(prod(beta^-beta), c(0.9, 0.1), c(1, 1))
@@ -28,7 +30,8 @@
 #' SCES_A(sigma = rep(-Inf, 3), alpha = c(1, 1, 1), Beta = Beta, p = c(1, 1, 1))
 
 
-SCES_A <- function(sigma, alpha, Beta, p) {
+SCES_A <- function(sigma=1-1/es, alpha, Beta, p, es=NA) {
+  if (!is.na(es)) sigma <- 1-1/es
   if (any(sigma >= 1)) stop("Li: sigma should be less than 1")
   if (is.vector(Beta)) Beta <- cbind(Beta)
   if (all(Beta != 0)) {

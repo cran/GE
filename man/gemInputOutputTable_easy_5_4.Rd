@@ -11,12 +11,12 @@ gemInputOutputTable_easy_5_4(
     = c(agri = 635, manu = 600, serv = 385, lab = 0, cap = 0)),
   supply.labor = 850,
   supply.capital = 770,
-  rhoq.agri = 0.2,
-  rhoq.manu = 0.3,
-  rhoq.serv = 0.1,
-  rhoVA.agri = 0.25,
-  rhoVA.manu = 0.5,
-  rhoVA.serv = 0.8
+  es.agri = 0.2,
+  es.manu = 0.3,
+  es.serv = 0.1,
+  es.VA.agri = 0.25,
+  es.VA.manu = 0.5,
+  es.VA.serv = 0.8
 )
 }
 \arguments{
@@ -26,10 +26,10 @@ gemInputOutputTable_easy_5_4(
 
 \item{supply.capital}{the supply of capital.}
 
-\item{rhoq.agri, rhoq.manu, rhoq.serv}{the elasticity of substitution between the intermediate input
+\item{es.agri, es.manu, es.serv}{the elasticity of substitution between the intermediate input
 and the value-added input of the agriculture sector, manufacturing sector and service sector.}
 
-\item{rhoVA.agri, rhoVA.manu, rhoVA.serv}{the elasticity of substitution between labor input and capital input
+\item{es.VA.agri, es.VA.manu, es.VA.serv}{the elasticity of substitution between labor input and capital input
 of the agriculture sector, manufacturing sector and service sector.}
 }
 \value{

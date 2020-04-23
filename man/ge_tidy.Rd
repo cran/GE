@@ -7,7 +7,7 @@
 ge_tidy(ge, names.commodity, names.agent)
 }
 \arguments{
-\item{ge}{the general equilibrium.}
+\item{ge}{a general equilibrium.}
 
 \item{names.commodity}{a character vector consisting of
 names of commodities.}
@@ -16,7 +16,7 @@ names of commodities.}
 names of agents.}
 }
 \value{
-A tidyed general equilibrium.
+A tidied general equilibrium.
 }
 \description{
 Add names to the matrices and vectors of a general equilibrium, and add

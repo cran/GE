@@ -9,9 +9,9 @@
 #' @param IT the input and consumption part of the input-output table.
 #' @param supply.labor the supply of labor.
 #' @param supply.capital the supply of capital.
-#' @param rhoq.agri,rhoq.manu,rhoq.serv the elasticity of substitution between the intermediate input
+#' @param es.agri,es.manu,es.serv the elasticity of substitution between the intermediate input
 #' and the value-added input of the agriculture sector, manufacturing sector and service sector.
-#' @param rhoVA.agri,rhoVA.manu,rhoVA.serv the elasticity of substitution between labor input and capital input
+#' @param es.VA.agri,es.VA.manu,es.VA.serv the elasticity of substitution between labor input and capital input
 #' of the agriculture sector, manufacturing sector and service sector.
 #' @return A general equilibrium.
 #' @references Zhang Xin. (2017, ISBN: 9787543227637). Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
@@ -38,13 +38,13 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
                                          ),
                                          supply.labor = 850, #* 1.08,
                                          supply.capital = 770,
-                                         rhoq.agri = 0.2,
-                                         rhoq.manu = 0.3,
-                                         rhoq.serv = 0.1,
+                                         es.agri = 0.2,
+                                         es.manu = 0.3,
+                                         es.serv = 0.1,
 
-                                         rhoVA.agri = 0.25,
-                                         rhoVA.manu = 0.5,
-                                         rhoVA.serv = 0.8) {
+                                         es.VA.agri = 0.25,
+                                         es.VA.manu = 0.5,
+                                         es.VA.serv = 0.8) {
   names.commodity <- rownames(IT)
   names.agent <- colnames(IT)
 
@@ -54,7 +54,7 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
   d.hh <- IT[, 4]
 
   dst.agri <- Node$new("sector.agri",
-    type = "CES", sigma = 1 - 1 / rhoq.agri,
+    type = "CES", sigma = 1 - 1 / es.agri,
     alpha = 1,
     beta = prop.table(c(
       sum(d.agri[1:3]),
@@ -68,7 +68,7 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
     AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
     parent$
     AddSibling("cc2.agri",
-    type = "CES", sigma = 1 - 1 / rhoVA.agri,
+    type = "CES", sigma = 1 - 1 / es.VA.agri,
     alpha = 1,
     beta = prop.table(d.agri[4:5])
   )$
@@ -76,7 +76,7 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
 
   ##
   dst.manu <- Node$new("sector.manu",
-    type = "CES", sigma = 1 - 1 / rhoq.manu,
+    type = "CES", sigma = 1 - 1 / es.manu,
     alpha = 1,
     beta = prop.table(c(
       sum(d.manu[1:3]),
@@ -90,7 +90,7 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
     AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
     parent$
     AddSibling("cc2.manu",
-    type = "CES", sigma = 1 - 1 / rhoVA.manu,
+    type = "CES", sigma = 1 - 1 / es.VA.manu,
     alpha = 1,
     beta = prop.table(d.manu[4:5])
   )$
@@ -98,7 +98,7 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
 
   ##
   dst.serv <- Node$new("sector.serv",
-    type = "CES", sigma = 1 - 1 / rhoq.serv,
+    type = "CES", sigma = 1 - 1 / es.serv,
     alpha = 1,
     beta = prop.table(c(
       sum(d.serv[1:3]),
@@ -112,7 +112,7 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
     AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
     parent$
     AddSibling("cc2.serv",
-    type = "CES", sigma = 1 - 1 / rhoVA.serv,
+    type = "CES", sigma = 1 - 1 / es.VA.serv,
     alpha = 1,
     beta = prop.table(d.serv[4:5])
   )$

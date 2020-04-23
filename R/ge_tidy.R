@@ -3,12 +3,12 @@
 #' @aliases ge_tidy
 #' @description Add names to the matrices and vectors of a general equilibrium, and add
 #' demand matrix, demand value matrix and supply value matrix to it.
-#' @param ge the general equilibrium.
+#' @param ge a general equilibrium.
 #' @param names.commodity a character vector consisting of
 #' names of commodities.
 #' @param names.agent a character vector consisting of
 #' names of agents.
-#' @return A tidyed general equilibrium.
+#' @return A tidied general equilibrium.
 
 ge_tidy <- function(ge, names.commodity, names.agent) {
   names(ge$p) <- names.commodity

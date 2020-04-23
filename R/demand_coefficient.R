@@ -4,13 +4,14 @@
 #' @aliases demand_coefficient
 #' @description Given a price vector, this function computes the demand coefficients of a sector with a demand structural tree. The class of a demand structural tree is Node defined by the package data.tree.
 #' For a CES function, this function always assume that it has a standard form such as
-#' alpha * (beta1 * (x1 / beta1)^sigma + beta2 * (x2 / beta2)^sigma)^(1 / sigma) wherein beta1 + beta2 == 1.
+#' alpha * (beta1 * (x1 / beta1)^sigma + beta2 * (x2 / beta2)^sigma)^(1 / sigma) wherein beta1 + beta2 == 1 (see \code{\link{SCES_A}}).
 #' @param node the demand structural tree.
 #' @param p the price vector with names of commodities.
 #' @return A vector consisting of demand coefficients.
 #' @examples
 #' dst <- Node$new("firm", type = "Leontief", a = c(0.5, 0.1))
 #' dst$AddChild("wheat")$AddSibling("iron")
+#' print(dst, "type")
 #' plot(dst)
 #'
 #' demand_coefficient(dst, p = c(wheat = 1, iron = 2)) # the same as a = c(0.5, 0.1)
@@ -57,22 +58,34 @@
 #'
 #' ####
 #' p <- c(product = 1, labor = 1, money = 1)
+#' dst <- Node$new("firm", type = "FIN", rate = c(0.75, 1 / 3)) # Financial-type Demand Structure
+#' dst$AddChild("cc1", type = "Leontief", a = c(0.8, 0.2))$
+#'   AddChild("product")$AddSibling("labor")$
+#'   parent$
+#'   AddSibling("money")
+#' dst_plot(dst)
+#' demand_coefficient(dst, p)
+#'
+## the same as above
+#' p <- c(product = 1, labor = 1, money = 1)
+#' dst <- Node$new("firm", type = "Leontief", a = c(0.8, 0.2))
+#' dst$AddChild("cc1", type = "FIN", rate = c(0.75, 1 / 3))$
+#'   AddChild("product")$AddSibling("money")
+#' dst$AddChild("cc2", type = "FIN", rate = c(0.75, 1 / 3))$
+#'   AddChild("labor")$AddSibling("money")
+#' dst_plot(dst)
+#' demand_coefficient(dst, p)
+#'
+#' ## the same as above
+#' p <- c(product = 1, labor = 1, money = 1)
 #' dst <- Node$new("firm", type = "FIN", rate = c(1, 1 / 3)) # Financial-type Demand Structure
 #' dst$AddChild("cc1", type = "Leontief", a = c(0.6, 0.15))$
 #'   AddChild("product")$AddSibling("labor")$
 #'   parent$
 #'   AddSibling("money")
-#' plot(dst)
+#' dst_plot(dst)
 #' demand_coefficient(dst, p)
-#'
-#' ## the same as above
-#' dst <- Node$new("firm", type = "Leontief", a = c(0.8, 0.2))
-#' dst$AddChild("cc1", type = "FIN", rate = c(0.75, 1/3))$
-#'   AddChild("product")$AddSibling("money")
-#' dst$AddChild("cc2", type = "FIN", rate = c(0.75, 1/3))$
-#'   AddChild("labor")$AddSibling("money")
-#' plot(dst)
-#' demand_coefficient(dst, p)
+
 
 demand_coefficient <- function(node, p) {
   compute.price_dc <- function(node, p) {
@@ -98,9 +111,15 @@ demand_coefficient <- function(node, p) {
           node$type
         },
         "CES" = {
-          the.input.coef <- SCES_A(
-            node$sigma, node$alpha, node$beta, the.input.p
-          )
+          if (!is.null(node$es)) {
+            the.input.coef <- SCES_A(
+              alpha = node$alpha, Beta = node$beta, p = the.input.p, es = node$es
+            )
+          } else {
+            the.input.coef <- SCES_A(
+              node$sigma, node$alpha, node$beta, the.input.p
+            )
+          }
         },
         "CD" = {
           the.input.coef <- CD_A(node$alpha, node$beta, the.input.p)
@@ -113,16 +132,18 @@ demand_coefficient <- function(node, p) {
         "dividend" = ,
         "bond" = ,
         "tax" = {
-          if (length(node$rate) == length(the.input.p)) {
-            tmp.input.value <- the.input.p[1] * node$rate[1]
+          if (!is.null(node$beta)) tmp.rate <- beta_to_rate(node$beta) else
+            tmp.rate <- node$rate
+          if (length(tmp.rate) == length(the.input.p)) {
+            tmp.input.value <- the.input.p[1] * tmp.rate[1]
             the.input.coef <- c(
-              node$rate[1],
-              tmp.input.value * node$rate[-1] / the.input.p[-1]
+              tmp.rate[1],
+              tmp.input.value * tmp.rate[-1] / the.input.p[-1]
             )
-          } else if (length(node$rate) == length(the.input.p) - 1) {
-            the.input.coef <- c(1, the.input.p[1] * node$rate / the.input.p[-1])
+          } else if (length(tmp.rate) == length(the.input.p) - 1) {
+            the.input.coef <- c(1, the.input.p[1] * tmp.rate / the.input.p[-1])
           } else {
-            stop("Li: wrong length of node$rate.")
+            stop("Li: wrong length of tmp.rate.")
           }
         },
         stop("Li: wrong type.")

@@ -4,16 +4,18 @@
 \alias{SCES_A}
 \title{Standard CES Demand Coefficient Matrix}
 \usage{
-SCES_A(sigma, alpha, Beta, p)
+SCES_A(sigma = 1 - 1/es, alpha, Beta, p, es = NA)
 }
 \arguments{
-\item{sigma}{a numeric m-vector or m-by-1 matrix.}
+\item{sigma}{a numeric m-vector or m-by-1 matrix. 1/(1-sigma) is the elasticity of substitution.}
 
 \item{alpha}{a nonnegative numeric m-vector or m-by-1 matrix.}
 
 \item{Beta}{a nonnegative numeric n-by-m matrix.}
 
 \item{p}{a nonnegative numeric n-vector or n-by-1 matrix.}
+
+\item{es}{a numeric m-vector or m-by-1 matrix of elasticity of substitution. If es is not NA, the value of sigma will be ignored.}
 }
 \value{
 A demand coefficient n-by-m matrix.
@@ -24,6 +26,7 @@ coefficient matrix (i.e. Theta==Beta), which is a wrapper of CES_A of CGE packag
 }
 \examples{
 SCES_A(-1, 1, c(0.9, 0.1), c(1, 1))
+SCES_A(alpha = 1, Beta = c(0.9, 0.1), p = c(1, 1), es = 0.5)
 SCES_A(0, 1, c(0.9, 0.1), c(1, 1))
 beta <- c(0.9, 0.1)
 CD_A(prod(beta^-beta), c(0.9, 0.1), c(1, 1))

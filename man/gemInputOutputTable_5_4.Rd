@@ -36,24 +36,24 @@ This input-output table contains 3 production sectors and one household.
 The household consumes products and supplies labor and capital.
 }
 \examples{
-rhoq.agri <- 0.2
-rhoq.manu <- 0.3
-rhoq.serv <- 0.1
+es.agri <- 0.2 # the elasticity of substitution
+es.manu <- 0.3
+es.serv <- 0.1
 
-rhoVA.agri <- 0.25
-rhoVA.manu <- 0.5
-rhoVA.serv <- 0.8
+es.VA.agri <- 0.25
+es.VA.manu <- 0.5
+es.VA.serv <- 0.8
 
 d.agri <- c(260, 345, 400, 200, 160)
 d.manu <- c(320, 390, 365, 250, 400)
 d.serv <- c(150, 390, 320, 400, 210)
 d.hh <- c(635, 600, 385, 0, 0)
-#d.hh <- c(635, 600, 100, 0, 0)
+# d.hh <- c(635, 600, 100, 0, 0)
 
 D <- cbind(d.agri, d.manu, d.serv, d.hh)
 
 dst.agri <- Node$new("sector.agri",
-  type = "CES", sigma = 1 - 1 / rhoq.agri,
+  type = "CES", sigma = 1 - 1 / es.agri,
   alpha = 1,
   beta = prop.table(c(
     sum(d.agri[1:3]),
@@ -67,7 +67,7 @@ dst.agri$AddChild("cc1.agri",
   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
   parent$
   AddSibling("cc2.agri",
-  type = "CES", sigma = 1 - 1 / rhoVA.agri,
+  type = "CES", sigma = 1 - 1 / es.VA.agri,
   alpha = 1,
   beta = prop.table(d.agri[4:5])
 )$
@@ -75,7 +75,7 @@ dst.agri$AddChild("cc1.agri",
 
 ##
 dst.manu <- Node$new("sector.manu",
-  type = "CES", sigma = 1 - 1 / rhoq.manu,
+  type = "CES", sigma = 1 - 1 / es.manu,
   alpha = 1,
   beta = prop.table(c(
     sum(d.manu[1:3]),
@@ -89,7 +89,7 @@ dst.manu$AddChild("cc1.manu",
   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
   parent$
   AddSibling("cc2.manu",
-  type = "CES", sigma = 1 - 1 / rhoVA.manu,
+  type = "CES", sigma = 1 - 1 / es.VA.manu,
   alpha = 1,
   beta = prop.table(d.manu[4:5])
 )$
@@ -97,7 +97,7 @@ dst.manu$AddChild("cc1.manu",
 
 ##
 dst.serv <- Node$new("sector.serv",
-  type = "CES", sigma = 1 - 1 / rhoq.serv,
+  type = "CES", sigma = 1 - 1 / es.serv,
   alpha = 1,
   beta = prop.table(c(
     sum(d.serv[1:3]),
@@ -111,7 +111,7 @@ dst.serv$AddChild("cc1.serv",
   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
   parent$
   AddSibling("cc2.serv",
-  type = "CES", sigma = 1 - 1 / rhoVA.serv,
+  type = "CES", sigma = 1 - 1 / es.VA.serv,
   alpha = 1,
   beta = prop.table(d.serv[4:5])
 )$

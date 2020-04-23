@@ -9,13 +9,13 @@ gemInputOutputTable_7_4(
   product.output,
   supply.labor,
   supply.capital,
-  rhoq.agri = 0,
-  rhoq.manu = 0,
-  rhoq.serv = 0,
-  rhoq.hh = 0,
-  rhoVA.agri = 0.25,
-  rhoVA.manu = 0.5,
-  rhoVA.serv = 0.8,
+  es.agri = 0,
+  es.manu = 0,
+  es.serv = 0,
+  es.hh = 0,
+  es.VA.agri = 0.25,
+  es.VA.manu = 0.5,
+  es.VA.serv = 0.8,
   ...
 )
 }
@@ -28,12 +28,12 @@ gemInputOutputTable_7_4(
 
 \item{supply.capital}{the supply of capital.}
 
-\item{rhoq.agri, rhoq.manu, rhoq.serv}{the elasticity of substitution between the intermediate input
+\item{es.agri, es.manu, es.serv}{the elasticity of substitution between the intermediate input
 and the value-added input of the agriculture sector, manufacturing sector and service sector.}
 
-\item{rhoq.hh}{the elasticity of substitution between products consummed by the household sector.}
+\item{es.hh}{the elasticity of substitution between products consummed by the household sector.}
 
-\item{rhoVA.agri, rhoVA.manu, rhoVA.serv}{the elasticity of substitution between labor input and capital input
+\item{es.VA.agri, es.VA.manu, es.VA.serv}{the elasticity of substitution between labor input and capital input
 of the agriculture sector, manufacturing sector and service sector.}
 
 \item{...}{arguments to be transferred to the function sdm of the package CGE.}
@@ -140,9 +140,8 @@ geTP3 <- gemInputOutputTable_7_4(
   supply.capital = 11.04
 )
 
-colSums(geTP3$ITV[4:7, 1:3]) / colSums(ge$ITV[4:7, 1:3]) # change in added value
-prop.table(colSums(geTP3$ITV[4:7, 1:3])) -
-  prop.table(colSums(ge$ITV[4:7, 1:3]))
+geTP3$value.added / ge$value.added
+prop.table(geTP3$value.added) - prop.table(ge$value.added)
 
 #### demand structure change
 IT.DSC <- IT17

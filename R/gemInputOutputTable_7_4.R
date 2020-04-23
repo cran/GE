@@ -11,10 +11,10 @@
 #' @param product.output the outputs of products in the base period.
 #' @param supply.labor the supply of labor.
 #' @param supply.capital the supply of capital.
-#' @param rhoq.agri,rhoq.manu,rhoq.serv the elasticity of substitution between the intermediate input
+#' @param es.agri,es.manu,es.serv the elasticity of substitution between the intermediate input
 #' and the value-added input of the agriculture sector, manufacturing sector and service sector.
-#' @param rhoq.hh the elasticity of substitution between products consummed by the household sector.
-#' @param rhoVA.agri,rhoVA.manu,rhoVA.serv the elasticity of substitution between labor input and capital input
+#' @param es.hh the elasticity of substitution between products consummed by the household sector.
+#' @param es.VA.agri,es.VA.manu,es.VA.serv the elasticity of substitution between labor input and capital input
 #' of the agriculture sector, manufacturing sector and service sector.
 #' @param ... arguments to be transferred to the function sdm of the package CGE.
 #' @return A general equilibrium.
@@ -107,9 +107,8 @@
 #'   supply.capital = 11.04
 #' )
 #'
-#' colSums(geTP3$ITV[4:7, 1:3]) / colSums(ge$ITV[4:7, 1:3]) # change in added value
-#' prop.table(colSums(geTP3$ITV[4:7, 1:3])) -
-#'   prop.table(colSums(ge$ITV[4:7, 1:3]))
+#' geTP3$value.added / ge$value.added
+#' prop.table(geTP3$value.added) - prop.table(ge$value.added)
 #'
 #' #### demand structure change
 #' IT.DSC <- IT17
@@ -159,14 +158,14 @@ gemInputOutputTable_7_4 <- function(IT,
                                     supply.labor,
                                     supply.capital,
 
-                                    rhoq.agri = 0,
-                                    rhoq.manu = 0,
-                                    rhoq.serv = 0,
-                                    rhoq.hh = 0,
+                                    es.agri = 0,
+                                    es.manu = 0,
+                                    es.serv = 0,
+                                    es.hh = 0,
 
-                                    rhoVA.agri = 0.25,
-                                    rhoVA.manu = 0.5,
-                                    rhoVA.serv = 0.8,
+                                    es.VA.agri = 0.25,
+                                    es.VA.manu = 0.5,
+                                    es.VA.serv = 0.8,
                                     ...) {
   names.commodity <- rownames(IT)
   names.agent <- colnames(IT)
@@ -213,7 +212,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.agri, "industry")
   tmp$type <- "CES"
-  tmp$sigma <- 1 - 1 / rhoq.agri
+  tmp$sigma <- 1 - 1 / es.agri
   tmp$alpha <- product.output[1] / sum(d.agri)
   tmp$beta <- prop.table(c(
     sum(d.agri[1:3]),
@@ -232,7 +231,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.agri, "cc2.1")
   tmp$type <- "CES"
-  tmp$sigma <- 1 - 1 / rhoVA.agri
+  tmp$sigma <- 1 - 1 / es.VA.agri
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.agri[4:5])
 
@@ -241,7 +240,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.manu, "industry")
   tmp$type <- "CES"
-  tmp$sigma <- 1 - 1 / rhoq.manu
+  tmp$sigma <- 1 - 1 / es.manu
   tmp$alpha <- product.output[2] / sum(d.manu)
   tmp$beta <- prop.table(c(
     sum(d.manu[1:3]),
@@ -260,7 +259,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.manu, "cc2.1")
   tmp$type <- "CES"
-  tmp$sigma <- 1 - 1 / rhoVA.manu
+  tmp$sigma <- 1 - 1 / es.VA.manu
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.manu[4:5])
 
@@ -269,7 +268,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.serv, "industry")
   tmp$type <- "CES"
-  tmp$sigma <- 1 - 1 / rhoq.serv
+  tmp$sigma <- 1 - 1 / es.serv
   tmp$alpha <- product.output[3] / sum(d.serv)
   tmp$beta <- prop.table(c(
     sum(d.serv[1:3]),
@@ -288,14 +287,14 @@ gemInputOutputTable_7_4 <- function(IT,
 
   tmp <- FindNode(dst.serv, "cc2.1")
   tmp$type <- "CES"
-  tmp$sigma <- 1 - 1 / rhoVA.serv
+  tmp$sigma <- 1 - 1 / es.VA.serv
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.serv[4:5])
 
 
   # dst.hh ------------------------------------------------------------------
   dst.hh <- Node$new("hh",
-    type = "CES", sigma = 1 - 1 / rhoq.hh,
+    type = "CES", sigma = 1 - 1 / es.hh,
     alpha = 1,
     beta = prop.table(d.hh[1:3])
   )
@@ -355,7 +354,7 @@ gemInputOutputTable_7_4 <- function(IT,
     ge$ITV["tax", "sector.agri"] <- -ge$SV["tax", "sector.agri"] # tax of sector agri
   }
 
-  ge$value.added <- colSums(ge$DV[4:7, 1:3])
+  ge$value.added <- colSums(ge$ITV[4:7, 1:3])
   ge$dstl <- dstl
   return(ge)
 }

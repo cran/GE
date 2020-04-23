@@ -11,7 +11,7 @@
 #' @param times the iteration times.
 #' @param tol the tolerance for stopping calculation. If the canberra distance of the last two
 #' state vectors is less than tol the calculation will stop.
-#' @param ... Optional arguments passed to the f function
+#' @param ... optional arguments passed to the f function.
 #' @return A matrix consisting of state vectors.
 #' @examples
 #' \donttest{

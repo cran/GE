@@ -17,7 +17,7 @@ If x has a name attribute, the names will be used to label the output matrix.}
 \item{tol}{the tolerance for stopping calculation. If the canberra distance of the last two
 state vectors is less than tol the calculation will stop.}
 
-\item{...}{Optional arguments passed to the f function}
+\item{...}{optional arguments passed to the f function.}
 }
 \value{
 A matrix consisting of state vectors.
