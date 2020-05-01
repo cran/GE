@@ -13,7 +13,7 @@ gemInputOutputTable_5_4(
 )
 }
 \arguments{
-\item{dstl}{the demand structure tree list.}
+\item{dstl}{a demand structure tree list.}
 
 \item{supply.labor}{the supply of labor.}
 
@@ -133,6 +133,12 @@ dstl <- list(
 )
 
 ge <- gemInputOutputTable_5_4(dstl)
+
+#### labor supply increase
+geLSI <- gemInputOutputTable_5_4(dstl, supply.labor = 850 * 1.08)
+geLSI$p
+geLSI$z / ge$z
+
 }
 \references{
 Zhang Xin. (2017, ISBN: 9787543227637). Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)

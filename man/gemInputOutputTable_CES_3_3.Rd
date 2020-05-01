@@ -7,7 +7,7 @@
 gemInputOutputTable_CES_3_3(
   input = matrix(c(200, 300, 100, 150, 320, 530, 250, 380, 0), 3, 3, TRUE),
   output = c(600, 1000, 630),
-  sigma = -Inf
+  es = 0
 )
 }
 \arguments{
@@ -15,8 +15,8 @@ gemInputOutputTable_CES_3_3(
 
 \item{output}{a vector consisting of the product outputs and labor supply in the base period.}
 
-\item{sigma}{a scalar, which is the coefficient of elasticity of substitution between the
-inputs. 1/(1-sigma) is the elasticity of substitution.}
+\item{es}{a scalar, which is the elasticity of substitution between the
+inputs.}
 }
 \value{
 A general equilibrium.
@@ -29,11 +29,15 @@ The household consumes products and supplies labor.
 }
 \examples{
 x <- 75
-gemInputOutputTable_CES_3_3(input = matrix(c(
-  200, 300, 100,
-  x, 320, 530,
-  250, 380, 0
-), 3, 3, TRUE), output = c(600, 1000, 630), sigma = -1)
+gemInputOutputTable_CES_3_3(
+  input = matrix(c(
+    200, 300, 100,
+    x, 320, 530,
+    250, 380, 0
+  ), 3, 3, TRUE),
+  output = c(600, 1000, 630),
+  es = 0.5
+)
 }
 \references{
 Zhang Xin. (2017, ISBN: 9787543227637). Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)

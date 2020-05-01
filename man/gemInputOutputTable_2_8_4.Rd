@@ -12,8 +12,8 @@ gemInputOutputTable_2_8_4(
   labor.supply.ROW = sum(IT["labor.ROW", ]),
   capital.supply.CHN = sum(IT["capital.CHN", ]),
   capital.supply.ROW = sum(IT["capital.ROW", ]),
-  money.supply.CHN = 100,
-  money.supply.ROW = 600,
+  money.interest.supply.CHN = 5,
+  money.interest.supply.ROW = 30,
   es.productDI.production.CHN = 0.5,
   es.productDI.production.ROW = 0.5,
   es.laborCapital.production.CHN = 0.75,
@@ -29,7 +29,7 @@ gemInputOutputTable_2_8_4(
 )
 }
 \arguments{
-\item{IT}{the input-output table.}
+\item{IT}{the input part of the input-output table (unit: trillion yuan).}
 
 \item{product.output.CHN}{the product output of the production sector of CHN.}
 
@@ -43,9 +43,10 @@ gemInputOutputTable_2_8_4(
 
 \item{capital.supply.ROW}{the capital supply of ROW.}
 
-\item{money.supply.CHN}{the money supply of CHN.}
+\item{money.interest.supply.CHN}{the money interest supply of CHN,
+that is, the exogenous money supply multiplied by the exogenous interest rate.}
 
-\item{money.supply.ROW}{the money supply of ROW.}
+\item{money.interest.supply.ROW}{the money interest supply of ROW.}
 
 \item{es.productDI.production.CHN}{the elasticity of substitution between
 domestic product and imported product used by the production sector of CHN.}
@@ -86,9 +87,9 @@ A general equilibrium, which usually is a list with the following elements:
 \item sector.names - names of sectors.
 \item subject.names - names of commodities or subjects.
 \item dstl - the demand structure tree list of sectors if return.dstl == TRUE.
-\item D - the demand matrix.
-\item DV - the demand value matrix.
-\item SV - the supply value matrix.
+\item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+\item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+\item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
 \item eri.CHN - the exchange rate index of CHN currency.
 \item eri.ROW - the exchange rate index of ROW currency.
 \item p.money - the price vector with CHN money as numeraire
@@ -101,7 +102,7 @@ A two-country general equilibrium model with money.
 This general equilibrium model is based on a two-country (i.e. CHN and ROW) input-output table.
 Each country contains four sectors and eight commodities (or subjects).
 The four sectors are production, consumption, investment and foreign trade.
-The eight commodities (or subjects) are product, labor, capital goods, bond, tax, dividends, imported product and money.
+The eight commodities (or subjects) are product, labor, capital goods, bond, tax, dividend, imported product and money interest.
 Hence the input-output table has 16 rows and 8 columns.
 }
 \details{
@@ -113,9 +114,9 @@ And in this case, the exchange rate is determined by the ratio of the interest o
 ITExample <- matrix(0, 16, 8, dimnames = list(
   c(
     "product.CHN", "labor.CHN", "capital.CHN", "bond.CHN",
-    "tax.CHN", "dividend.CHN", "imported.product.CHN", "money.CHN",
-    "product.ROW", "labor.ROW", "capital.ROW", "bond.ROW", "tax.ROW",
-    "dividend.ROW", "imported.product.ROW", "money.ROW"
+    "tax.CHN", "dividend.CHN", "imported.product.CHN", "money.interest.CHN",
+    "product.ROW", "labor.ROW", "capital.ROW", "bond.ROW",
+    "tax.ROW", "dividend.ROW", "imported.product.ROW", "money.interest.ROW"
   ),
   c(
     "production.CHN", "consumption.CHN", "investment.CHN", "foreign.trade.CHN",
@@ -125,47 +126,46 @@ ITExample <- matrix(0, 16, 8, dimnames = list(
 
 production.CHN <- c(
   product.CHN = 140, labor.CHN = 40, capital.CHN = 10,
-  tax.CHN = 10, dividend.CHN = 20, imported.product.CHN = 5, money.CHN = 5
+  tax.CHN = 10, dividend.CHN = 20, imported.product.CHN = 5, money.interest.CHN = 5
 )
 production.ROW <- c(
   product.ROW = 840, labor.ROW = 240, capital.ROW = 60,
-  tax.ROW = 60, dividend.ROW = 120, imported.product.ROW = 6, money.ROW = 30
+  tax.ROW = 60, dividend.ROW = 120, imported.product.ROW = 6, money.interest.ROW = 30
 )
 
 consumption.CHN <- c(
-  product.CHN = 40, bond.CHN = 30, imported.product.CHN = 5, money.CHN = 2
+  product.CHN = 40, bond.CHN = 30, imported.product.CHN = 5, money.interest.CHN = 2
 )
 
 consumption.ROW <- c(
-  product.ROW = 240, bond.ROW = 180,
-  imported.product.ROW = 6, money.ROW = 12
+  product.ROW = 240, bond.ROW = 180, imported.product.ROW = 6, money.interest.ROW = 12
 )
 
 investment.CHN <- c(
   product.CHN = 30,
-  imported.product.CHN = 4, money.CHN = 1,
+  imported.product.CHN = 4, money.interest.CHN = 1,
   bond.ROW = 1,
-  money.ROW = 0.02
+  money.interest.ROW = 0.02
 )
 
 investment.ROW <- c(
   bond.CHN = 1,
-  money.CHN = 0.02,
+  money.interest.CHN = 0.02,
   product.ROW = 180,
-  imported.product.ROW = 4, money.ROW = 6
+  imported.product.ROW = 4, money.interest.ROW = 6
 )
 
 
 foreign.trade.CHN <- c(
   product.ROW = 13,
   tax.CHN = 0.65,
-  money.ROW = 0.26
+  money.interest.ROW = 0.26
 )
 
 foreign.trade.ROW <- c(
   product.CHN = 15,
   tax.ROW = 0.75,
-  money.CHN = 0.3
+  money.interest.CHN = 0.3
 )
 
 ITExample <- matrix_add_by_name(
@@ -183,8 +183,8 @@ dst_plot(ge$dstl[[4]])
 
 ge2 <- gemInputOutputTable_2_8_4(
   IT = ge$DV,
-  money.supply.CHN = sum(ge$DV["money.CHN", ]),
-  money.supply.ROW = sum(ge$DV["money.ROW", ]),
+  money.interest.supply.CHN = sum(ge$DV["money.interest.CHN", ]),
+  money.interest.supply.ROW = sum(ge$DV["money.interest.ROW", ]),
   return.dstl = TRUE
 )
 ge2$eri.CHN
@@ -230,4 +230,5 @@ geTmp <- gemInputOutputTable_2_8_4(
 )
 geTmp$eri.CHN
 }
+
 }

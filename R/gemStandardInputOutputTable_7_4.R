@@ -1,16 +1,17 @@
 #' @export
-#' @title A General Equilibrium Model based on a 7x4 Input-Output Table
-#' @aliases gemInputOutputTable_7_4
-#' @description This is a general equilibrium model based on a 7x4 input-output table.
+#' @title A General Equilibrium Model based on a 7x4 Standard Input-Output Table
+#' @aliases gemStandardInputOutputTable_7_4
+#' @description This is a general equilibrium model based on a 7x4 standard input-output table.
+#' There is no negative number in this standard input-output table,
+#' and both the input and output parts are 7x4 matrices.
+#' The standard input-output table consists of input and output parts with the same dimensions.
 #' @details Given a 7x4 input-output table, this model calculates
 #' the corresponding general equilibrium.
 #' This input-output table contains 3 production sectors and 1 household.
 #' The household consumes products and supplies labor, capital, stock and tax receipt.
 #' Generally speaking, the value of the elasticity of substitution in this model should be between 0 and 1.
 #' @param IT the input part of the input-output table in the base period (unit: trillion yuan).
-#' @param product.output the outputs of products in the base period.
-#' @param supply.labor the supply of labor.
-#' @param supply.capital the supply of capital.
+#' @param OT the output part of the input-output table in the base period (unit: trillion yuan).
 #' @param es.agri,es.manu,es.serv the elasticity of substitution between the intermediate input
 #' and the value-added input of the agriculture sector, manufacturing sector and service sector.
 #' @param es.hh the elasticity of substitution among products consumed by the household sector.
@@ -18,62 +19,71 @@
 #' of the agriculture sector, manufacturing sector and service sector.
 #' @param ... arguments to be transferred to the function sdm of the package CGE.
 #' @return A general equilibrium.
+#' @seealso \cite{\link{gemInputOutputTable_7_4}}
 #' @examples
 #' \donttest{
-#' IT17 <- matrix(c(
+#' IT2017 <- matrix(c(
 #'   1.47, 6.47, 0.57, 2.51,
 #'   2.18, 76.32, 12.83, 44.20,
 #'   0.82, 19.47, 23.33, 35.61,
 #'   6.53, 13.92, 21.88, 0,
 #'   0.23, 4.05, 6.76, 0,
-#'   -0.34, 6.43, 3.40, 0,
+#'   0, 6.43, 3.40, 0,
 #'   0.13, 8.87, 10.46, 0
 #' ), 7, 4, TRUE)
 #'
-#' product.output <- c(11.02, 135.53, 79.23)
+#' OT2017 <- matrix(c(
+#'   11.02, 0, 0, 0,
+#'   0, 135.53, 0, 0,
+#'   0, 0, 79.23, 0,
+#'   0, 0, 0, 42.33,
+#'   0, 0, 0, 11.04,
+#'   0.34, 0, 0, 9.49,
+#'   0, 0, 0, 19.46
+#' ), 7, 4, TRUE)
 #'
-#' rownames(IT17) <- c("agri", "manu", "serv", "lab", "cap", "tax", "dividend")
-#' colnames(IT17) <- c("sector.agri", "sector.manu", "sector.serv", "sector.hh")
+#' rownames(IT2017) <- rownames(OT2017) <-
+#'   c("agri", "manu", "serv", "lab", "cap", "tax", "dividend")
+#' colnames(IT2017) <- colnames(OT2017) <-
+#'   c("sector.agri", "sector.manu", "sector.serv", "sector.hh")
 #'
-#' ge <- gemInputOutputTable_7_4(
-#'   IT = IT17,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04
+#' ge <- gemStandardInputOutputTable_7_4(
+#'   IT = IT2017,
+#'   OT = OT2017
 #' )
 #'
+#'
+#'
 #' #### labor supply reduction
-#' geLSR <- gemInputOutputTable_7_4(
-#'   IT = IT17,
-#'   product.output = product.output,
-#'   supply.labor = 42.33 * 0.9,
-#'   supply.capital = 11.04
+#' OTLSR <- OT2017
+#' OTLSR["lab", "sector.hh"] <- OTLSR["lab", "sector.hh"] * 0.9
+#' geLSR <- gemStandardInputOutputTable_7_4(
+#'   IT = IT2017,
+#'   OT = OTLSR
 #' )
 #'
 #' geLSR$z / ge$z
 #' geLSR$p / ge$p
 #'
 #' #### capital accumulation
-#' geCA <- gemInputOutputTable_7_4(
-#'   IT = IT17,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04 * 1.1
+#' OTCA <- OT2017
+#' OTCA["cap", "sector.hh"] <- OTCA["cap", "sector.hh"] * 1.1
+#' geCA <- gemStandardInputOutputTable_7_4(
+#'   IT = IT2017,
+#'   OT = OTCA
 #' )
 #'
 #' geCA$z / ge$z
 #' geCA$p / ge$p
 #'
 #' #### technology progress
-#' IT.TP <- IT17
+#' IT.TP <- IT2017
 #' IT.TP ["lab", "sector.manu"] <-
 #'   IT.TP ["lab", "sector.manu"] * 0.9
 #'
-#' geTP <- gemInputOutputTable_7_4(
+#' geTP <- gemStandardInputOutputTable_7_4(
 #'   IT = IT.TP,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04
+#'   OT = OT2017
 #' )
 #'
 #' geTP$z / ge$z
@@ -83,90 +93,80 @@
 #' IT.TP2 <- IT.TP
 #' IT.TP2 ["cap", "sector.manu"] <-
 #'   IT.TP2["cap", "sector.manu"] * 1.02
-#' geTP2 <- gemInputOutputTable_7_4(
+#' geTP2 <- gemStandardInputOutputTable_7_4(
 #'   IT = IT.TP2,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04
+#'   OT = OT2017
 #' )
 #'
 #' geTP2$z / ge$z
 #' geTP2$p / ge$p
 #'
 #' ##
-#' IT.TP3 <- IT17
+#' IT.TP3 <- IT2017
 #' IT.TP3 ["lab", "sector.manu"] <-
 #'   IT.TP3 ["lab", "sector.manu"] * 0.9
 #' IT.TP3 ["lab", "sector.agri"] <-
 #'   IT.TP3 ["lab", "sector.agri"] * 0.8
 #'
-#' geTP3 <- gemInputOutputTable_7_4(
+#' geTP3 <- gemStandardInputOutputTable_7_4(
 #'   IT = IT.TP3,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04
+#'   OT = OT2017
 #' )
 #'
 #' geTP3$value.added / ge$value.added
 #' prop.table(geTP3$value.added) - prop.table(ge$value.added)
 #'
 #' #### demand structure change
-#' IT.DSC <- IT17
+#' IT.DSC <- IT2017
 #' IT.DSC["serv", "sector.hh"] <- IT.DSC ["serv", "sector.hh"] * 1.2
 #'
-#' geDSC <- gemInputOutputTable_7_4(
+#' geDSC <- gemStandardInputOutputTable_7_4(
 #'   IT = IT.DSC,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04
+#'   OT = OT2017
 #' )
 #'
 #' geDSC$z[1:3] / ge$z[1:3]
 #' geDSC$p / ge$p
 #'
 #' #### tax change
-#' IT.TC <- IT17
-#' IT.TC["tax", "sector.agri"] <- IT.TC["tax", "sector.agri"] * 2
+#' OT.TC <- OT2017
+#' OT.TC["tax", "sector.agri"] <- OT.TC["tax", "sector.agri"] * 2
 #'
-#' geTC <- gemInputOutputTable_7_4(
-#'   IT = IT.TC,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04
+#' geTC <- gemStandardInputOutputTable_7_4(
+#'   IT = IT2017,
+#'   OT = OT.TC
 #' )
 #'
 #' geTC$z / ge$z
 #' geTC$p / ge$p
 #'
 #' ##
-#' IT.TC2 <- IT17
+#' IT.TC2 <- IT2017
 #' IT.TC2["tax", "sector.manu"] <- IT.TC2["tax", "sector.manu"] * 0.8
 #'
-#' geTC2 <- gemInputOutputTable_7_4(
+#' geTC2 <- gemStandardInputOutputTable_7_4(
 #'   IT = IT.TC2,
-#'   product.output = product.output,
-#'   supply.labor = 42.33,
-#'   supply.capital = 11.04
+#'   OT = OT2017
 #' )
 #'
 #' geTC2$z / ge$z
 #' geTC2$p / ge$p
 #' }
-#'
-gemInputOutputTable_7_4 <- function(IT,
-                                    product.output,
-                                    supply.labor,
-                                    supply.capital,
 
-                                    es.agri = 0,
-                                    es.manu = 0,
-                                    es.serv = 0,
-                                    es.hh = 0,
+gemStandardInputOutputTable_7_4 <- function(IT,
+                                           OT,
 
-                                    es.VA.agri = 0.25,
-                                    es.VA.manu = 0.5,
-                                    es.VA.serv = 0.8,
-                                    ...) {
+                                           es.agri = 0,
+                                           es.manu = 0,
+                                           es.serv = 0,
+                                           es.hh = 0,
+
+                                           es.VA.agri = 0.25,
+                                           es.VA.manu = 0.5,
+                                           es.VA.serv = 0.8,
+                                           ...) {
+  product.output <- diag(OT[1:3, 1:3])
+
   names.commodity <- rownames(IT)
   names.agent <- colnames(IT)
 
@@ -175,20 +175,8 @@ gemInputOutputTable_7_4 <- function(IT,
   d.serv <- IT[, 3]
   d.hh <- IT[, 4]
 
-  tmp.tax <- IT["tax", ]
-  supply.tax <- sum(tmp.tax[tmp.tax > 0])
-  supply.stock <- sum(IT["dividend", ])
 
-  if (IT["tax", "sector.agri"] >= 0) {
-    tax.rate.agri <- IT["tax", "sector.agri"] / sum(IT[c("lab", "cap"), "sector.agri"])
-    supply.tax.hh <- supply.tax
-    supply.tax.agri <- NA
-  } else {
-    tax.rate.agri <- 0
-    supply.tax.agri <- -IT["tax", "sector.agri"]
-    supply.tax.hh <- supply.tax - supply.tax.agri
-  }
-
+  tax.rate.agri <- IT["tax", "sector.agri"] / sum(IT[c("lab", "cap"), "sector.agri"])
   tax.rate.manu <- IT["tax", "sector.manu"] / sum(IT[c("lab", "cap"), "sector.manu"])
   tax.rate.serv <- IT["tax", "sector.serv"] / sum(IT[c("lab", "cap"), "sector.serv"])
 
@@ -327,12 +315,16 @@ gemInputOutputTable_7_4 <- function(IT,
       ), 7, 4, TRUE)
     },
     S0Exg = {
-      tmp <- matrix(NA, 7, 4)
-      tmp[4, 4] <- supply.labor
-      tmp[5, 4] <- supply.capital
-      tmp[6, 4] <- supply.tax.hh
-      tmp[6, 1] <- supply.tax.agri
-      tmp[7, 4] <- supply.stock
+      tmp <- matrix(NA, 7, 4, TRUE)
+      colnames(tmp) <- names.agent
+      rownames(tmp) <- names.commodity
+      tmp["lab", "sector.hh"] <- sum(OT["lab", ])
+      tmp["cap", "sector.hh"] <- sum(OT["cap", ])
+
+      tmp["tax", "sector.agri"] <- OT["tax", "sector.agri"]
+      tmp["tax", "sector.hh"] <- sum(IT["tax", ]) - OT["tax", "sector.agri"]
+
+      tmp["dividend", "sector.hh"] <- sum(OT["dividend", ])
       tmp
     },
     tolCond = 1e-8,
@@ -344,14 +336,8 @@ gemInputOutputTable_7_4 <- function(IT,
   ge <- ge_tidy(ge, names.commodity, names.agent)
 
 
-  ge$IT <- ge$D
-  ge$ITV <- ge$DV
-  if (IT["tax", "sector.agri"] < 0) {
-    ge$IT["tax", "sector.agri"] <- -ge$S["tax", "sector.agri"] # tax of sector agri
-    ge$ITV["tax", "sector.agri"] <- -ge$SV["tax", "sector.agri"] # tax of sector agri
-  }
-
-  ge$value.added <- colSums(ge$ITV[4:7, 1:3])
+  ge$value.added <- colSums(ge$DV[4:7, 1:3]) - ge$SV["tax", 1:3]
   ge$dstl <- dstl
   return(ge)
 }
+

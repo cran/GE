@@ -5,7 +5,8 @@
 #' @aliases dst_plot
 #' @description Plot a demand structure tree by the package DiagrammeR
 #' and the type attribute of each node is shown.
-#' @param dst the demand structural tree.
+#' @param dst a demand structural tree.
+#' @seealso \code{\link{demand_coefficient}}
 
 dst_plot <- function(dst) {
   tmp.dst <- Clone(dst)

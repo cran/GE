@@ -6,7 +6,7 @@
 #' the corresponding general equilibrium.
 #' This input-output table contains 3 production sectors and one household.
 #' The household consumes products and supplies labor and capital.
-#' @param dstl the demand structure tree list.
+#' @param dstl a demand structure tree list.
 #' @param supply.labor the supply of labor.
 #' @param supply.capital the supply of capital.
 #' @param names.commodity names of commodities.
@@ -111,13 +111,17 @@
 #' )
 #'
 #' ge <- gemInputOutputTable_5_4(dstl)
+#'
+#' #### labor supply increase
+#' geLSI <- gemInputOutputTable_5_4(dstl, supply.labor = 850 * 1.08)
+#' geLSI$p
+#' geLSI$z / ge$z
+#'
 gemInputOutputTable_5_4 <- function(dstl,
-                                    supply.labor = 850, #* 1.08,
+                                    supply.labor = 850,
                                     supply.capital = 770,
                                     names.commodity = c("agri", "manu", "serv", "lab", "cap"),
                                     names.agent = c("agri", "manu", "serv", "hh")) {
-  account.zero <- rep(0, length(names.commodity))
-  names(account.zero) <- names.commodity
 
   ge <- sdm(
     A = function(state) {

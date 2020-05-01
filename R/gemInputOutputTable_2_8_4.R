@@ -5,17 +5,18 @@
 #' This general equilibrium model is based on a two-country (i.e. CHN and ROW) input-output table.
 #' Each country contains four sectors and eight commodities (or subjects).
 #' The four sectors are production, consumption, investment and foreign trade.
-#' The eight commodities (or subjects) are product, labor, capital goods, bond, tax, dividends, imported product and money.
+#' The eight commodities (or subjects) are product, labor, capital goods, bond, tax, dividend, imported product and money interest.
 #' Hence the input-output table has 16 rows and 8 columns.
-#' @param IT the input-output table.
+#' @param IT the input part of the input-output table (unit: trillion yuan).
 #' @param product.output.CHN the product output of the production sector of CHN.
 #' @param product.output.ROW the product output of the production sector of ROW.
 #' @param labor.supply.CHN the labor supply of CHN.
 #' @param labor.supply.ROW the labor supply of ROW.
 #' @param capital.supply.CHN the capital supply of CHN.
 #' @param capital.supply.ROW the capital supply of ROW.
-#' @param money.supply.CHN the money supply of CHN.
-#' @param money.supply.ROW the money supply of ROW.
+#' @param money.interest.supply.CHN the money interest supply of CHN,
+#' that is, the exogenous money supply multiplied by the exogenous interest rate.
+#' @param money.interest.supply.ROW the money interest supply of ROW.
 #' @param es.productDI.production.CHN the elasticity of substitution between
 #' domestic product and imported product used by the production sector of CHN.
 #' @param es.productDI.production.ROW the elasticity of substitution between
@@ -42,9 +43,9 @@
 #' \item sector.names - names of sectors.
 #' \item subject.names - names of commodities or subjects.
 #' \item dstl - the demand structure tree list of sectors if return.dstl == TRUE.
-#' \item D - the demand matrix.
-#' \item DV - the demand value matrix.
-#' \item SV - the supply value matrix.
+#' \item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+#' \item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+#' \item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
 #' \item eri.CHN - the exchange rate index of CHN currency.
 #' \item eri.ROW - the exchange rate index of ROW currency.
 #' \item p.money - the price vector with CHN money as numeraire
@@ -58,9 +59,9 @@
 #' ITExample <- matrix(0, 16, 8, dimnames = list(
 #'   c(
 #'     "product.CHN", "labor.CHN", "capital.CHN", "bond.CHN",
-#'     "tax.CHN", "dividend.CHN", "imported.product.CHN", "money.CHN",
-#'     "product.ROW", "labor.ROW", "capital.ROW", "bond.ROW", "tax.ROW",
-#'     "dividend.ROW", "imported.product.ROW", "money.ROW"
+#'     "tax.CHN", "dividend.CHN", "imported.product.CHN", "money.interest.CHN",
+#'     "product.ROW", "labor.ROW", "capital.ROW", "bond.ROW",
+#'     "tax.ROW", "dividend.ROW", "imported.product.ROW", "money.interest.ROW"
 #'   ),
 #'   c(
 #'     "production.CHN", "consumption.CHN", "investment.CHN", "foreign.trade.CHN",
@@ -70,47 +71,46 @@
 #'
 #' production.CHN <- c(
 #'   product.CHN = 140, labor.CHN = 40, capital.CHN = 10,
-#'   tax.CHN = 10, dividend.CHN = 20, imported.product.CHN = 5, money.CHN = 5
+#'   tax.CHN = 10, dividend.CHN = 20, imported.product.CHN = 5, money.interest.CHN = 5
 #' )
 #' production.ROW <- c(
 #'   product.ROW = 840, labor.ROW = 240, capital.ROW = 60,
-#'   tax.ROW = 60, dividend.ROW = 120, imported.product.ROW = 6, money.ROW = 30
+#'   tax.ROW = 60, dividend.ROW = 120, imported.product.ROW = 6, money.interest.ROW = 30
 #' )
 #'
 #' consumption.CHN <- c(
-#'   product.CHN = 40, bond.CHN = 30, imported.product.CHN = 5, money.CHN = 2
+#'   product.CHN = 40, bond.CHN = 30, imported.product.CHN = 5, money.interest.CHN = 2
 #' )
 #'
 #' consumption.ROW <- c(
-#'   product.ROW = 240, bond.ROW = 180,
-#'   imported.product.ROW = 6, money.ROW = 12
+#'   product.ROW = 240, bond.ROW = 180, imported.product.ROW = 6, money.interest.ROW = 12
 #' )
 #'
 #' investment.CHN <- c(
 #'   product.CHN = 30,
-#'   imported.product.CHN = 4, money.CHN = 1,
+#'   imported.product.CHN = 4, money.interest.CHN = 1,
 #'   bond.ROW = 1,
-#'   money.ROW = 0.02
+#'   money.interest.ROW = 0.02
 #' )
 #'
 #' investment.ROW <- c(
 #'   bond.CHN = 1,
-#'   money.CHN = 0.02,
+#'   money.interest.CHN = 0.02,
 #'   product.ROW = 180,
-#'   imported.product.ROW = 4, money.ROW = 6
+#'   imported.product.ROW = 4, money.interest.ROW = 6
 #' )
 #'
 #'
 #' foreign.trade.CHN <- c(
 #'   product.ROW = 13,
 #'   tax.CHN = 0.65,
-#'   money.ROW = 0.26
+#'   money.interest.ROW = 0.26
 #' )
 #'
 #' foreign.trade.ROW <- c(
 #'   product.CHN = 15,
 #'   tax.ROW = 0.75,
-#'   money.CHN = 0.3
+#'   money.interest.CHN = 0.3
 #' )
 #'
 #' ITExample <- matrix_add_by_name(
@@ -128,8 +128,8 @@
 #'
 #' ge2 <- gemInputOutputTable_2_8_4(
 #'   IT = ge$DV,
-#'   money.supply.CHN = sum(ge$DV["money.CHN", ]),
-#'   money.supply.ROW = sum(ge$DV["money.ROW", ]),
+#'   money.interest.supply.CHN = sum(ge$DV["money.interest.CHN", ]),
+#'   money.interest.supply.ROW = sum(ge$DV["money.interest.ROW", ]),
 #'   return.dstl = TRUE
 #' )
 #' ge2$eri.CHN
@@ -175,7 +175,7 @@
 #' )
 #' geTmp$eri.CHN
 #' }
-
+#'
 gemInputOutputTable_2_8_4 <- function(IT,
                                       product.output.CHN = sum(IT[, "production.CHN"]),
                                       product.output.ROW = sum(IT[, "production.ROW"]),
@@ -186,11 +186,10 @@ gemInputOutputTable_2_8_4 <- function(IT,
                                       capital.supply.CHN = sum(IT["capital.CHN", ]),
                                       capital.supply.ROW = sum(IT["capital.ROW", ]),
 
-                                      money.supply.CHN = 100,
-                                      money.supply.ROW = 600,
+                                      money.interest.supply.CHN = 5,
+                                      money.interest.supply.ROW = 30,
 
-
-                                      es.productDI.production.CHN = 0.5, # elasticity of substitution
+                                      es.productDI.production.CHN = 0.5,
                                       es.productDI.production.ROW = 0.5,
 
                                       es.laborCapital.production.CHN = 0.75,
@@ -210,23 +209,21 @@ gemInputOutputTable_2_8_4 <- function(IT,
 
 
   # exogenous supply --------------------------------------------------------
-
-
   SExg <- IT * NA
-  SExg[c("labor.CHN", "dividend.CHN", "tax.CHN", "money.CHN", "capital.CHN"), "consumption.CHN"] <-
+  SExg[c("labor.CHN", "dividend.CHN", "tax.CHN", "money.interest.CHN", "capital.CHN"), "consumption.CHN"] <-
     c(
       labor.supply.CHN,
       sum(IT["dividend.CHN", ]),
       sum(IT["tax.CHN", ]),
-      money.supply.CHN,
+      money.interest.supply.CHN,
       capital.supply.CHN
     )
-  SExg[c("labor.ROW", "dividend.ROW", "tax.ROW", "money.ROW", "capital.ROW"), "consumption.ROW"] <-
+  SExg[c("labor.ROW", "dividend.ROW", "tax.ROW", "money.interest.ROW", "capital.ROW"), "consumption.ROW"] <-
     c(
       labor.supply.ROW,
       sum(IT["dividend.ROW", ]),
       sum(IT["tax.ROW", ]),
-      money.supply.ROW,
+      money.interest.supply.ROW,
       capital.supply.ROW
     )
 
@@ -239,8 +236,8 @@ gemInputOutputTable_2_8_4 <- function(IT,
   dst.production.CHN <- Node$new("production.CHN",
     type = "money",
     beta = prop.table(c(
-      (sum(IT[, "production.CHN"]) - IT["money.CHN", "production.CHN"]),
-      IT["money.CHN", "production.CHN"]
+      (sum(IT[, "production.CHN"]) - IT["money.interest.CHN", "production.CHN"]),
+      IT["money.interest.CHN", "production.CHN"]
     ))
   )
 
@@ -267,7 +264,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ))
   )$
     parent$
-    AddSibling("money.CHN")
+    AddSibling("money.interest.CHN")
 
   FindNode(dst.production.CHN, "cc1.1.production.CHN")$
     AddChild("product.CHN")$AddSibling("imported.product.CHN")
@@ -289,8 +286,8 @@ gemInputOutputTable_2_8_4 <- function(IT,
   dst.production.ROW <- Node$new("production.ROW",
     type = "money",
     beta = prop.table(c(
-      (sum(IT[, "production.ROW"]) - IT["money.ROW", "production.ROW"]),
-      IT["money.ROW", "production.ROW"]
+      (sum(IT[, "production.ROW"]) - IT["money.interest.ROW", "production.ROW"]),
+      IT["money.interest.ROW", "production.ROW"]
     ))
   )
 
@@ -306,7 +303,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     AddChild("cc1.1.production.ROW",
     type = "CES",
     es = es.productDI.production.ROW,
-    alpha = 1, # alpha.production.ROW,
+    alpha = 1,
     beta = prop.table(IT[c("product.ROW", "imported.product.ROW"), "production.ROW"])
   )$AddSibling("cc1.2.production.ROW",
     type = "FIN",
@@ -317,7 +314,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ))
   )$
     parent$
-    AddSibling("money.ROW")
+    AddSibling("money.interest.ROW")
 
   FindNode(dst.production.ROW, "cc1.1.production.ROW")$
     AddChild("product.ROW")$AddSibling("imported.product.ROW")
@@ -326,7 +323,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     AddChild("cc1.2.1.production.ROW",
     type = "CES",
     es = es.laborCapital.production.ROW,
-    alpha = 1, # alpha.laborCapital.production.ROW,
+    alpha = 1,
     beta = prop.table(IT[c("labor.ROW", "capital.ROW"), "production.ROW"]),
   )$
     AddChild("labor.ROW")$AddSibling("capital.ROW")$
@@ -338,8 +335,8 @@ gemInputOutputTable_2_8_4 <- function(IT,
   dst.consumption.CHN <- Node$new("consumption.CHN",
     type = "money",
     beta = prop.table(c(
-      sum(IT[, "consumption.CHN"]) - IT["money.CHN", "consumption.CHN"],
-      IT["money.CHN", "consumption.CHN"]
+      sum(IT[, "consumption.CHN"]) - IT["money.interest.CHN", "consumption.CHN"],
+      IT["money.interest.CHN", "consumption.CHN"]
     ))
   )
   dst.consumption.CHN$AddChild("cc1.consumption.CHN",
@@ -358,15 +355,15 @@ gemInputOutputTable_2_8_4 <- function(IT,
     parent$
     AddSibling("bond.CHN")$
     parent$
-    AddSibling("money.CHN")
+    AddSibling("money.interest.CHN")
 
 
   # consumption.ROW ---------------------------------------------------------
   dst.consumption.ROW <- Node$new("consumption.ROW",
     type = "money",
     beta = prop.table(c(
-      sum(IT[, "consumption.ROW"]) - IT["money.ROW", "consumption.ROW"],
-      IT["money.ROW", "consumption.ROW"]
+      sum(IT[, "consumption.ROW"]) - IT["money.interest.ROW", "consumption.ROW"],
+      IT["money.interest.ROW", "consumption.ROW"]
     ))
   )
   dst.consumption.ROW$AddChild("cc1.consumption.ROW",
@@ -385,15 +382,15 @@ gemInputOutputTable_2_8_4 <- function(IT,
     parent$
     AddSibling("bond.ROW")$
     parent$
-    AddSibling("money.ROW")
+    AddSibling("money.interest.ROW")
 
 
   # investment.CHN ----------------------------------------------------------
   dst.investment.CHN <- Node$new("investment.CHN",
     type = "FIN",
     beta = prop.table(c(
-      sum(IT[c("product.CHN", "imported.product.CHN", "money.CHN"), "investment.CHN"]),
-      sum(IT[c("bond.ROW", "money.ROW"), "investment.CHN"])
+      sum(IT[c("product.CHN", "imported.product.CHN", "money.interest.CHN"), "investment.CHN"]),
+      sum(IT[c("bond.ROW", "money.interest.ROW"), "investment.CHN"])
     ))
   )
 
@@ -402,7 +399,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     type = "money",
     beta = prop.table(c(
       sum(IT[c("product.CHN", "imported.product.CHN"), "investment.CHN"]),
-      IT["money.CHN", "investment.CHN"]
+      IT["money.interest.CHN", "investment.CHN"]
     ))
   )$
     AddChild("cc1.1.investment.CHN",
@@ -413,24 +410,24 @@ gemInputOutputTable_2_8_4 <- function(IT,
   )$
     AddChild("product.CHN")$AddSibling("imported.product.CHN")$
     parent$
-    AddSibling("money.CHN")
+    AddSibling("money.interest.CHN")
 
   dst.investment.CHN$AddChild("cc2",
     type = "money",
     beta = prop.table(c(
       IT["bond.ROW", "investment.CHN"],
-      IT["money.ROW", "investment.CHN"]
+      IT["money.interest.ROW", "investment.CHN"]
     ))
   )$
-    AddChild("bond.ROW")$AddSibling("money.ROW")
+    AddChild("bond.ROW")$AddSibling("money.interest.ROW")
 
 
   # investment.ROW ----------------------------------------------------------
   dst.investment.ROW <- Node$new("investment.ROW",
     type = "FIN",
     beta = prop.table(c(
-      sum(IT[c("product.ROW", "imported.product.ROW", "money.ROW"), "investment.ROW"]),
-      sum(IT[c("bond.CHN", "money.CHN"), "investment.ROW"])
+      sum(IT[c("product.ROW", "imported.product.ROW", "money.interest.ROW"), "investment.ROW"]),
+      sum(IT[c("bond.CHN", "money.interest.CHN"), "investment.ROW"])
     ))
   )
 
@@ -439,7 +436,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     type = "money",
     beta = prop.table(c(
       sum(IT[c("product.ROW", "imported.product.ROW"), "investment.ROW"]),
-      IT["money.ROW", "investment.ROW"]
+      IT["money.interest.ROW", "investment.ROW"]
     ))
   )$
     AddChild("cc1.1.investment.ROW",
@@ -450,16 +447,16 @@ gemInputOutputTable_2_8_4 <- function(IT,
   )$
     AddChild("product.ROW")$AddSibling("imported.product.ROW")$
     parent$
-    AddSibling("money.ROW")
+    AddSibling("money.interest.ROW")
 
   dst.investment.ROW$AddChild("cc2",
     type = "money",
     beta = prop.table(c(
       IT["bond.CHN", "investment.ROW"],
-      IT["money.CHN", "investment.ROW"]
+      IT["money.interest.CHN", "investment.ROW"]
     ))
   )$
-    AddChild("bond.CHN")$AddSibling("money.CHN")
+    AddChild("bond.CHN")$AddSibling("money.interest.CHN")
 
 
   # foreign.trade.CHN -------------------------------------------------------
@@ -467,7 +464,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     type = "money",
     beta = prop.table(c(
       sum(IT[c("product.ROW", "tax.CHN"), "foreign.trade.CHN"]),
-      IT["money.ROW", "foreign.trade.CHN"]
+      IT["money.interest.ROW", "foreign.trade.CHN"]
     ))
   )
   dst.foreign.trade.CHN$AddChild("cc1.foreign.trade.CHN",
@@ -479,7 +476,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
   )$
     AddChild("product.ROW")$AddSibling("tax.CHN")$
     parent$
-    AddSibling("money.ROW")
+    AddSibling("money.interest.ROW")
 
 
   # foreign.trade.ROW -------------------------------------------------------
@@ -487,7 +484,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     type = "money",
     beta = prop.table(c(
       sum(IT[c("product.CHN", "tax.ROW"), "foreign.trade.ROW"]),
-      IT["money.CHN", "foreign.trade.ROW"]
+      IT["money.interest.CHN", "foreign.trade.ROW"]
     ))
   )
   dst.foreign.trade.ROW$AddChild("cc1.foreign.trade.ROW",
@@ -499,7 +496,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
   )$
     AddChild("product.CHN")$AddSibling("tax.ROW")$
     parent$
-    AddSibling("money.CHN")
+    AddSibling("money.interest.CHN")
 
   dstl <- list(
     dst.production.CHN,
@@ -544,17 +541,18 @@ gemInputOutputTable_2_8_4 <- function(IT,
   if (return.dstl) ge$dstl <- dstl
 
   ge$e <- NULL
+
   ge$p <- ge$p / ge$p["labor.CHN"]
   ge <- ge_tidy(ge, ge$subject.names, ge$sector.names)
-  ge$eri.ROW <- ge$p["money.ROW"] / ge$p["money.CHN"] # exchange rate index
-  ge$eri.CHN <- ge$p["money.CHN"] / ge$p["money.ROW"]
+  ge$eri.ROW <- ge$p["money.interest.ROW"] / ge$p["money.interest.CHN"] # exchange rate index
+  ge$eri.CHN <- ge$p["money.interest.CHN"] / ge$p["money.interest.ROW"]
   if (!is.na(interest.rate.CHN) & !is.na(interest.rate.ROW)) {
-    money.value.CHN <- ge$p["money.CHN"] / interest.rate.CHN
-    money.value.ROW <- ge$p["money.ROW"] / interest.rate.ROW
+    money.value.CHN <- ge$p["money.interest.CHN"] / interest.rate.CHN
+    money.value.ROW <- ge$p["money.interest.ROW"] / interest.rate.ROW
     ge$p.money <- ge$p
-    ge$p.money["money.CHN"] <- money.value.CHN
-    ge$p.money["money.ROW"] <- money.value.ROW
-    ge$p.money <- ge$p.money / ge$p.money["money.CHN"]
+    ge$p.money["money.interest.CHN"] <- money.value.CHN
+    ge$p.money["money.interest.ROW"] <- money.value.ROW
+    ge$p.money <- ge$p.money / ge$p.money["money.interest.CHN"]
   }
 
   return(ge)

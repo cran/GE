@@ -31,7 +31,7 @@
 
 
 SCES_A <- function(sigma=1-1/es, alpha, Beta, p, es=NA) {
-  if (!is.na(es)) sigma <- 1-1/es
+  if (all(!is.na(es))) sigma <- 1-1/es
   if (any(sigma >= 1)) stop("Li: sigma should be less than 1")
   if (is.vector(Beta)) Beta <- cbind(Beta)
   if (all(Beta != 0)) {

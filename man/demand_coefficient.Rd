@@ -2,7 +2,7 @@
 % Please edit documentation in R/demand_coefficient.R
 \name{demand_coefficient}
 \alias{demand_coefficient}
-\title{Compute Demand Coefficients of a Sector with a Demand Sturctural Tree}
+\title{Compute Demand Coefficients of an Agent (or a Sector) with a Demand Sturctural Tree}
 \usage{
 demand_coefficient(node, p)
 }
@@ -18,6 +18,35 @@ A vector consisting of demand coefficients.
 Given a price vector, this function computes the demand coefficients of a sector with a demand structural tree. The class of a demand structural tree is Node defined by the package data.tree.
 For a CES function, this function always assume that it has a standard form such as
 alpha * (beta1 * (x1 / beta1)^sigma + beta2 * (x2 / beta2)^sigma)^(1 / sigma) wherein beta1 + beta2 == 1 (see \code{\link{SCES_A}}).
+}
+\details{
+The demand for various commodities by an economic agent can be expressed by a demand structure tree.
+Each non-leaf node can be regarded as the output of all its child nodes.
+Each node can be regarded as an input of its parent node.
+Each non-leaf node usually has an attribute named type.
+This attribute describes the input-output relationship between the children nodes and the parent node.
+This relationship can sometimes be represented by a production function or a utility function.
+The type attribute of each non-leaf node can take the following values.
+\itemize{
+\item CES. In this case, this node also has parameters alpha, beta and es (or sigma = 1-1 / es).
+alpha and es are scalars. beta is a vector. These parameters are parameters of a standard CES function.
+\item Leontief. In this case, this node also has the parameter a,
+which is a vector and is the parameter of a Leontief function.
+\item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta.
+These parameters are parameters of a Cobb-Douglas function.
+\item FIN. That is the financial type. FIN can also be written as money, dividends, bonds and taxes.
+In this case, this node also has the parameter rate or beta.
+If the parameter beta is not NULL, then the parameter rate will be ignored.
+The parameter rate applies to all situations, while the parameter beta only applies for some special cases.
+For FIN nodes, the first child node should represent for a physical commodity or a composite commodity
+containing a physical commodity, and other child nodes represent for financial instruments.
+The parameter beta indicates the proportion of each child node's expenditure.
+The parameter rate indicates the expenditure ratios between financial-instrument-type child nodes
+and the first child node.
+The first element of the parameter rate indicate the amount of the first child node needed to get a unit of output.
+}
+If a non-leaf node does not have an attribute named type, then it should have an attribute named func.
+The value of this attribute is a function of calculating the demand coefficient for the child nodes.
 }
 \examples{
 dst <- Node$new("firm", type = "Leontief", a = c(0.5, 0.1))
@@ -77,6 +106,7 @@ dst$AddChild("cc1", type = "Leontief", a = c(0.8, 0.2))$
 dst_plot(dst)
 demand_coefficient(dst, p)
 
+## the same as above
 p <- c(product = 1, labor = 1, money = 1)
 dst <- Node$new("firm", type = "Leontief", a = c(0.8, 0.2))
 dst$AddChild("cc1", type = "FIN", rate = c(0.75, 1 / 3))$

@@ -7,9 +7,12 @@
 dst_plot(dst)
 }
 \arguments{
-\item{dst}{the demand structural tree.}
+\item{dst}{a demand structural tree.}
 }
 \description{
 Plot a demand structure tree by the package DiagrammeR
 and the type attribute of each node is shown.
+}
+\seealso{
+\code{\link{demand_coefficient}}
 }
