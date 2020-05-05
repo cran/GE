@@ -14,7 +14,7 @@
 #' \donttest{
 #' CES(1, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))
 #' }
-#'
+
 CES <- function(sigma, alpha, beta, x, theta = NULL) {
   if (length(sigma) != length(alpha)) {
     message("Li: length(sigma)!=length(alpha)")

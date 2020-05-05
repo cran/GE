@@ -83,10 +83,8 @@ domestic product and imported product used by the investment sector of ROW.}
 \value{
 A general equilibrium, which usually is a list with the following elements:
 \itemize{
-\item p - the price vector with CHN labor as numeraire.
-\item sector.names - names of sectors.
-\item subject.names - names of commodities or subjects.
-\item dstl - the demand structure tree list of sectors if return.dstl == TRUE.
+\item p - the price vector with CHN labor as numeraire, wherein
+the price of a currency is the interest per unit of currency.
 \item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
 \item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
 \item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
@@ -94,6 +92,7 @@ A general equilibrium, which usually is a list with the following elements:
 \item eri.ROW - the exchange rate index of ROW currency.
 \item p.money - the price vector with CHN money as numeraire
 if both interest.rate.CHN and interest.rate.CHN are not NA.
+\item dstl - the demand structure tree list of sectors if return.dstl == TRUE.
 \item ... - some elements returned by the CGE::sdm function
 }
 }
@@ -108,6 +107,9 @@ Hence the input-output table has 16 rows and 8 columns.
 \details{
 If interest.rate.CHN is NA or interest.rate.CHN is NA, they are assumed to be equal.
 And in this case, the exchange rate is determined by the ratio of the interest of unit currency of the two countries.
+In this model, the ratio of a sector's monetary interest expenditure to its transaction value may not be equal to the interest rate
+because the ratio is not only affected by the interest rate,
+but also by the sector's currency circulation velocity and other factors.
 }
 \examples{
 \donttest{

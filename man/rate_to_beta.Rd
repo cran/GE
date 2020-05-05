@@ -13,14 +13,15 @@ beta_to_rate(x)
 \item{x}{a vector.}
 }
 \value{
-a vector.
+A vector.
 }
 \description{
-Conversion between a rate vector and a beta vector.
-For an economic agent, the rate vector indicates the proportional relationship between expenditures on physical commodities and financial instruments.
+Conversion between an expenditure rate vector and a beta vector (i.e. an expenditure proportion vector).
+For an economic agent, the rate vector indicates the ratios between expenditures on financial instruments and the physical commodity.
 The first element of the rate vector indicates the quantity of the physical commodity needed to obtain a unit of output.
-Other elements indicate the ratio of expenditures on various financial instruments to that of the physical commodity.
-The beta vector indicates the proportion of expenditures on various commodities.
+Other elements indicate the ratio of expenditures on various financial instruments to that of the physical commodity,
+which may be equal to the interest rate, the tax rate, the dividend rate, etc.
+The beta vector indicates the proportions of expenditures on various commodities.
 }
 \section{Functions}{
 \itemize{

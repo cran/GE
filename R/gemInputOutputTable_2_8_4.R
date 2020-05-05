@@ -39,10 +39,8 @@
 #' @param ... arguments to be transferred to the function sdm of the package CGE.
 #' @return A general equilibrium, which usually is a list with the following elements:
 #' \itemize{
-#' \item p - the price vector with CHN labor as numeraire.
-#' \item sector.names - names of sectors.
-#' \item subject.names - names of commodities or subjects.
-#' \item dstl - the demand structure tree list of sectors if return.dstl == TRUE.
+#' \item p - the price vector with CHN labor as numeraire, wherein
+#' the price of a currency is the interest per unit of currency.
 #' \item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
 #' \item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
 #' \item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
@@ -50,10 +48,14 @@
 #' \item eri.ROW - the exchange rate index of ROW currency.
 #' \item p.money - the price vector with CHN money as numeraire
 #' if both interest.rate.CHN and interest.rate.CHN are not NA.
+#' \item dstl - the demand structure tree list of sectors if return.dstl == TRUE.
 #' \item ... - some elements returned by the CGE::sdm function
 #' }
 #' @details If interest.rate.CHN is NA or interest.rate.CHN is NA, they are assumed to be equal.
 #' And in this case, the exchange rate is determined by the ratio of the interest of unit currency of the two countries.
+#' In this model, the ratio of a sector's monetary interest expenditure to its transaction value may not be equal to the interest rate
+#' because the ratio is not only affected by the interest rate,
+#' but also by the sector's currency circulation velocity and other factors.
 #' @examples
 #' \donttest{
 #' ITExample <- matrix(0, 16, 8, dimnames = list(
@@ -531,21 +533,13 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ...
   )
 
-
-  ge$sector.names <- colnames(IT)
-  ge$subject.names <- rownames(IT)
-  names(ge$p) <- ge$subject.names
-  names(ge$z) <- ge$sector.names
-
-
-  if (return.dstl) ge$dstl <- dstl
-
-  ge$e <- NULL
-
+  names(ge$p) <- rownames(IT)
   ge$p <- ge$p / ge$p["labor.CHN"]
-  ge <- ge_tidy(ge, ge$subject.names, ge$sector.names)
-  ge$eri.ROW <- ge$p["money.interest.ROW"] / ge$p["money.interest.CHN"] # exchange rate index
-  ge$eri.CHN <- ge$p["money.interest.CHN"] / ge$p["money.interest.ROW"]
+
+  ge <- ge_tidy(ge, rownames(IT), colnames(IT))
+
+  ge$eri.ROW <- unname(ge$p["money.interest.ROW"] / ge$p["money.interest.CHN"]) # exchange rate index
+  ge$eri.CHN <- unname(ge$p["money.interest.CHN"] / ge$p["money.interest.ROW"])
   if (!is.na(interest.rate.CHN) & !is.na(interest.rate.ROW)) {
     money.value.CHN <- ge$p["money.interest.CHN"] / interest.rate.CHN
     money.value.ROW <- ge$p["money.interest.ROW"] / interest.rate.ROW
@@ -553,7 +547,12 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ge$p.money["money.interest.CHN"] <- money.value.CHN
     ge$p.money["money.interest.ROW"] <- money.value.ROW
     ge$p.money <- ge$p.money / ge$p.money["money.interest.CHN"]
+
+    ge$eri.ROW <- unname(ge$p.money["money.interest.ROW"] / ge$p.money["money.interest.CHN"])
+    ge$eri.CHN <- unname(ge$p.money["money.interest.CHN"] / ge$p.money["money.interest.ROW"])
   }
+
+  if (return.dstl) ge$dstl <- dstl
 
   return(ge)
 }

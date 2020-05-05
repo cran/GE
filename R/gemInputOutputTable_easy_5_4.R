@@ -13,8 +13,16 @@
 #' and the value-added input of the agriculture sector, manufacturing sector and service sector.
 #' @param es.VA.agri,es.VA.manu,es.VA.serv the elasticity of substitution between labor input and capital input
 #' of the agriculture sector, manufacturing sector and service sector.
-#' @return A general equilibrium.
-#' @references Zhang Xin. (2017, ISBN: 9787543227637). Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
+#' @return A general equilibrium, which is a list with the following elements:
+#' \itemize{
+#' \item p - the price vector with labor as numeraire.
+#' \item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+#' \item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+#' \item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
+#' \item ... - some elements returned by the CGE::sdm function
+#' }
+#'
+#' @references Zhang Xin (2017, ISBN: 9787543227637) Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
 #' @examples
 #' sector.agri <- c(260, 345, 400, 200, 160)
 #' sector.manu <- c(320, 390, 365, 250, 400)

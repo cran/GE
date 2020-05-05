@@ -15,7 +15,14 @@ gemInputOutputTable_Leontief_3_3(
 \item{output}{a vector consisting of the product outputs and labor supply in the base period.}
 }
 \value{
-A general equilibrium.
+A general equilibrium, which is a list with the following elements:
+\itemize{
+\item p - the price vector with labor as numeraire.
+\item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+\item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+\item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
+\item ... - some elements returned by the CGE::sdm function
+}
 }
 \description{
 Given a 3x3 input-output table (e.g., see Zhang Xin, 2017, Table 2.2.2), this model can be

@@ -7,7 +7,15 @@
 #' The household consumes products and supplies labor.
 #' @param input the input matrix in the base period.
 #' @param output a vector consisting of the product outputs and labor supply in the base period.
-#' @return A general equilibrium.
+#' @return A general equilibrium, which is a list with the following elements:
+#' \itemize{
+#' \item p - the price vector with labor as numeraire.
+#' \item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+#' \item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+#' \item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
+#' \item ... - some elements returned by the CGE::sdm function
+#' }
+#'
 #' @references Zhang Xin. (2017, ISBN: 9787543227637). Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
 #' @examples
 #' x <- 75

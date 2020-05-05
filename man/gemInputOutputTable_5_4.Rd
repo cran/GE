@@ -24,7 +24,13 @@ gemInputOutputTable_5_4(
 \item{names.agent}{names of agents.}
 }
 \value{
-A general equilibrium.
+A general equilibrium which is a list with the following elements:
+\itemize{
+\item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+\item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+\item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
+\item ... - some elements returned by the CGE::sdm function
+}
 }
 \description{
 This is a general equilibrium model based on a 5x4 input-output table (see Zhang Xin, 2017, Table 8.6.1).
@@ -141,5 +147,5 @@ geLSI$z / ge$z
 
 }
 \references{
-Zhang Xin. (2017, ISBN: 9787543227637). Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
+Zhang Xin (2017, ISBN: 9787543227637) Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
 }

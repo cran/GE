@@ -1,4 +1,3 @@
-#' @import stringr
 #' @importFrom graphics plot
 #' @export
 #' @title Plot a Demand Structure Tree
@@ -14,7 +13,7 @@ dst_plot <- function(dst) {
   tmp.dst$Do(function(node) {
     if (!is.null(node$type)) {
       node$name <-
-        str_c(node$name, "(", node$type, ")")
+        paste(node$name, "(", node$type, ")", sep = "")
     }
   }, filterFun = isNotLeaf)
   plot(tmp.dst)

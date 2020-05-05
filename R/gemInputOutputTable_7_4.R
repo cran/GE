@@ -17,7 +17,19 @@
 #' @param es.VA.agri,es.VA.manu,es.VA.serv the elasticity of substitution between labor input and capital input
 #' of the agriculture sector, manufacturing sector and service sector.
 #' @param ... arguments to be transferred to the function sdm of the package CGE.
-#' @return A general equilibrium.
+#' @return A general equilibrium, which is a list with the following elements:
+#' \itemize{
+#' \item p - the price vector with labor as numeraire.
+#' \item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+#' \item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+#' \item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
+#' \item IT - the nonstandard input table, wherein the agricultural tax can be negative.
+#' \item ITV - the nonstandard value input table, wherein the agricultural tax can be negative.
+#' \item value.added - the value-added of the three production sectors.
+#' \item dstl - the demand structure tree list of sectors.
+#' \item ... - some elements returned by the CGE::sdm function
+#' }
+#'
 #' @examples
 #' \donttest{
 #' IT17 <- matrix(c(
@@ -339,7 +351,7 @@ gemInputOutputTable_7_4 <- function(IT,
     ...
   )
 
-  ge$p <- ge$p / ge$p[4]
+  ge$p <- ge$p / ge$p[4] #lab as numeraire
 
   ge <- ge_tidy(ge, names.commodity, names.agent)
 

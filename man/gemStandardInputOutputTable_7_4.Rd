@@ -33,7 +33,16 @@ of the agriculture sector, manufacturing sector and service sector.}
 \item{...}{arguments to be transferred to the function sdm of the package CGE.}
 }
 \value{
-A general equilibrium.
+A general equilibrium, which is a list with the following elements:
+\itemize{
+\item p - the price vector with labor as numeraire.
+\item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
+\item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
+\item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
+\item value.added - the value-added of the three production sectors.
+\item dstl - the demand structure tree list of sectors.
+\item ... - some elements returned by the CGE::sdm function
+}
 }
 \description{
 This is a general equilibrium model based on a 7x4 standard input-output table.
