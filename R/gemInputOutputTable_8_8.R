@@ -101,7 +101,7 @@
 #' OT.CA["cap", "sector.hh"] <- OT.CA["cap", "sector.hh"] * 1.1
 #' geCA <- gemInputOutputTable_8_8(
 #'   IT = IT17,
-#'   OT = OTCA
+#'   OT = OT.CA
 #' )
 #'
 #' geCA$z / ge$z

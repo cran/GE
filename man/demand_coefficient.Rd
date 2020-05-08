@@ -15,7 +15,7 @@ demand_coefficient(node, p)
 A vector consisting of demand coefficients.
 }
 \description{
-Given a price vector, this function computes the demand coefficients of a sector with a demand structural tree. The class of a demand structural tree is Node defined by the package data.tree.
+Given a price vector, this function computes the demand coefficients of an agent with a demand structural tree. The class of a demand structural tree is Node defined by the package data.tree.
 For a CES function, this function always assume that it has a standard form such as
 alpha * (beta1 * (x1 / beta1)^sigma + beta2 * (x2 / beta2)^sigma)^(1 / sigma) wherein beta1 + beta2 == 1 (see \code{\link{SCES_A}}).
 }

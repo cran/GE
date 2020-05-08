@@ -226,7 +226,7 @@ interest.rate.ROW <- 0.1
 
 firm.CHN <- Node$new("firm.CHN",
   type = "FIN",
-  rate = c(1, interest.rate.CHN) # 0.1 is the interest rate.
+  rate = c(1, interest.rate.CHN)
 )
 
 firm.CHN$AddChild("cc1.CHN",
