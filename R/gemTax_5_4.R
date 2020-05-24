@@ -15,6 +15,7 @@
 #' @param supply.cap.consumer1 the capital supply of consumer 1.
 #' @param supply.lab.consumer2 the labor supply of consumer 2.
 #' @param supply.cap.consumer2 the capital supply of consumer 2.
+#' @param policy.tax a tax policy function (see \code{\link{sdm2}}).
 #' @return A general equilibrium, which is a list with the following elements:
 #' \itemize{
 #' \item p - the price vector with labor as numeraire.
@@ -69,14 +70,14 @@
 #'   rate = c(1, output.tax.rate),
 #'   dst.firm1, "tax"
 #' )
-#' dst_plot(dst.taxed.firm1)
+#' node_plot(dst.taxed.firm1)
 #'
 #' dst.taxed.firm2 <- node_set("taxed.output", NA,
 #'   type = "FIN",
 #'   rate = c(1, output.tax.rate),
 #'   dst.firm2, "tax"
 #' )
-#' dst_plot(dst.taxed.firm2)
+#' node_plot(dst.taxed.firm2)
 #'
 #' dstl <- list(dst.taxed.firm1, dst.taxed.firm2, dst.consumer1, dst.consumer2)
 #'
@@ -111,28 +112,28 @@
 #'   beta = c(0.4, 0.6)
 #' )
 #'
-#' dstl <- list(dst.labor.taxed.firm1, dst.labor.taxed.firm2, dst.consumer1, dst.consumer2)
+#' dstl.labor.tax <- list(dst.labor.taxed.firm1, dst.labor.taxed.firm2, dst.consumer1, dst.consumer2)
 #'
-#' ge.lab.tax <- gemTax_5_4(dstl, delta = 0.5)
+#' ge.lab.tax <- gemTax_5_4(dstl.labor.tax, delta = 0.5)
 #'
-#' ge.lab.tax$p / ge$p
+#' ge.lab.tax$p
 #' ge.lab.tax$z / ge$z - 1
 #'
 #' ## income tax (see Table 4.3)
 #' income.tax.rate <- 0.2
 #' consumption.tax.rate <- income.tax.rate / (1 - income.tax.rate)
-#' dst.taxed.consumer1 <- node_set("tax.consumer", NA,
-#'                                 type = "FIN",
-#'                                 rate = c(1, consumption.tax.rate),
-#'                                 dst.consumer1,
-#'                                 "tax"
+#' dst.taxed.consumer1 <- node_set("taxed.utility", NA,
+#'   type = "FIN",
+#'   rate = c(1, consumption.tax.rate),
+#'   dst.consumer1,
+#'   "tax"
 #' )
 #'
-#' dst.taxed.consumer2 <- node_set("tax.consumer", NA,
-#'                                 type = "FIN",
-#'                                 rate = c(1, consumption.tax.rate),
-#'                                 dst.consumer2,
-#'                                 "tax"
+#' dst.taxed.consumer2 <- node_set("taxed.utility", NA,
+#'   type = "FIN",
+#'   rate = c(1, consumption.tax.rate),
+#'   dst.consumer2,
+#'   "tax"
 #' )
 #'
 #' dstl <- list(dst.firm1, dst.firm2, dst.taxed.consumer1, dst.taxed.consumer2)
@@ -143,10 +144,10 @@
 #' ## labor tax (see Table 4.3)
 #' lab.tax.rate <- 0.3742
 #' node_set(dst.labor.taxed.firm1, "taxed.lab",
-#'          rate = c(1, lab.tax.rate)
+#'   rate = c(1, lab.tax.rate)
 #' )
 #' node_set(dst.labor.taxed.firm2, "taxed.lab",
-#'          rate = c(1, lab.tax.rate)
+#'   rate = c(1, lab.tax.rate)
 #' )
 #'
 #' ge.lab.tax <- gemTax_5_4(list(
@@ -156,8 +157,34 @@
 #'   dst.consumer2
 #' ), delta = 0.5)
 #' ge.lab.tax$z / ge$z - 1
+#'
+#' ## variable labor tax rate
+#' policy.var.tax.rate <- function(time, dstl, state) {
+#'   current.tax.rate <- NA
+#'   if (time >= 200) {
+#'     tax.amount <- (state$p / state$p[3])[5]
+#'     adjustment.ratio <- ratio_adjust(tax.amount / 18.7132504, coef = 0.1)
+#'     last.tax.rate <- node_set(dstl[[1]], "taxed.lab")$rate[2]
+#'     current.tax.rate <- last.tax.rate / adjustment.ratio
+#'   } else {
+#'     current.tax.rate <- 0.1
+#'   }
+#'   node_set(dstl[[1]], "taxed.lab", rate = c(1, current.tax.rate))
+#'   node_set(dstl[[2]], "taxed.lab", rate = c(1, current.tax.rate))
+#'
+#'   state$current.policy.data <- c(time, current.tax.rate)
+#'   state
 #' }
-
+#'
+#' ge.var.lab.tax <- gemTax_5_4(dstl.labor.tax, policy = policy.var.tax.rate)
+#' matplot(ge.var.lab.tax$ts.z, type = "l")
+#' matplot(ge.var.lab.tax$ts.p / ge.var.lab.tax$p[3], type = "l")
+#' plot(ge.var.lab.tax$policy.data[, 1], ge.var.lab.tax$policy.data[, 2],
+#'   ylab = "labor tax rate"
+#' )
+#' ge.var.lab.tax$p / ge.var.lab.tax$p[3]
+#' }
+#'
 gemTax_5_4 <- function(dstl,
                        names.commodity = c("prod1", "prod2", "lab", "cap", "tax"),
                        names.agent = c("taxed.firm1", "taxed.firm2", "consumer1", "consumer2"),
@@ -165,18 +192,19 @@ gemTax_5_4 <- function(dstl,
                        supply.lab.consumer1 = 30,
                        supply.cap.consumer1 = 20,
                        supply.lab.consumer2 = 20,
-                       supply.cap.consumer2 = 5) {
-  ge <- sdm_dstl(dstl,
+                       supply.cap.consumer2 = 5,
+                       policy.tax = NULL) {
+  ge <- sdm2(dstl,
     names.commodity = names.commodity,
     names.agent = names.agent,
     B = {
-      tmp <- matrix(0, 5, 4, dimnames = list(names.commodity,names.agent))
+      tmp <- matrix(0, 5, 4, dimnames = list(names.commodity, names.agent))
       tmp[1, 1] <- 1
       tmp[2, 2] <- 1
       tmp
     },
     S0Exg = {
-      tmp <- matrix(NA, 5, 4, dimnames = list(names.commodity,names.agent))
+      tmp <- matrix(NA, 5, 4, dimnames = list(names.commodity, names.agent))
       tmp[3, 3] <- supply.lab.consumer1
       tmp[4, 3] <- supply.cap.consumer1
       tmp[3, 4] <- supply.lab.consumer2
@@ -185,7 +213,11 @@ gemTax_5_4 <- function(dstl,
       tmp[5, 3] <- delta
       tmp[5, 4] <- 1 - delta
       tmp
-    }
+    },
+    ts = TRUE,
+    maxIteration = 1,
+    numberOfPeriods = 500,
+    policy = policy.tax
   )
 
   ge$p <- ge$p / ge$p[3]

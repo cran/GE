@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_set.R
 \name{node_set}
 \alias{node_set}
-\title{Create a Tree or Set Attributes for a Node.}
+\title{Create a Tree or Set Attributes for a Node}
 \usage{
 node_set(tree, node.name = NA, ...)
 }
@@ -16,7 +16,8 @@ then the second parameter node.name should be set to NA.}
 If the first parameter is a tree, the value of this parameter should be the name of a node in the tree.}
 
 \item{...}{attribute names and values (e.g. alpha=1).
-The parameter name of a value will be treated as the name of an attribute.\cr
+The parameter name of a value will be treated as the name of an attribute.
+If a value is NULL, the corresponding attribute should exist and will be deleted. \cr
 
 A value without a parameter name will be treated as a child node or the name of a child node.
 If the class of the value is Node, it will be added as a child.
@@ -37,8 +38,9 @@ dst1 <- node_set("firm1")
 print(dst1)
 
 ## create a tree with children
-dst <- node_set("firm", NA,
-                "lab", "cap", dst1
+dst <- node_set(
+  "firm", NA,
+  "lab", "cap", dst1
 )
 print(dst)
 
@@ -50,8 +52,8 @@ print(dst, "type", "alpha", "beta")
 
 #### create a tree with attributes and children
 dst <- node_set("firm", NA,
-                type = "CD", alpha = 1, beta = c(0.5, 0.5),
-                "lab", "cap"
+  type = "CD", alpha = 1, beta = c(0.5, 0.5),
+  "lab", "cap"
 )
 print(dst, "type", "alpha", "beta")
 
@@ -68,7 +70,7 @@ print(dst.firm, "alpha", "beta")
 
 ## set attributes and add a child for a node
 node_set(dst.firm, "VA",
-  type = "CES",
+  type = "SCES",
   alpha = 1,
   beta = c(0.1, 0.8, 0.1),
   es = 0,
@@ -76,4 +78,5 @@ node_set(dst.firm, "VA",
 )
 print(dst.firm, "type", "alpha", "beta", "es")
 }
+
 }

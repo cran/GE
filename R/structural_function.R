@@ -6,8 +6,8 @@
 #' This function calculates the value of a structured function.
 #' @param theta the track switching parameter, which is a scalar.
 #' @param transition.interval a 2-vector.
-#' @param f1 the first function.
-#' @param f2 the second function.
+#' @param f1 the first function (or a value).
+#' @param f2 the second function (or a value).
 #' @param ... parameters of f1 and f2.
 #' @return The value of the structural function.
 #' @examples
@@ -17,15 +17,17 @@
 #' plot(x, y)
 #' lines(x, log(x), col = "blue")
 #' lines(x, sqrt(x), col = "red")
-
 structural_function <- function(theta, transition.interval, f1, f2, ...) {
+  value1 <- ifelse(is.function(f1), f1(...), f1)
+  value2 <- ifelse(is.function(f2), f2(...), f2)
+
   if (theta <= transition.interval[1]) {
-    return(f1(...))
+    return(value1)
   }
   if (theta >= transition.interval[2]) {
-    return(f2(...))
+    return(value2)
   }
-  result <- (transition.interval[2] - theta) / diff(transition.interval) * f1(...) +
-    (theta - transition.interval[1]) / diff(transition.interval) * f2(...)
+  result <- (transition.interval[2] - theta) / diff(transition.interval) * value1 +
+    (theta - transition.interval[1]) / diff(transition.interval) * value2
   return(result)
 }

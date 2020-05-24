@@ -194,19 +194,19 @@ gemInputOutputTable_8_8 <- function(IT,
   dst.industry <- Node$new("industry")
   dst.industry$AddChild("cc1")$
     AddChild("cc.agri",
-    type = "CES",
+    type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
     es = es.prodcctDI
   )$
     AddSibling("cc.manu",
-    type = "CES",
+    type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
     es = es.prodcctDI
   )$
     AddSibling("cc.serv",
-    type = "CES",
+    type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
     es = es.prodcctDI
@@ -224,7 +224,7 @@ gemInputOutputTable_8_8 <- function(IT,
   dst.agri <- Clone(dst.industry)
 
   tmp <- FindNode(dst.agri, "industry")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.agri
   tmp$alpha <- OT["agri", "sector.agri"] / sum(d.agri)
   tmp$beta <- prop.table(c(
@@ -243,7 +243,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
 
   tmp <- FindNode(dst.agri, "cc2.1")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.VA.agri
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.agri[4:5])
@@ -252,7 +252,7 @@ gemInputOutputTable_8_8 <- function(IT,
   dst.manu <- Clone(dst.industry)
 
   tmp <- FindNode(dst.manu, "industry")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.manu
   tmp$alpha <- OT["manu", "sector.manu"] / sum(d.manu)
   tmp$beta <- prop.table(c(
@@ -271,7 +271,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
 
   tmp <- FindNode(dst.manu, "cc2.1")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.VA.manu
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.manu[4:5])
@@ -280,7 +280,7 @@ gemInputOutputTable_8_8 <- function(IT,
   dst.serv <- Clone(dst.industry)
 
   tmp <- FindNode(dst.serv, "industry")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.serv
   tmp$alpha <- OT["serv", "sector.serv"] / sum(d.serv)
   tmp$beta <- prop.table(c(
@@ -299,7 +299,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
 
   tmp <- FindNode(dst.serv, "cc2.1")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.VA.serv
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.serv[4:5])
@@ -315,24 +315,24 @@ gemInputOutputTable_8_8 <- function(IT,
   )
 
   dst.hh$AddChild("cc1",
-    type = "CES",
+    type = "SCES",
     es = es.hh,
     alpha = 1,
     beta = prop.table(d.hh[1:3])
   )$AddChild("cc.agri",
-    type = "CES",
+    type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
     es = es.prodcctDI
   )$
     AddSibling("cc.manu",
-    type = "CES",
+    type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
     es = es.prodcctDI
   )$
     AddSibling("cc.serv",
-    type = "CES",
+    type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
     es = es.prodcctDI
@@ -347,7 +347,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
   # dst.FT ------------------------------------------------------------------
   dst.FT.agri <- Node$new("FT.agri",
-    type = "CES",
+    type = "SCES",
     es = es.FT,
     alpha = sum(OT[, "sector.FT.agri"]) / sum(IT[, "sector.FT.agri"]),
     beta = prop.table(IT[1:3, "sector.FT.agri"])
@@ -356,7 +356,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
 
   dst.FT.manu <- Node$new("FT.manu",
-    type = "CES",
+    type = "SCES",
     es = es.FT,
     alpha = sum(OT[, "sector.FT.manu"]) / sum(IT[, "sector.FT.manu"]),
     beta = prop.table(IT[1:3, "sector.FT.manu"])
@@ -365,7 +365,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
 
   dst.FT.serv <- Node$new("FT.serv",
-    type = "CES",
+    type = "SCES",
     es = es.FT,
     alpha = sum(OT[, "sector.FT.serv"]) / sum(IT[, "sector.FT.serv"]),
     beta = prop.table(IT[1:3, "sector.FT.serv"])
@@ -374,7 +374,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
 
   dst.FT.bond.ROW <- Node$new("FT.bond.ROW",
-    type = "CES",
+    type = "SCES",
     es = es.FT,
     alpha = sum(OT[, "sector.FT.bond.ROW"]) / sum(IT[, "sector.FT.bond.ROW"]),
     beta = prop.table(IT[1:3, "sector.FT.bond.ROW"])

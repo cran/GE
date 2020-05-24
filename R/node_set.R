@@ -1,5 +1,5 @@
 #' @export
-#' @title Create a Tree or Set Attributes for a Node.
+#' @title Create a Tree or Set Attributes for a Node
 #' @aliases node_set
 #' @description Create a tree or set attributes for a node by the package data.tree.
 #' This function can also be used to add child nodes to a node.
@@ -11,7 +11,8 @@
 #' @param node.name a character string, the name of a node.
 #' If the first parameter is a tree, the value of this parameter should be the name of a node in the tree.
 #' @param ... attribute names and values (e.g. alpha=1).
-#' The parameter name of a value will be treated as the name of an attribute.\cr
+#' The parameter name of a value will be treated as the name of an attribute.
+#' If a value is NULL, the corresponding attribute should exist and will be deleted. \cr
 #'
 #' A value without a parameter name will be treated as a child node or the name of a child node.
 #' If the class of the value is Node, it will be added as a child.
@@ -24,8 +25,9 @@
 #' print(dst1)
 #'
 #' ## create a tree with children
-#' dst <- node_set("firm", NA,
-#'                 "lab", "cap", dst1
+#' dst <- node_set(
+#'   "firm", NA,
+#'   "lab", "cap", dst1
 #' )
 #' print(dst)
 #'
@@ -37,8 +39,8 @@
 #'
 #' #### create a tree with attributes and children
 #' dst <- node_set("firm", NA,
-#'                 type = "CD", alpha = 1, beta = c(0.5, 0.5),
-#'                 "lab", "cap"
+#'   type = "CD", alpha = 1, beta = c(0.5, 0.5),
+#'   "lab", "cap"
 #' )
 #' print(dst, "type", "alpha", "beta")
 #'
@@ -55,7 +57,7 @@
 #'
 #' ## set attributes and add a child for a node
 #' node_set(dst.firm, "VA",
-#'   type = "CES",
+#'   type = "SCES",
 #'   alpha = 1,
 #'   beta = c(0.1, 0.8, 0.1),
 #'   es = 0,
@@ -63,8 +65,7 @@
 #' )
 #' print(dst.firm, "type", "alpha", "beta", "es")
 #' }
-
-
+#'
 node_set <- function(tree, node.name = NA, ...) {
   if (is.na(node.name)) {
     if (is.character(tree)) {
@@ -74,6 +75,10 @@ node_set <- function(tree, node.name = NA, ...) {
     }
   } else {
     the.node <- FindNode(tree, node.name)
+    if (is.null(the.node)) {
+      warning("Li: node not found.")
+      return(NULL)
+    }
   }
 
   arg.list <- list(...)
@@ -83,13 +88,20 @@ node_set <- function(tree, node.name = NA, ...) {
   for (k in seq_along(arg.list)) {
     if (is.null(arg.names) || arg.names[k] == "") {
       switch(class(arg.list[[k]])[1],
-             "character"={the.node$AddChild(arg.list[[k]])},
-             "R6"=,
-             "Node"={the.node$AddChildNode(arg.list[[k]])}
+        "character" = {
+          the.node$AddChild(arg.list[[k]])
+        },
+        "R6" = ,
+        "Node" = {
+          the.node$AddChildNode(arg.list[[k]])
+        }
       )
-
     } else {
-      eval(parse(text = paste("the.node$", arg.names[k], " <- arg.list[[k]]")))
+      if (is.null(arg.list[[k]])) {
+        the.node$RemoveAttribute(arg.names[k])
+      } else {
+        eval(parse(text = paste("the.node$", arg.names[k], " <- arg.list[[k]]")))
+      }
     }
   }
 

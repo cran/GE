@@ -1,8 +1,8 @@
 #' @import CGE data.tree DiagrammeR
 #' @export
-#' @title A General Equilibrium Model with Money.
+#' @title A General Equilibrium Model with Money
 #' @aliases gemMoney_3_2
-#' @description This is a general equilibrium model with money.
+#' @description A general equilibrium model with money.
 #' @details A general equilibrium model with 3 commodities (i.e. product, labor,
 #' and money) and 2 agents (i.e. a firm and a household).
 #' To produce, the firm needs product, labor and money.
@@ -30,52 +30,54 @@
 #' }
 #'
 #' @examples
-#' interest.rate <- 1 / 3
-#'
-#' ds.firm <- Node$new("firm", type = "FIN", rate = c(0.75, interest.rate))
-#' ds.firm$AddChild("cc1",
-#'   type = "CES",
-#'   alpha = 1,
-#'   beta = c(0.8, 0.2),
-#'   es = 0 # es is the elasticity of substitution.
-#' )$
-#'   AddChild("product")$AddSibling("labor")$
-#'   parent$
-#'   AddSibling("money")
-#' dst_plot(ds.firm)
-#'
-#' ds.household <- Node$new("household", type = "FIN", rate = c(1, interest.rate))
-#' ds.household$AddChild("product")$
-#'   AddSibling("money")
-#'
-#' dstl <- list(ds.firm, ds.household)
-#'
-#' ge <- gemMoney_3_2(dstl)
-#' dst_plot(ge$dstl[[1]])
-#' dst_plot(ge$dstl[[2]])
-#' ge$p
-#' p.money <- ge$p
-#' p.money["money"] <- p.money["money"] / interest.rate
-#' p.money <- p.money / p.money["money"] #prices in terms of the asset price of the currency
-#'
 #' #### Leontief-type firm
-#' dst.firm.Leontief <- Node$new("firm", type = "FIN", rate = c(0.75, interest.rate))
-#' dst.firm.Leontief$AddChild("cc1", type = "Leontief", a = c(0.8, 0.2))$
-#'   AddChild("product")$AddSibling("labor")$
-#'   parent$
-#'   AddSibling("money")
+#' interest.rate <- 0.25
 #'
-#' dstl.Leontief <- list(dst.firm.Leontief, ds.household)
+#' dst.Leontief.firm <- node_new("output",
+#'   type = "FIN", rate = c(1, interest.rate),
+#'   "cc1", "money"
+#' )
+#' node_set(dst.Leontief.firm, "cc1",
+#'   type = "Leontief", a = c(0.6, 0.2),
+#'   "product", "labor"
+#' )
+#'
+#' dst.household <- node_new("utility",
+#'   type = "FIN", rate = c(1, interest.rate),
+#'   "product", "money"
+#' )
+#'
+#' dstl.Leontief <- list(dst.Leontief.firm, dst.household)
 #'
 #' ge.Leontief <- gemMoney_3_2(dstl.Leontief)
-#' dst_plot(ge.Leontief$dstl[[1]])
+#' node_plot(ge.Leontief$dstl[[1]])
 #' ge.Leontief$p
+#'
+#' ## CES-type firm
+#' dst.CES.firm <- Clone(dst.Leontief.firm)
+#' node_set(dst.CES.firm, "cc1",
+#'   type = "SCES", a = NULL, alpha = 1, beta = c(0.6, 0.2),
+#'   es = 0 # es is the elasticity of substitution.
+#' )
+#'
+#' node_plot(dst.CES.firm)
+#'
+#' dstl.CES <- list(dst.CES.firm, dst.household)
+#'
+#' ge.CES <- gemMoney_3_2(dstl.CES)
+#' node_plot(ge.CES$dstl[[1]])
+#' node_plot(ge.CES$dstl[[2]])
+#' ge.CES$p
+#' p.money <- ge.CES$p
+#' p.money["money"] <- p.money["money"] / interest.rate
+#' p.money <- p.money / p.money["money"] # prices in terms of the asset price of the currency
+#' p.money
 
 gemMoney_3_2 <- function(dstl,
-                             supply.labor = 100,
-                             supply.money = 1000,
-                             names.commodity = c("product", "labor", "money"),
-                             names.agent = c("firm", "household")) {
+                         supply.labor = 100,
+                         supply.money = 300,
+                         names.commodity = c("product", "labor", "money"),
+                         names.agent = c("firm", "household")) {
   ge <- sdm(
     A = function(state) {
       p <- c(state$p)
@@ -84,18 +86,20 @@ gemMoney_3_2 <- function(dstl,
     },
     B = matrix(c(
       1, 0,
-      0, 1,
-      0, 1
-    ), 3, 2, TRUE),
+      0, 0,
+      0, 0
+    ), 3, 2, TRUE,
+    dimnames = list(names.commodity, names.agent)
+    ),
     S0Exg = {
-      tmp <- matrix(NA, 3, 2)
+      tmp <- matrix(NA, 3, 2, dimnames = list(names.commodity, names.agent))
       tmp[2, 2] <- supply.labor
       tmp[3, 2] <- supply.money
       tmp
     }
   )
 
-  ge$p <- ge$p/ge$p[2] # labor as numeraire
+  ge$p <- ge$p / ge$p[2] # labor as numeraire
 
   ge <- ge_tidy(ge, names.commodity, names.agent)
 

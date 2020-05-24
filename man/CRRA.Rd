@@ -4,18 +4,18 @@
 \alias{CRRA}
 \title{Constant Relative Risk Aversion (CRRA) Utility Function}
 \usage{
-CRRA(x, theta, p = rep(1/length(x), length(x)))
+CRRA(x, gamma, p = rep(1/length(x), length(x)))
 }
 \arguments{
 \item{x}{a vector of all possible states (e.g. returns).}
 
-\item{theta}{the relative risk aversion coefficient.}
+\item{gamma}{the relative risk aversion coefficient.}
 
 \item{p}{the probability vector. By default, the states are assumed to
 occur with equal probability.}
 }
 \value{
-A 2-vector consisting of the value and the certainty equivalent.
+A list consisting of the value and the certainty equivalent.
 }
 \description{
 Compute the value and the certainty equivalent of the CRRA utility function.
@@ -26,7 +26,7 @@ mu <- 90 # mu <- 100
 sigma <- mu * csv
 x <- seq(mu - 5 * sigma, mu + 5 * sigma, length.out = 10000)
 pd <- dnorm(x, mean = mu, sd = sigma)
-theta <- 0.8
+gamma <- 0.8
 # the ratio of risk premium to expected return (i.e. the relative risk premium).
-(mu - CRRA(x, theta, pd)[2]) / mu
+(mu - CRRA(x, gamma, pd)$CE) / mu
 }

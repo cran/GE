@@ -126,7 +126,7 @@
 #' )
 #' ge$eri.CHN
 #' ge$p
-#' dst_plot(ge$dstl[[4]])
+#' node_plot(ge$dstl[[4]])
 #'
 #' ge2 <- gemInputOutputTable_2_8_4(
 #'   IT = ge$DV,
@@ -253,7 +253,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     )
   )$
     AddChild("cc1.1.production.CHN",
-    type = "CES",
+    type = "SCES",
     es = es.productDI.production.CHN,
     alpha = 1, # alpha.production.CHN,
     beta = prop.table(IT[c("product.CHN", "imported.product.CHN"), "production.CHN"])
@@ -273,7 +273,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
 
   FindNode(dst.production.CHN, "cc1.2.production.CHN")$
     AddChild("cc1.2.1.production.CHN",
-    type = "CES",
+    type = "SCES",
     es = es.laborCapital.production.CHN,
     alpha = 1, # alpha.laborCapital.production.CHN,
     beta = prop.table(IT[c("labor.CHN", "capital.CHN"), "production.CHN"]),
@@ -303,7 +303,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     )
   )$
     AddChild("cc1.1.production.ROW",
-    type = "CES",
+    type = "SCES",
     es = es.productDI.production.ROW,
     alpha = 1,
     beta = prop.table(IT[c("product.ROW", "imported.product.ROW"), "production.ROW"])
@@ -323,7 +323,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
 
   FindNode(dst.production.ROW, "cc1.2.production.ROW")$
     AddChild("cc1.2.1.production.ROW",
-    type = "CES",
+    type = "SCES",
     es = es.laborCapital.production.ROW,
     alpha = 1,
     beta = prop.table(IT[c("labor.ROW", "capital.ROW"), "production.ROW"]),
@@ -349,7 +349,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ))
   )$
     AddChild("cc1.1.consumption.CHN",
-    type = "CES",
+    type = "SCES",
     es = es.consumption.CHN,
     alpha = 1,
     beta = prop.table(IT[c("product.CHN", "imported.product.CHN"), "consumption.CHN"])
@@ -376,7 +376,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ))
   )$
     AddChild("cc1.1.consumption.ROW",
-    type = "CES",
+    type = "SCES",
     es = es.consumption.ROW,
     alpha = 1,
     beta = prop.table(IT[c("product.ROW", "imported.product.ROW"), "consumption.ROW"])
@@ -405,7 +405,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ))
   )$
     AddChild("cc1.1.investment.CHN",
-    type = "CES",
+    type = "SCES",
     es = es.investment.CHN,
     alpha = 1,
     beta = prop.table(IT[c("product.CHN", "imported.product.CHN"), "investment.CHN"])
@@ -442,7 +442,7 @@ gemInputOutputTable_2_8_4 <- function(IT,
     ))
   )$
     AddChild("cc1.1.investment.ROW",
-    type = "CES",
+    type = "SCES",
     es = es.investment.ROW,
     alpha = 1,
     beta = prop.table(IT[c("product.ROW", "imported.product.ROW"), "investment.ROW"])

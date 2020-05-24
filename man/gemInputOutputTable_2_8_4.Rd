@@ -181,7 +181,7 @@ ge <- gemInputOutputTable_2_8_4(
 )
 ge$eri.CHN
 ge$p
-dst_plot(ge$dstl[[4]])
+node_plot(ge$dstl[[4]])
 
 ge2 <- gemInputOutputTable_2_8_4(
   IT = ge$DV,

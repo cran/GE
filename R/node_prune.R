@@ -1,5 +1,5 @@
 #' @export
-#' @title Prune Nodes off a Tree by Names.
+#' @title Prune Nodes off a Tree by Names
 #' @aliases node_prune
 #' @description A wrapper of data.tree::Prunes. Prune nodes off a tree by names.
 #' This function has side-effects, it modifies the tree given by the argument (see the package data.tree).

@@ -13,12 +13,12 @@ CES(sigma, alpha, beta, x, theta = NULL)
 
 \item{beta}{a vector consisting of the beta coefficients.}
 
-\item{x}{the inputs.}
+\item{x}{a vector consisting of the inputs.}
 
 \item{theta}{a vector consisting of the theta coefficients.}
 }
 \value{
-the output or utility level.
+The output or utility level.
 }
 \description{
 CES function, e.g. alpha * (beta1 * (x1 / theta1)^sigma + beta2 * (x2 / theta2)^sigma)^(1 / sigma).

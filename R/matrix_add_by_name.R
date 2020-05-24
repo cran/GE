@@ -9,8 +9,8 @@
 #' @return A matirx.
 #' @examples
 #' M <- matrix(0, 5, 5)
-#' colnames(M) <- paste("c", as.character(1:5), sep = "")
-#' rownames(M) <- paste("r", as.character(1:5), sep = "")
+#' colnames(M) <- paste("c", 1:5, sep = "")
+#' rownames(M) <- paste("r", 1:5, sep = "")
 #'
 #' M2 <- matrix(1:9, 3, 3)
 #' colnames(M2) <- c("c2", "c3", "c5")

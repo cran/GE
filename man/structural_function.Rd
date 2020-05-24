@@ -11,9 +11,9 @@ structural_function(theta, transition.interval, f1, f2, ...)
 
 \item{transition.interval}{a 2-vector.}
 
-\item{f1}{the first function.}
+\item{f1}{the first function (or a value).}
 
-\item{f2}{the second function.}
+\item{f2}{the second function (or a value).}
 
 \item{...}{parameters of f1 and f2.}
 }

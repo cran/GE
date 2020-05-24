@@ -2,12 +2,12 @@
 % Please edit documentation in R/gemMoney_3_2.R
 \name{gemMoney_3_2}
 \alias{gemMoney_3_2}
-\title{A General Equilibrium Model with Money.}
+\title{A General Equilibrium Model with Money}
 \usage{
 gemMoney_3_2(
   dstl,
   supply.labor = 100,
-  supply.money = 1000,
+  supply.money = 300,
   names.commodity = c("product", "labor", "money"),
   names.agent = c("firm", "household")
 )
@@ -35,7 +35,7 @@ A general equilibrium, which is a list with the following elements:
 }
 }
 \description{
-This is a general equilibrium model with money.
+A general equilibrium model with money.
 }
 \details{
 A general equilibrium model with 3 commodities (i.e. product, labor,
@@ -50,44 +50,46 @@ For example, a unit of currency may be two dollars or ten dollars.
 The interest price divided by the interest rate is the asset price of 1 unit of the currency.
 }
 \examples{
-interest.rate <- 1 / 3
-
-ds.firm <- Node$new("firm", type = "FIN", rate = c(0.75, interest.rate))
-ds.firm$AddChild("cc1",
-  type = "CES",
-  alpha = 1,
-  beta = c(0.8, 0.2),
-  es = 0 # es is the elasticity of substitution.
-)$
-  AddChild("product")$AddSibling("labor")$
-  parent$
-  AddSibling("money")
-dst_plot(ds.firm)
-
-ds.household <- Node$new("household", type = "FIN", rate = c(1, interest.rate))
-ds.household$AddChild("product")$
-  AddSibling("money")
-
-dstl <- list(ds.firm, ds.household)
-
-ge <- gemMoney_3_2(dstl)
-dst_plot(ge$dstl[[1]])
-dst_plot(ge$dstl[[2]])
-ge$p
-p.money <- ge$p
-p.money["money"] <- p.money["money"] / interest.rate
-p.money <- p.money / p.money["money"] #prices in terms of the asset price of the currency
-
 #### Leontief-type firm
-dst.firm.Leontief <- Node$new("firm", type = "FIN", rate = c(0.75, interest.rate))
-dst.firm.Leontief$AddChild("cc1", type = "Leontief", a = c(0.8, 0.2))$
-  AddChild("product")$AddSibling("labor")$
-  parent$
-  AddSibling("money")
+interest.rate <- 0.25
 
-dstl.Leontief <- list(dst.firm.Leontief, ds.household)
+dst.Leontief.firm <- node_new("output",
+  type = "FIN", rate = c(1, interest.rate),
+  "cc1", "money"
+)
+node_set(dst.Leontief.firm, "cc1",
+  type = "Leontief", a = c(0.6, 0.2),
+  "product", "labor"
+)
+
+dst.household <- node_new("utility",
+  type = "FIN", rate = c(1, interest.rate),
+  "product", "money"
+)
+
+dstl.Leontief <- list(dst.Leontief.firm, dst.household)
 
 ge.Leontief <- gemMoney_3_2(dstl.Leontief)
-dst_plot(ge.Leontief$dstl[[1]])
+node_plot(ge.Leontief$dstl[[1]])
 ge.Leontief$p
+
+## CES-type firm
+dst.CES.firm <- Clone(dst.Leontief.firm)
+node_set(dst.CES.firm, "cc1",
+  type = "SCES", a = NULL, alpha = 1, beta = c(0.6, 0.2),
+  es = 0 # es is the elasticity of substitution.
+)
+
+node_plot(dst.CES.firm)
+
+dstl.CES <- list(dst.CES.firm, dst.household)
+
+ge.CES <- gemMoney_3_2(dstl.CES)
+node_plot(ge.CES$dstl[[1]])
+node_plot(ge.CES$dstl[[2]])
+ge.CES$p
+p.money <- ge.CES$p
+p.money["money"] <- p.money["money"] / interest.rate
+p.money <- p.money / p.money["money"] # prices in terms of the asset price of the currency
+p.money
 }

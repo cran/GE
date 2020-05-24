@@ -19,12 +19,18 @@ ge_tidy <- function(ge, names.commodity, names.agent) {
 
   ge$SV <- dg(ge$p) %*% ge$S
 
-  colnames(ge$A) <- colnames(ge$S) <- colnames(ge$D) <-
-      colnames(ge$DV) <- colnames(ge$SV) <- names.agent
 
-    rownames(ge$A) <- rownames(ge$S) <- rownames(ge$D) <-
-      rownames(ge$DV) <- rownames(ge$SV) <- names.commodity
+  dimnames(ge$A) <- dimnames(ge$S) <- dimnames(ge$SV) <- dimnames(ge$D) <-
+    dimnames(ge$DV) <- list(names.commodity, names.agent)
 
+  if (!is.null(ge$B)) dimnames(ge$B) <- list(names.commodity, names.agent)
+  if (!is.null(ge$S0Exg)) dimnames(ge$S0Exg) <- list(names.commodity, names.agent)
+
+
+  if (!is.null(ge$ts.p)) colnames(ge$ts.p) <- names.commodity
+  if (!is.null(ge$ts.q)) colnames(ge$ts.q) <- names.commodity
+  if (!is.null(ge$ts.z)) colnames(ge$ts.z) <- names.agent
+  if (!is.null(ge$ts.S)) dimnames(ge$ts.S) <- list(names.commodity, names.agent, NULL)
 
   ge
 }

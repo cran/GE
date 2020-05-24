@@ -37,7 +37,7 @@
 #' D <- cbind(d.agri, d.manu, d.serv, d.hh)
 #'
 #' dst.agri <- Node$new("sector.agri",
-#'   type = "CES", sigma = 1 - 1 / es.agri,
+#'   type = "SCES", sigma = 1 - 1 / es.agri,
 #'   alpha = 1,
 #'   beta = prop.table(c(
 #'     sum(d.agri[1:3]),
@@ -51,7 +51,7 @@
 #'   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
 #'   parent$
 #'   AddSibling("cc2.agri",
-#'   type = "CES", sigma = 1 - 1 / es.VA.agri,
+#'   type = "SCES", sigma = 1 - 1 / es.VA.agri,
 #'   alpha = 1,
 #'   beta = prop.table(d.agri[4:5])
 #' )$
@@ -59,7 +59,7 @@
 #'
 #' ##
 #' dst.manu <- Node$new("sector.manu",
-#'   type = "CES", sigma = 1 - 1 / es.manu,
+#'   type = "SCES", sigma = 1 - 1 / es.manu,
 #'   alpha = 1,
 #'   beta = prop.table(c(
 #'     sum(d.manu[1:3]),
@@ -73,7 +73,7 @@
 #'   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
 #'   parent$
 #'   AddSibling("cc2.manu",
-#'   type = "CES", sigma = 1 - 1 / es.VA.manu,
+#'   type = "SCES", sigma = 1 - 1 / es.VA.manu,
 #'   alpha = 1,
 #'   beta = prop.table(d.manu[4:5])
 #' )$
@@ -81,7 +81,7 @@
 #'
 #' ##
 #' dst.serv <- Node$new("sector.serv",
-#'   type = "CES", sigma = 1 - 1 / es.serv,
+#'   type = "SCES", sigma = 1 - 1 / es.serv,
 #'   alpha = 1,
 #'   beta = prop.table(c(
 #'     sum(d.serv[1:3]),
@@ -95,7 +95,7 @@
 #'   AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
 #'   parent$
 #'   AddSibling("cc2.serv",
-#'   type = "CES", sigma = 1 - 1 / es.VA.serv,
+#'   type = "SCES", sigma = 1 - 1 / es.VA.serv,
 #'   alpha = 1,
 #'   beta = prop.table(d.serv[4:5])
 #' )$
@@ -103,7 +103,7 @@
 #'
 #' ##
 #' dst.hh <- Node$new("sector.hh",
-#'   type = "CES", sigma = -1,
+#'   type = "SCES", sigma = -1,
 #'   alpha = 1,
 #'   beta = prop.table(d.hh[1:3])
 #' )

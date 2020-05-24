@@ -17,13 +17,13 @@ intertemporal_utility(x, beta = 1, gamma = 1)
 A list consists of the intertemporal utility level and the certainty-equivalent instantaneous utility level (i.e. steady-state-equivalent instantaneous utility level).
 }
 \description{
-This is an intertemporal utility function with constant relative risk aversion.
+An intertemporal utility function with constant relative risk aversion.
 }
 \examples{
 \donttest{
 intertemporal_utility(c(1, 2, 3), beta = 0.99, gamma = 0.5)
-intertemporal_utility(c(1, 2, 3)/10, beta = 0.99, gamma = 0.5)
-intertemporal_utility(c(1, 2, 3)/10, gamma = 0)
+intertemporal_utility(c(1, 2, 3) / 10, beta = 0.99, gamma = 0.5)
+intertemporal_utility(c(1, 2, 3) / 10, gamma = 0)
 }
 
 }

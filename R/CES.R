@@ -7,9 +7,9 @@
 #' @param sigma the sigma coefficient.
 #' @param alpha the alpha coefficient.
 #' @param beta a vector consisting of the beta coefficients.
-#' @param x the inputs.
+#' @param x a vector consisting of the inputs.
 #' @param theta a vector consisting of the theta coefficients.
-#' @return the output or utility level.
+#' @return The output or utility level.
 #' @examples
 #' \donttest{
 #' CES(1, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))

@@ -12,7 +12,8 @@ gemTax_5_4(
   supply.lab.consumer1 = 30,
   supply.cap.consumer1 = 20,
   supply.lab.consumer2 = 20,
-  supply.cap.consumer2 = 5
+  supply.cap.consumer2 = 5,
+  policy.tax = NULL
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ gemTax_5_4(
 \item{supply.lab.consumer2}{the labor supply of consumer 2.}
 
 \item{supply.cap.consumer2}{the capital supply of consumer 2.}
+
+\item{policy.tax}{a tax policy function (see \code{\link{sdm2}}).}
 }
 \value{
 A general equilibrium, which is a list with the following elements:
@@ -95,14 +98,14 @@ dst.taxed.firm1 <- node_set("taxed.output", NA,
   rate = c(1, output.tax.rate),
   dst.firm1, "tax"
 )
-dst_plot(dst.taxed.firm1)
+node_plot(dst.taxed.firm1)
 
 dst.taxed.firm2 <- node_set("taxed.output", NA,
   type = "FIN",
   rate = c(1, output.tax.rate),
   dst.firm2, "tax"
 )
-dst_plot(dst.taxed.firm2)
+node_plot(dst.taxed.firm2)
 
 dstl <- list(dst.taxed.firm1, dst.taxed.firm2, dst.consumer1, dst.consumer2)
 
@@ -137,28 +140,28 @@ node_set(dst.labor.taxed.firm2, "VA",
   beta = c(0.4, 0.6)
 )
 
-dstl <- list(dst.labor.taxed.firm1, dst.labor.taxed.firm2, dst.consumer1, dst.consumer2)
+dstl.labor.tax <- list(dst.labor.taxed.firm1, dst.labor.taxed.firm2, dst.consumer1, dst.consumer2)
 
-ge.lab.tax <- gemTax_5_4(dstl, delta = 0.5)
+ge.lab.tax <- gemTax_5_4(dstl.labor.tax, delta = 0.5)
 
-ge.lab.tax$p / ge$p
+ge.lab.tax$p
 ge.lab.tax$z / ge$z - 1
 
 ## income tax (see Table 4.3)
 income.tax.rate <- 0.2
 consumption.tax.rate <- income.tax.rate / (1 - income.tax.rate)
-dst.taxed.consumer1 <- node_set("tax.consumer", NA,
-                                type = "FIN",
-                                rate = c(1, consumption.tax.rate),
-                                dst.consumer1,
-                                "tax"
+dst.taxed.consumer1 <- node_set("taxed.utility", NA,
+  type = "FIN",
+  rate = c(1, consumption.tax.rate),
+  dst.consumer1,
+  "tax"
 )
 
-dst.taxed.consumer2 <- node_set("tax.consumer", NA,
-                                type = "FIN",
-                                rate = c(1, consumption.tax.rate),
-                                dst.consumer2,
-                                "tax"
+dst.taxed.consumer2 <- node_set("taxed.utility", NA,
+  type = "FIN",
+  rate = c(1, consumption.tax.rate),
+  dst.consumer2,
+  "tax"
 )
 
 dstl <- list(dst.firm1, dst.firm2, dst.taxed.consumer1, dst.taxed.consumer2)
@@ -169,10 +172,10 @@ ge.income.tax$z / ge$z - 1
 ## labor tax (see Table 4.3)
 lab.tax.rate <- 0.3742
 node_set(dst.labor.taxed.firm1, "taxed.lab",
-         rate = c(1, lab.tax.rate)
+  rate = c(1, lab.tax.rate)
 )
 node_set(dst.labor.taxed.firm2, "taxed.lab",
-         rate = c(1, lab.tax.rate)
+  rate = c(1, lab.tax.rate)
 )
 
 ge.lab.tax <- gemTax_5_4(list(
@@ -182,7 +185,34 @@ ge.lab.tax <- gemTax_5_4(list(
   dst.consumer2
 ), delta = 0.5)
 ge.lab.tax$z / ge$z - 1
+
+## variable labor tax rate
+policy.var.tax.rate <- function(time, dstl, state) {
+  current.tax.rate <- NA
+  if (time >= 200) {
+    tax.amount <- (state$p / state$p[3])[5]
+    adjustment.ratio <- ratio_adjust(tax.amount / 18.7132504, coef = 0.1)
+    last.tax.rate <- node_set(dstl[[1]], "taxed.lab")$rate[2]
+    current.tax.rate <- last.tax.rate / adjustment.ratio
+  } else {
+    current.tax.rate <- 0.1
+  }
+  node_set(dstl[[1]], "taxed.lab", rate = c(1, current.tax.rate))
+  node_set(dstl[[2]], "taxed.lab", rate = c(1, current.tax.rate))
+
+  state$current.policy.data <- c(time, current.tax.rate)
+  state
 }
+
+ge.var.lab.tax <- gemTax_5_4(dstl.labor.tax, policy = policy.var.tax.rate)
+matplot(ge.var.lab.tax$ts.z, type = "l")
+matplot(ge.var.lab.tax$ts.p / ge.var.lab.tax$p[3], type = "l")
+plot(ge.var.lab.tax$policy.data[, 1], ge.var.lab.tax$policy.data[, 2],
+  ylab = "labor tax rate"
+)
+ge.var.lab.tax$p / ge.var.lab.tax$p[3]
+}
+
 }
 \references{
 Manuel Alejandro Cardenete, Ana-Isabel Guerra, Ferran Sancho (2012, ISBN: 9783642247453) Applied General Equilibrium: An Introduction. Springer-Verlag Berlin Heidelberg.

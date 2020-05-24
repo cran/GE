@@ -2,17 +2,20 @@
 #' @title Applying a Function to All Combinations of the Supplied Vectors
 #' @aliases apply_expand.grid
 #' @description  A wrapper of the functions apply and expand.grid.
-#' Returns a matrix or data frame of values obtained by applying a function
+#' Returns a data frame of values obtained by applying a function
 #' to all combinations of the supplied vectors.
 #' Firstly, the function expand.grid will be used for the supplied vectors in ... and
 #' we will get a data frame containing one row for each combination of the supplied vectors.
 #' Then the function will be applied to each row of the data frame.
-#' The values of the data frame will also be included in the returned matrix or data frame.
+#' The values of the data frame will also be included in the returned data frame.
 #' @param FUN the function to be applied. The argument is a numeric vector.
 #' @param ... numeric vectors.
-#' @return a matrix or data frame.
+#' @return A data frame.
 #' @examples
 #' \donttest{
+#' apply_expand.grid(prod, a = 1:9, b = 1:9)
+#'
+#' ####
 #' f <- function(x) c(r1 = sum(x), r2 = unname(x["b"] - x["a"]))
 #' apply_expand.grid(f, a = c(1, 2), b = c(3, 4))
 #'
@@ -68,7 +71,7 @@ apply_expand.grid <- function(FUN, ...) {
   for (k in 1:length(first.names)) {
     if (first.names[k] == "" && is.name(param.list[k])) {
       first.names[k] <- as.character(param.list[k])
-    } # set the last name as the first name equal
+    }
   }
 
   colnames(param) <- first.names

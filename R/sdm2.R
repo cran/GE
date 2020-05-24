@@ -1,0 +1,610 @@
+#' @export
+#' @title Structural Dynamic Model (alias Structural Growth Model) Version 2
+#' @aliases sdm2
+#' @description A new version of the sdm function in the package CGE.
+#' Now the  parameter A can be a demand structure tree list.
+#' Hence we actually no longer need the function \code{\link{sdm_dstl}}.
+#' Some rarely used parameters in the function sdm have been deleted.
+#' @param A a demand structure tree list (see \code{\link{demand_coefficient}}), a demand coefficient n-by-m matrix (alias demand structure matrix)
+#' or a function A(state) which returns an n-by-m matrix (see the sdm function).
+#' @param B	a supply coefficient n-by-m matrix (alias supply structure matrix).
+#' If (i,j)-th element of S0Exg is not NA, the value of the (i,j)-th element of B will be useless and ignored.
+#' @param S0Exg an initial exogenous supply n-by-m matrix. This matrix may contain NA, but not zero.
+#' @param names.commodity names of commodities.
+#' If the parameter A is a demand structure tree list, the values in names.commodity should be the names of those leaf nodes.
+#' @param names.agent names of agents.
+#' @param p0 an initial price n-vector.
+#' @param z0 an m-vector consisting of the initial exchange levels (i.e. activity levels, production levels or utility levels).
+#' @param GRExg an exogenous growth rate of the exogenous supplies in S0Exg.
+#' If GRExg is NA and some commodities have exogenous supply, then GRExg will be set to 0.
+#' @param pExg an n-vector indicating the exogenous prices (if any).
+#' @param numeraire the name or index of the numeraire commodity.
+#' @param tolCond the tolerance condition.
+#' @param maxIteration the maximum iteration count. If the main purpose of running this function is to do simulation instead of calculating equilibrium, then maxIteration should be set to 1.
+#' @param numberOfPeriods the period number in each iteration.
+#' @param depreciationCoef the depreciation coefficient (i.e. 1 minus the depreciation rate) of the unsold products.
+#' @param priceAdjustmentFunction the price adjustment function. The arguments are a price n-vector p and a sales rate n-vector q.
+#' The return value is a price n-vector. The default price adjustment method is p * (1 - priceAdjustmentVelocity * (1 - q)).
+#' @param priceAdjustmentVelocity the price adjustment velocity.
+#' @param trace if TRUE, information is printed during the running of sdm.
+#' @param ts if TRUE, the time series of the last iteration are returned.
+#' @param policy a policy function. The policy function has the following optional parameters:
+#' \itemize{
+#' \item time - the current time.
+#' \item dstl - the demand structure tree list in the model, which can be adjusted in the policy function
+#' and it need not be returned.
+#' \item state - the current state, which is a list.
+#' state$p is the current price vector.
+#' state$S is the current supply matrix.
+#' state$last.z is the last output and utility vector.
+#' state$B is the current supply coefficient matrix.
+#' \item state.history - the state history, which is a list consisting of the time series of p, S, q, and z.
+#' }
+#' The return value of the policy function other than a list will be ignored.
+#' If the return value is a list, it should have elements p, S and B which specify the prices, supplies and supply coefficient matrix after adjustment.
+#' A vector with the name current.policy.data can be put into the state list as well,
+#' which will be put into the return value of the sdm2.
+#' @param exchangeFunction the exchange function.
+#' @return  A list usually containing the following components:
+#' \itemize{
+#' \item tolerance - the tolerance of the results.
+#' \item p - equilibrium prices.
+#' \item z- equilibrium exchange levels (i.e. activity levels, output levels or utility levels).
+#' \item S - the equilibrium supply matrix at the initial period.
+#' \item growthRate	- the endogenous equilibrium growth rate in a pure production economy.
+#' \item A - the equilibrium demand coefficient matrix.
+#' \item B - the supply coefficient matrix.
+#' \item S0Exg - the initial exogenous supply n-by-m matrix.
+#' \item D - the demand matrix.
+#' \item DV - the demand value matrix.
+#' \item SV - the supply value matrix.
+#' \item ts.p	- the time series of prices in the last iteration.
+#' \item ts.z - the time series of exchange levels (i.e. activity levels, production levels or utility levels) in the last iteration.
+#' \item ts.S - the time series of supply matrix in the last iteration.
+#' \item ts.q - the time series of sales rates in the last iteration.
+#' \item policy.data - the policy data.
+#' }
+#' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
+#' @references LI Wu (2010) A Structural Growth Model and its Applications to Sraffa's System. http://www.iioa.org/conferences/18th/papers/files/104_20100729011_AStructuralGrowthModelanditsApplicationstoSraffasSstem.pdf
+#' @examples
+#' \donttest{
+#' dst.firm <- node_set("output", NA,
+#'   type = "Leontief", a = c(0.5, 1),
+#'   "prod", "lab"
+#' )
+#'
+#' dst.consumer <- node_set("utility", NA, type = "Leontief", a = 1, "prod")
+#'
+#' dstl <- list(dst.firm, dst.consumer)
+#'
+#' B <- matrix(c(
+#'   1, 0,
+#'   0, 0
+#' ), 2, 2, TRUE)
+#' S0Exg <- matrix(c(
+#'   NA, NA,
+#'   NA, 100
+#' ), 2, 2, TRUE)
+#'
+#' ## variable dst and technology progress
+#' policy.TP <- function(time, state, dstl) {
+#'   if (time >= 200) {
+#'     dstl[[1]]$a <- c(0.5, 0.8)
+#'   } else {
+#'     dstl[[1]]$a <- c(0.5, 1)
+#'   }
+#'   state
+#' }
+#'
+#' ge.TP <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "consumer"),
+#'   policy = policy.TP,
+#'   ts = TRUE,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000
+#' )
+#' matplot(ge.TP$ts.z, type = "l")
+#' plot(ge.TP$ts.p[, 1] / ge.TP$ts.p[, 2], type = "l")
+#'
+#' ## variable supply coefficient matrix and technology progress
+#' policy.TP <- function(time, state) {
+#'   if (time >= 200) {
+#'     state$B[1, 1] <- 2
+#'   } else {
+#'     state$B[1, 1] <- 1
+#'   }
+#'   state
+#' }
+#'
+#' ge.TP <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "consumer"),
+#'   policy = policy.TP,
+#'   ts = TRUE,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000
+#' )
+#' matplot(ge.TP$ts.z, type = "l")
+#' plot(ge.TP$ts.p[, 1] / ge.TP$ts.p[, 2], type = "l")
+#'
+#' ## variable dst and disequilibrium
+#' policy.DE <- function(time, dstl) {
+#'   if (time >= 200) {
+#'     dstl[[1]]$a[2] <- dstl[[1]]$a[2] * 0.999
+#'   } else {
+#'     dstl[[1]]$a[2] <- 1
+#'   }
+#' }
+#'
+#' ge.DE <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "consumer"),
+#'   policy = policy.DE,
+#'   ts = TRUE,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000
+#' )
+#' matplot(ge.DE$ts.z, type = "l")
+#' plot(ge.DE$ts.p[, 1] / ge.DE$ts.p[, 2], type = "l")
+#'
+#'
+#' ## structural equilibria and structural transition
+#' policy.SE <- function(time, state, dstl) {
+#'   dstl[[1]]$a[2] <- structural_function(state$last.z[1], c(105, 125), 1, 0.5)
+#' }
+#'
+#' ge.low.level <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "consumer"),
+#'   policy = policy.SE,
+#'   ts = TRUE,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000,
+#'   z0 = c(100, 100)
+#' )
+#' matplot(ge.low.level$ts.z, type = "l")
+#'
+#' ge.high.level <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "consumer"),
+#'   policy = policy.SE,
+#'   ts = TRUE,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000,
+#'   z0 = c(150, 100)
+#' )
+#' matplot(ge.high.level$ts.z, type = "l")
+#'
+#' policy.ST <- function(time, state, dstl) {
+#'   dstl[[1]]$a[2] <- structural_function(state$last.z[1], c(105, 125), 1, 0.5)
+#'   if (time >= 200 && time <= 210) state$S[2, 2] <- 125 # Introduce foreign labor.
+#'   state
+#' }
+#'
+#' ge.ST <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "consumer"),
+#'   policy = policy.ST,
+#'   ts = TRUE,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000,
+#'   z0 = c(100, 100)
+#' )
+#' matplot(ge.ST$ts.z, type = "l")
+#'
+#' #### economic cycles and an interest rate policy for the firm
+#' dst.firm <- node_set("agent", NA,
+#'   type = "FIN",
+#'   rate = c(1, 0.25),
+#'   "cc1", "money"
+#' )
+#' node_set(dst.firm, "cc1",
+#'   type = "Leontief",
+#'   a = c(0.5, 0.5),
+#'   "wheat", "labor"
+#' )
+#'
+#' dst.laborer <- Clone(dst.firm)
+#' dst.money.lender <- Clone(dst.firm)
+#'
+#' dstl <- list(dst.firm, dst.laborer, dst.money.lender)
+#'
+#' policy.interest.rate <- function(time, state, dstl, state.history) {
+#'   upsilon <- NA
+#'   if (time >= 600) {
+#'     upsilon <- state.history$z[time - 1, 1] / mean(state.history$z[(time - 50):(time - 1), 1])
+#'     dstl[[1]]$rate[2] <- max(0.25 + 0.5 * log(upsilon), 0)
+#'   } else {
+#'     dstl[[1]]$rate[2] <- 0.25
+#'   }
+#'
+#'   state$current.policy.data <- c(time, dstl[[1]]$rate[2], upsilon)
+#'   state
+#' }
+#'
+#' B <- matrix(0, 3, 3)
+#' B[1, 1] <- 1
+#'
+#' S0Exg <- matrix(NA, 3, 3)
+#' S0Exg[2, 2] <- 100
+#' S0Exg[3, 3] <- 100
+#'
+#' de <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("wheat", "labor", "money"),
+#'   names.agent = c("firm", "laborer", "money.lender"),
+#'   p0 = rbind(0.625, 0.375, 0.25),
+#'   z0 = rbind(95, 100, 100),
+#'   priceAdjustmentVelocity = 0.3,
+#'   numberOfPeriods = 1000,
+#'   maxIteration = 1,
+#'   trace = FALSE,
+#'   ts = TRUE
+#' )
+#' matplot(de$ts.z, type = "l")
+#'
+#' ge.policy <- sdm2(
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("wheat", "labor", "money"),
+#'   names.agent = c("firm", "laborer", "money.lender"),
+#'   p0 = rbind(0.625, 0.375, 0.25),
+#'   z0 = rbind(95, 100, 100),
+#'   priceAdjustmentVelocity = 0.3,
+#'   numberOfPeriods = 1000,
+#'   maxIteration = 1,
+#'   trace = FALSE,
+#'   ts = TRUE,
+#'   policy = policy.interest.rate
+#' )
+#' matplot(ge.policy$ts.z, type = "l")
+#'
+#' #### Example 9.3 in Li (2019): fixed-ratio price adjustment method
+#' #### and disequilibrium (business cycles) in a pure production economy
+#' fixedRatioPriceAdjustmentFunction <- function(p, q) {
+#'   thresholdForPriceAdjustment <- 0.99
+#'   priceAdjustmentVelocity <- 0.02
+#'   result <- ifelse(q <= thresholdForPriceAdjustment,
+#'     p * (1 - priceAdjustmentVelocity),
+#'     p
+#'   )
+#'   return(prop.table(result))
+#' }
+#'
+#' de.Sraffa <- sdm2(
+#'   A = matrix(c(
+#'     56 / 115, 6,
+#'     12 / 575, 2 / 5
+#'   ), 2, 2, TRUE),
+#'   B = diag(2),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 100,
+#'   p0 = rbind(1 / 15, 1),
+#'   z0 = rbind(575, 20),
+#'   priceAdjustmentFunction = fixedRatioPriceAdjustmentFunction,
+#'   ts = TRUE
+#' )
+#' matplot(growth_rate(de.Sraffa$ts.z), type = "l")
+#' }
+#'
+sdm2 <- function(A,
+                 B,
+                 S0Exg = matrix(NA, nrow(B), ncol(B)),
+                 names.commodity = paste("comm", 1:nrow(B), sep = ""),
+                 names.agent = paste("agt", 1:ncol(B), sep = ""),
+                 p0 = matrix(1, nrow = nrow(B), ncol = 1),
+                 z0 = matrix(100, nrow = ncol(B), ncol = 1),
+                 GRExg = NA,
+                 pExg = NULL,
+                 numeraire = NULL,
+                 tolCond = 1e-5,
+                 maxIteration = 200,
+                 numberOfPeriods = 300,
+                 depreciationCoef = 0.8,
+                 priceAdjustmentFunction = NULL,
+                 priceAdjustmentVelocity = 0.15,
+                 trace = TRUE,
+                 ts = FALSE,
+                 policy = NULL,
+                 exchangeFunction = F_Z) {
+  ##### definition of the economic transition function xNext
+  xNext <- function(xt) {
+    p_t <- xt$p
+    S_t <- xt$S
+    q_t <- xt$q
+    z_t <- xt$z
+
+
+    # price adjustment
+    if (is.null(priceAdjustmentFunction)) {
+      p_tp1 <- p_t * (1 - priceAdjustmentVelocity * (1 - q_t))
+    } else {
+      p_tp1 <- priceAdjustmentFunction(p_t, q_t)
+    }
+
+    if (any(!is.na(pExg))) {
+      tmpIndex <- which(!is.na(pExg))
+      tmpIndex <- tmpIndex[1]
+      p_tp1 <- p_tp1 / p_tp1[tmpIndex] * pExg[tmpIndex]
+      p_tp1[!is.na(pExg)] <- pExg[!is.na(pExg)]
+    }
+    else {
+      p_tp1 <- prop.table(p_tp1)
+    }
+
+
+    S_tp1 <- B %*% dg(z_t) + dg(depreciationCoef * (1 - q_t)) %*% S_t
+
+    if (!all(is.na(S0Exg))) {
+      S_tp1[!is.na(S0Exg)] <- S_t[!is.na(S0Exg)] * (1 + GRExg)
+    } # Set exogenous supply
+
+
+    if (!is.null(policy)) {
+      ## 20200510
+      policy.arg.names <- names(formals(policy))
+
+      policy.arg <- list()
+      if ("time" %in% policy.arg.names) policy.arg$time <- time
+      if ("state" %in% policy.arg.names) {
+        policy.arg$state <- list(p = p_tp1, S = S_tp1, last.z = z_t, B = B)
+      }
+      if (is.list(A) && ("dstl" %in% policy.arg.names)) policy.arg$dstl <- A
+      if ("state.history" %in% policy.arg.names) {
+        policy.arg$state.history <- list(
+          p = t(p),
+          S = S,
+          q = t(q),
+          z = t(z)
+        )
+      }
+
+      policy.result <- do.call(policy, policy.arg)
+      if (is.list(policy.result)) {
+        p_tp1 <- policy.result$p
+        S_tp1 <- policy.result$S
+        B <<- policy.result$B
+
+        if (!is.null(policy.result$current.policy.data)) {
+          policy.data <<- rbind(policy.data, policy.result$current.policy.data)
+        }
+      }
+    }
+
+    switch(class(A)[1],
+      "matrix" = {
+        A_tp1 <- A
+      },
+      "function" = {
+        A_tp1 <-
+          A(list(
+            p = p_tp1,
+            z = z_t,
+            w = t(p_tp1) %*% S_tp1,
+            t = time
+          ))
+      },
+      "list" = {
+        tmp.p <- c(p_tp1)
+        names(tmp.p) <- names.commodity
+        A_tp1 <- sapply(A, demand_coefficient, tmp.p)
+      }
+    )
+
+    tmp <- exchangeFunction(A_tp1, p_tp1, S_tp1)
+    q_tp1 <- tmp$q
+    z_tp1 <- tmp$z
+
+    if (any(z_tp1 < 0)) {
+      if (any(z_tp1[z_tp1 < 0] > -0.01)) {
+        z_tp1[z_tp1 < 0] <- 0
+
+        warning("LI: negative_z,z_tp1<0")
+      }
+      else {
+        message(z_tp1)
+        stop("Li: negative_z")
+      }
+    }
+
+    list(
+      p = p_tp1,
+      S = S_tp1,
+      q = q_tp1,
+      z = z_tp1
+    )
+  } # xNext
+
+  # beginning ---------------------------------------------------------------
+  n <- nrow(B)
+  m <- ncol(B)
+
+  # check names.commodity
+  if (is.list(A)) {
+    names.leaf <- lapply(A, function(tree) {
+      tree$Get("name", filterFun = isLeaf)
+    })
+    names.leaf <- unlist(names.leaf)
+    if (!all(is.element(names.leaf, names.commodity))) {
+      stop("Li: The names of some leaf nodes are not included in names.commodity.")
+    } else
+    if (!setequal(names.leaf, names.commodity)) {
+      message("Li: Some names in names.commodity do not have corresponding leaf nodes: ")
+      message(paste(setdiff(names.commodity, names.leaf), sep = ", "))
+    }
+  }
+
+  result <- c()
+
+  if (is.na(GRExg) && !all(is.na(S0Exg))) GRExg <- 0
+
+  if (trace) {
+    message(paste("tolCond: ", tolCond))
+  }
+
+  p <- matrix(0, n, numberOfPeriods)
+  S <- array(0, dim = c(n, m, numberOfPeriods))
+  q <- matrix(0, n, numberOfPeriods)
+  z <- matrix(0, m, numberOfPeriods)
+
+  if (!is.null(policy)) policy.data <- data.frame()
+
+  if (all(is.na(S0Exg))) {
+    S0 <- matrix(0, n, m)
+  } else {
+    S0 <- S0Exg
+    S0[is.na(S0)] <- 0
+  }
+
+  firstExgSupplyIndex <- which(!is.na(c(S0Exg)))[1] # NA or a positive integer.
+
+  time <- 1
+
+  xtp1 <- xNext(list(
+    p = p0,
+    S = S0,
+    q = matrix(1, n, 1),
+    z = z0
+  ))
+
+  p[, 1] <- xtp1$p
+  S[, , 1] <- xtp1$S
+  q[, 1] <- xtp1$q
+  z[, 1] <- xtp1$z
+
+
+  toleranceRec <- matrix(1, maxIteration, 1)
+
+  for (k.iteration in 1:maxIteration) {
+    for (t in 2:numberOfPeriods) {
+      time <- time + 1
+
+      xt <- c()
+      xt$p <- p[, t - 1]
+      xt$S <- S[, , t - 1]
+      dim(xt$S) <- c(n, m)
+      xt$q <- q[, t - 1]
+      xt$z <- z[, t - 1]
+
+      xtp1 <- xNext(xt)
+
+
+      p[, t] <- xtp1$p
+      S[, , t] <- xtp1$S
+      q[, t] <- xtp1$q
+      z[, t] <- xtp1$z
+    } # for (t in 2:numberOfPeriods)
+    ##### the end of an iteration
+
+    if (ts) {
+      result$ts.p <- t(p)
+      result$ts.z <- t(z)
+      result$ts.S <- S
+      result$ts.q <- t(q)
+    }
+
+    tmp1 <- z[, ncol(z)] / max(z[, ncol(z)])
+    tmp2 <- z[, ncol(z) - 1] / max(z[, ncol(z) - 1])
+    toleranceZ <- max(abs(tmp1 - tmp2))
+
+    tmpU <- apply(q[, (ncol(q) - 20):ncol(q)], 1, min)
+    tmpU <- tmpU[p[, ncol(p)] > tolCond]
+    toleranceU <- max(1 - tmpU)
+    tolerance <- max(c(toleranceU, toleranceZ))
+    toleranceRec[k.iteration] <- tolerance
+
+    p0 <- p[, ncol(p)]
+    z0 <- z[, ncol(z)]
+    S0 <- S[, , dim(S)[3]]
+    dim(S0) <- c(n, m)
+
+    if (!is.na(firstExgSupplyIndex)) {
+      # There are exogenous supplies.
+      z0 <- z0 / S0[firstExgSupplyIndex] * S0Exg[firstExgSupplyIndex]
+      S0 <- S0 / S0[firstExgSupplyIndex] * S0Exg[firstExgSupplyIndex]
+    }
+    else {
+      S0 <- S0 / max(z0)
+      z0 <- z0 / max(z0)
+    }
+
+    if (trace) {
+      message(paste("Iteration number ", k.iteration, ": tolerance coefficient ", tolerance))
+    }
+
+    if (tolerance < tolCond) {
+      break
+    }
+
+    if (k.iteration < maxIteration) {
+      xtp1 <- xNext(list(
+        p = p0,
+        S = S0,
+        q = matrix(1, n, 1),
+        z = z0
+      ))
+      p[, 1] <- xtp1$p
+      S[, , 1] <- xtp1$S
+      q[, 1] <- xtp1$q
+      z[, 1] <- xtp1$z
+    }
+  } # for (k.iteration in 1:maxIteration)
+
+
+  # result ------------------------------------------------------------------
+  result$tolerance <- tolerance
+  result$p <- p0
+  result$z <- z0
+  result$S <- S0
+
+  if (all(is.na(S0Exg))) {
+    result$growthRate <- max(z[, ncol(z)]) / max(z[, ncol(z) - 1]) - 1
+  }
+
+  switch(mode(A),
+    "numeric" = {
+      result$A <- A
+    },
+    "function" = {
+      tmpS <- S0Exg
+      tmpS[is.na(tmpS)] <- 0
+      result$A <-
+        A(list(
+          p = result$p,
+          z = result$z,
+          w = result$p %*% tmpS,
+          t = 1
+        ))
+    },
+    "list" = {
+      tmp.p <- c(result$p)
+      names(tmp.p) <- names.commodity
+      result$A <- sapply(A, demand_coefficient, tmp.p)
+    }
+  )
+
+  result$B <- B
+  result$S0Exg <- S0Exg
+
+  if (!is.null(policy) && length(policy.data) != 0) {
+    result$policy.data <- policy.data
+  }
+
+  if (!is.null(numeraire)) {
+    if (is.character(numeraire)) numeraire <- which(names.commodity == numeraire)
+    result$p <- result$p / result$p[numeraire]
+    if (ts) {
+      result$ts.p <- apply(result$ts.p, 2, function(x) x / result$ts.p[, numeraire])
+    }
+  }
+
+  result <- ge_tidy(result, names.commodity, names.agent)
+
+  return(result)
+}

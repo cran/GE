@@ -223,7 +223,7 @@ gemInputOutputTable_7_4 <- function(IT,
   dst.agri <- Clone(dst.industry)
 
   tmp <- FindNode(dst.agri, "industry")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.agri
   tmp$alpha <- product.output[1] / sum(d.agri)
   tmp$beta <- prop.table(c(
@@ -242,7 +242,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
 
   tmp <- FindNode(dst.agri, "cc2.1")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.VA.agri
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.agri[4:5])
@@ -251,7 +251,7 @@ gemInputOutputTable_7_4 <- function(IT,
   dst.manu <- Clone(dst.industry)
 
   tmp <- FindNode(dst.manu, "industry")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.manu
   tmp$alpha <- product.output[2] / sum(d.manu)
   tmp$beta <- prop.table(c(
@@ -270,7 +270,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
 
   tmp <- FindNode(dst.manu, "cc2.1")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.VA.manu
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.manu[4:5])
@@ -279,7 +279,7 @@ gemInputOutputTable_7_4 <- function(IT,
   dst.serv <- Clone(dst.industry)
 
   tmp <- FindNode(dst.serv, "industry")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.serv
   tmp$alpha <- product.output[3] / sum(d.serv)
   tmp$beta <- prop.table(c(
@@ -298,7 +298,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
 
   tmp <- FindNode(dst.serv, "cc2.1")
-  tmp$type <- "CES"
+  tmp$type <- "SCES"
   tmp$sigma <- 1 - 1 / es.VA.serv
   tmp$alpha <- 1
   tmp$beta <- prop.table(d.serv[4:5])
@@ -306,7 +306,7 @@ gemInputOutputTable_7_4 <- function(IT,
 
   # dst.hh ------------------------------------------------------------------
   dst.hh <- Node$new("hh",
-    type = "CES", sigma = 1 - 1 / es.hh,
+    type = "SCES", sigma = 1 - 1 / es.hh,
     alpha = 1,
     beta = prop.table(d.hh[1:3])
   )

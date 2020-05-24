@@ -2,7 +2,7 @@
 % Please edit documentation in R/node_prune.R
 \name{node_prune}
 \alias{node_prune}
-\title{Prune Nodes off a Tree by Names.}
+\title{Prune Nodes off a Tree by Names}
 \usage{
 node_prune(tree, ...)
 }
