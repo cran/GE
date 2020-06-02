@@ -90,7 +90,7 @@ node_plot(dst.Robinson)
 
 dstl <- list(dst.Robinson)
 
-ge <- sdm2(dstl,
+ge.3_1 <- sdm2(dstl,
   names.commodity = c("lab", "land1", "land2"),
   names.agent = c("Robinson"),
   B = matrix(0, 3, 1),
@@ -101,7 +101,39 @@ ge <- sdm2(dstl,
   ), 3, 1, TRUE),
   numeraire = "lab"
 )
-ge
+ge.3_1
+
+#### the same economy as above
+ge.5_3 <- sdm2(
+  A = list(
+    dst.firm1 = node_new("output",
+                         type = "CD", alpha = 1, beta = c(0.2, 0.8),
+                         "lab", "land1"
+    ),
+    dst.firm2 = node_new("output",
+                         type = "CD", alpha = 1, beta = c(0.8, 0.2),
+                         "lab", "land2"
+    ),
+    dst.Robinson = node_new("util",
+                            type = "CD", alpha = 1, beta = c(0.5, 0.5),
+                            "prod1", "prod2"
+    )
+  ),
+  names.commodity = c("prod1", "prod2", "lab", "land1", "land2"),
+  names.agent = c("firm1", "firm2", "Robinson"),
+  B = {
+    B <- matrix(0, 5, 3)
+    B[1, 1] <- B[2, 2] <- 1
+    B
+  },
+  S0Exg = {
+    S0Exg <- matrix(NA, 5, 3)
+    S0Exg[3:5, 3] <- 100
+    S0Exg
+  },
+  numeraire = "lab"
+)
+ge.5_3
 }
 
 }

@@ -11,7 +11,8 @@ SCES_A(sigma = 1 - 1/es, alpha, Beta, p, es = NA)
 
 \item{alpha}{a nonnegative numeric m-vector or m-by-1 matrix.}
 
-\item{Beta}{a nonnegative numeric n-by-m matrix.}
+\item{Beta}{a nonnegative numeric n-by-m matrix, where the sum of each column is equal to 1.
+If a vector is provided, then it will be converted into a single-column matrix.}
 
 \item{p}{a nonnegative numeric n-vector or n-by-1 matrix.}
 

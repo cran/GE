@@ -5,7 +5,8 @@
 #' coefficient matrix (i.e. Theta==Beta), which is a wrapper of CES_A of CGE package.
 #' @param sigma a numeric m-vector or m-by-1 matrix. 1/(1-sigma) is the elasticity of substitution.
 #' @param alpha a nonnegative numeric m-vector or m-by-1 matrix.
-#' @param Beta a nonnegative numeric n-by-m matrix.
+#' @param Beta a nonnegative numeric n-by-m matrix, where the sum of each column is equal to 1.
+#' If a vector is provided, then it will be converted into a single-column matrix.
 #' @param p a nonnegative numeric n-vector or n-by-1 matrix.
 #' @param es a numeric m-vector or m-by-1 matrix of elasticity of substitution. If es is not NA, the value of sigma will be ignored.
 #' @return A demand coefficient n-by-m matrix.

@@ -6,7 +6,7 @@
 #' \itemize{
 #' \item log : coef * log(ratio) + 1, if ratio >= 1; 1 / (coef * log(1 / ratio) + 1), if ratio < 1.
 #' \item left.linear : 1 / (coef * (1 / ratio - 1) + 1), if ratio >= 1; 1 + coef * (ratio - 1), if ratio < 1.
-#' \item max : max(coef * log(ratio) + 1, 0).
+#' \item trunc.log : max(coef * log(ratio) + 1, 0).
 #' \item linear : coef * (ratio - 1) + 1.
 #' }
 #' @param ratio a positive numeric vector.
@@ -21,33 +21,29 @@
 #' plot(x, x, type = "l")
 #' lines(x, ratio_adjust(x, 0.8, method = "log"), col = "red")
 #' lines(x, ratio_adjust(x, 0.8, method = "left.linear"), col = "blue")
-#' lines(x, ratio_adjust(x, 0.8, method = "max"), col = "green")
-#'
-
+#' lines(x, ratio_adjust(x, 0.8, method = "trunc.log"), col = "green")
 ratio_adjust <- function(ratio, coef = 0.8,
-                            method = c("log","left.linear", "max", "linear")) {
+                         method = c("log", "left.linear", "trunc.log", "linear")) {
   switch(method[1],
-    log = { #symmetric
+    log = { # symmetric
       result <- ifelse(ratio >= 1,
         coef * log(ratio) + 1,
         1 / (coef * log(1 / ratio) + 1)
       )
     },
-    left.linear = { #symmetric
+    left.linear = { # symmetric
       result <- ifelse(ratio >= 1,
         1 / (coef * (1 / ratio - 1) + 1),
         coef * (ratio - 1) + 1
       )
     },
-    max = { # asymmetric
+    trunc.log = { # asymmetric
       result <- pmax(coef * log(ratio) + 1, 0)
     },
-    linear = { #asymmetric
+    linear = { # asymmetric
       result <- coef * (ratio - 1) + 1
     }
   )
 
   return(result)
 }
-
-

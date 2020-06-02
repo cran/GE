@@ -18,6 +18,7 @@
 #' If the class of the value is Node, it will be added as a child.
 #' If the class of the value is character, a child node will be created with the value as the name.
 #' @return Invisibly returns the node.
+#' @seealso \code{\link{node_new}}
 #' @examples
 #' \donttest{
 #' #### create a tree
@@ -64,6 +65,10 @@
 #'   "land"
 #' )
 #' print(dst.firm, "type", "alpha", "beta", "es")
+#'
+#' ## find a node
+#' x <- node_set(dst.firm, "VA")
+#' node_print(x)
 #' }
 #'
 node_set <- function(tree, node.name = NA, ...) {

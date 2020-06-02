@@ -14,7 +14,11 @@ intertemporal_utility(x, beta = 1, gamma = 1)
 \item{gamma}{the coefficient (>=0) in CRRA instantaneous utility function.}
 }
 \value{
-A list consists of the intertemporal utility level and the certainty-equivalent instantaneous utility level (i.e. steady-state-equivalent instantaneous utility level).
+A list containing the following components:
+\itemize{
+\item u.intertemporal: the intertemporal utility level.
+\item CE: the certainty-equivalent instantaneous utility level (i.e. steady-state-equivalent instantaneous utility level).
+}
 }
 \description{
 An intertemporal utility function with constant relative risk aversion.

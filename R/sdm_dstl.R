@@ -3,6 +3,8 @@
 #' @aliases sdm_dstl
 #' @description This is a wrapper of the function CGE::sdm.
 #' The parameter A of CGE::sdm is replaced with a demand structure tree list.
+#' This function can be replaced by the more comprehensive function \code{\link{sdm2}},
+#' so it is not recommended.
 #' @param dstl a demand structure tree list.
 #' @param names.commodity names of commodities.
 #' @param names.agent names of agents.

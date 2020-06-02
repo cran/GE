@@ -1,0 +1,58 @@
+#' @export
+#' @title Make a Policy of Sticky Price
+#' @aliases makePolicyStickyPrice
+#' @description Given a stickiness value and a time window vector, this function returns a policy function that
+#' sets the current prices equal to the weighted mean of the market-clearing prices and the current prices during this time window.
+#' When the stickiness value is 0, the prices will be set to the market-clearing prices.
+#' When the stickiness value is 1, the current prices will keep unchanged.
+#' @param stickiness a stickiness value between 0 and 1.
+#' @param time.win the time window vector, i.e. a 2-vector specifying the start time and end time of policy implementation.
+#' @return A policy function, which is often used as an argument of the function sdm2.
+#' @note Three major price adjustment methods can be used in the structural dynamic model.
+#' The corresponding three kinds of prices are exploratory prices (the default case), market clearing prices, and sticky prices.
+#' The exploratory prices are computed based on the prices and sales rates of the previous period.
+#' In economic reality, the market clearing prices are unknown, so exploratory prices are more realistic.
+#' @note
+#' When the stickiness value is positive and the parameter of priceAdjustmentFunction of sdm2 is set to \{function(p, q) p\}
+#' (that is, the current prices are the prices in the previous period),
+#' after the implementation of this policy the current prices will be the weighted mean of the market-clearing prices and the the prices in the previous period.
+#' In general, this function should be used this way.
+#' @seealso \code{\link{sdm2}}
+#' @examples
+#' \donttest{
+#' InitialEndowments <- {
+#'   tmp <- matrix(0, 3, 2)
+#'   tmp[1, 1] <- 0.01
+#'   tmp[2, 2] <- tmp[3, 2] <- 1
+#'   tmp
+#' }
+#'
+#' ge <- gemCanonicalDynamicMacroeconomic_3_2(
+#'   priceAdjustmentFunction = function(p, q) p,
+#'   policy.supply = makePolicySupply(InitialEndowments),
+#'   policy.price = makePolicyStickyPrice(stickiness = 0.5),
+#'   ts = TRUE,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 50
+#' )
+#'
+#' par(mfrow = c(1, 2))
+#' matplot(ge$ts.z, type = "b", pch = 20)
+#' matplot(ge$ts.p, type = "b", pch = 20)
+#' }
+#'
+makePolicyStickyPrice <- function(stickiness = 0.5, time.win = c(1, Inf)) {
+  function(time, state, dstl) {
+    if (time >= time.win[1] && time <= time.win[2]) {
+      instantaneous.equilibrium <- sdm2(dstl,
+        B = 0 * state$S, S0Exg = state$S,
+        names.commodity = state$names.commodity,
+        names.agent = state$names.agent
+      )
+      p.market.clearing <- instantaneous.equilibrium$p
+      state$p <- state$p * stickiness + (1 - stickiness) * p.market.clearing
+    }
+
+    state
+  }
+}

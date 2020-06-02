@@ -56,7 +56,7 @@ Both firms pay ad valorem output tax to consumers.
 }
 \examples{
 \donttest{
-dst.consumer1 <- node_set("utility", NA,
+dst.consumer1 <- node_new("utility",
   type = "CD",
   alpha = 1,
   beta = c(0.3, 0.7),
@@ -66,7 +66,7 @@ dst.consumer1 <- node_set("utility", NA,
 dst.consumer2 <- Clone(dst.consumer1)
 dst.consumer2$beta <- c(0.6, 0.4)
 
-dst.firm1 <- node_set("output", NA,
+dst.firm1 <- node_new("output",
   type = "Leontief",
   a = c(0.5, 0.2, 0.3),
   "VA", "prod1", "prod2"
@@ -93,14 +93,14 @@ ge <- gemTax_5_4(dstl, delta = 1)
 
 ## ad valorem output tax (see Table 4.1)
 output.tax.rate <- 0.1
-dst.taxed.firm1 <- node_set("taxed.output", NA,
+dst.taxed.firm1 <- node_new("taxed.output",
   type = "FIN",
   rate = c(1, output.tax.rate),
   dst.firm1, "tax"
 )
 node_plot(dst.taxed.firm1)
 
-dst.taxed.firm2 <- node_set("taxed.output", NA,
+dst.taxed.firm2 <- node_new("taxed.output",
   type = "FIN",
   rate = c(1, output.tax.rate),
   dst.firm2, "tax"
@@ -116,7 +116,7 @@ ge.output.tax3 <- gemTax_5_4(dstl, delta = 0)
 ## labor tax (see Table 4.3)
 lab.tax.rate <- 0.1
 
-dst.taxed.lab <- node_set("taxed.lab", NA,
+dst.taxed.lab <- node_new("taxed.lab",
   type = "FIN",
   rate = c(1, lab.tax.rate),
   "lab",
@@ -150,14 +150,14 @@ ge.lab.tax$z / ge$z - 1
 ## income tax (see Table 4.3)
 income.tax.rate <- 0.2
 consumption.tax.rate <- income.tax.rate / (1 - income.tax.rate)
-dst.taxed.consumer1 <- node_set("taxed.utility", NA,
+dst.taxed.consumer1 <- node_new("taxed.utility",
   type = "FIN",
   rate = c(1, consumption.tax.rate),
   dst.consumer1,
   "tax"
 )
 
-dst.taxed.consumer2 <- node_set("taxed.utility", NA,
+dst.taxed.consumer2 <- node_new("taxed.utility",
   type = "FIN",
   rate = c(1, consumption.tax.rate),
   dst.consumer2,

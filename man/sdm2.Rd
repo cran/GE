@@ -28,13 +28,19 @@ sdm2(
 )
 }
 \arguments{
-\item{A}{a demand structure tree list (see \code{\link{demand_coefficient}}), a demand coefficient n-by-m matrix (alias demand structure matrix)
-or a function A(state) which returns an n-by-m matrix (see the sdm function).}
+\item{A}{a demand structure tree list (i.e. dstl, see \code{\link{demand_coefficient}}), a demand coefficient n-by-m matrix (alias demand structure matrix)
+or a function A(state) which returns an n-by-m matrix (see the sdm function).
+When the calculation process involves policy functions, dstl is strongly recommended.
+Some policy functions in this package only support dstl.}
 
 \item{B}{a supply coefficient n-by-m matrix (alias supply structure matrix).
-If (i,j)-th element of S0Exg is not NA, the value of the (i,j)-th element of B will be useless and ignored.}
+If the (i,j)-th element of S0Exg is not NA, the value of the (i,j)-th element of B will be useless and ignored.}
 
-\item{S0Exg}{an initial exogenous supply n-by-m matrix. This matrix may contain NA, but not zero.}
+\item{S0Exg}{an initial exogenous supply n-by-m matrix.
+If the (i,j)-th element of S0Exg is zero, it means there is no supply,
+and NA means the exogenous part of the supply is zero
+and there may be an endogenous supply part.
+In most cases, this matrix contains NA values but no zeros.}
 
 \item{names.commodity}{names of commodities.
 If the parameter A is a demand structure tree list, the values in names.commodity should be the names of those leaf nodes.}
@@ -50,13 +56,18 @@ If GRExg is NA and some commodities have exogenous supply, then GRExg will be se
 
 \item{pExg}{an n-vector indicating the exogenous prices (if any).}
 
-\item{numeraire}{the name or index of the numeraire commodity.}
+\item{numeraire}{the name, index or price of the numeraire commodity.
+If it is a character string, then it is assumed to be the name of the numeraire commodity.
+If it is a number without a name, then it is assumed to be the index of the numeraire commodity.
+If it is a number with a name, e.g. c("lab" = 0.5), then the name is assumed to be the name of the numeraire commodity
+and the number is assumed to be the price of the numeraire commodity,
+even though the price of the numeraire commodity usually is 1.}
 
 \item{tolCond}{the tolerance condition.}
 
 \item{maxIteration}{the maximum iteration count. If the main purpose of running this function is to do simulation instead of calculating equilibrium, then maxIteration should be set to 1.}
 
-\item{numberOfPeriods}{the period number in each iteration.}
+\item{numberOfPeriods}{the period number in each iteration, which should not be less than 20.}
 
 \item{depreciationCoef}{the depreciation coefficient (i.e. 1 minus the depreciation rate) of the unsold products.}
 
@@ -69,16 +80,18 @@ The return value is a price n-vector. The default price adjustment method is p *
 
 \item{ts}{if TRUE, the time series of the last iteration are returned.}
 
-\item{policy}{a policy function. The policy function has the following optional parameters:
+\item{policy}{a policy function or a policy function list. A policy function has the following optional parameters:
 \itemize{
 \item time - the current time.
 \item dstl - the demand structure tree list in the model, which can be adjusted in the policy function
 and it need not be returned.
 \item state - the current state, which is a list.
-state$p is the current price vector.
+state$p is the current price vector with names.
 state$S is the current supply matrix.
 state$last.z is the last output and utility vector.
 state$B is the current supply coefficient matrix.
+state$names.commodity contains the names of commodities.
+state$names.agent contains the names of agents.
 \item state.history - the state history, which is a list consisting of the time series of p, S, q, and z.
 }
 The return value of the policy function other than a list will be ignored.
@@ -114,15 +127,36 @@ A new version of the sdm function in the package CGE.
 Now the  parameter A can be a demand structure tree list.
 Hence we actually no longer need the function \code{\link{sdm_dstl}}.
 Some rarely used parameters in the function sdm have been deleted.
+This function is the core of this package.
+}
+\details{
+In each period of the structural dynamic model, the economy runs as follows. \cr
+Firstly, the new price vector emerges on the basis of the price vector and sales rates of the previous period, which indicates the current market prices. \cr
+Secondly, outputs and depreciated inventories of the previous period constitute the current supplies.\cr
+Thirdly, policy functions (if any) are implemented.\cr
+Fourthly, the current input coefficient matrix is computed and the supplies are exchanged under market prices. The exchange vector and sales rate vector are obtained. Unsold goods constitute the inventories, which will undergo depreciation and become a portion of the supplies of the next period. The exchange vector determines the current outputs and utility levels.
+}
+\note{
+In the package CGE, the instantaneous equilibrium path (alias market clearing path) is computed by the function iep.
+In this package, the instantaneous equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
+
+The order of implementation of various policies is critical.
+When a policy list contains a supply policy, a technology (i.e. dstl) policy, a price policy (e.g. a market-clearing-price policy) and a B policy
+(i.e. a policy adjusting the argument B), both the supply policy and the technology policy should be placed before the price policy,
+and the B policy should be placed after the price policy.
+The reason is that the calculation of the current prices may require the use of supply and technology,
+while the calculation of B may require the use of the current prices.
 }
 \examples{
 \donttest{
-dst.firm <- node_set("output", NA,
+dst.firm <- node_new("output",
   type = "Leontief", a = c(0.5, 1),
   "prod", "lab"
 )
 
-dst.consumer <- node_set("utility", NA, type = "Leontief", a = 1, "prod")
+dst.consumer <- node_new("utility",
+  type = "Leontief", a = 1, "prod"
+)
 
 dstl <- list(dst.firm, dst.consumer)
 
@@ -249,7 +283,7 @@ ge.ST <- sdm2(
 matplot(ge.ST$ts.z, type = "l")
 
 #### economic cycles and an interest rate policy for the firm
-dst.firm <- node_set("agent", NA,
+dst.firm <- node_new("cc", #composite commodity
   type = "FIN",
   rate = c(1, 0.25),
   "cc1", "money"

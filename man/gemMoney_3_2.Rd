@@ -9,7 +9,8 @@ gemMoney_3_2(
   supply.labor = 100,
   supply.money = 300,
   names.commodity = c("product", "labor", "money"),
-  names.agent = c("firm", "household")
+  names.agent = c("firm", "household"),
+  ...
 )
 }
 \arguments{
@@ -22,17 +23,11 @@ gemMoney_3_2(
 \item{names.commodity}{names of commodities.}
 
 \item{names.agent}{names of agents.}
+
+\item{...}{arguments to be to be passed to the function sdm2.}
 }
 \value{
-A general equilibrium, which is a list with the following elements:
-\itemize{
-\item p - the price vector with labor as numeraire.
-\item D - the demand matrix.
-\item DV - the demand value matrix.
-\item SV - the supply value matrix.
-\item dstl - the demand structure tree list.
-\item ... - some elements returned by the CGE::sdm function
-}
+A general equilibrium (see \code{\link{sdm2}})
 }
 \description{
 A general equilibrium model with money.
@@ -70,7 +65,6 @@ dst.household <- node_new("utility",
 dstl.Leontief <- list(dst.Leontief.firm, dst.household)
 
 ge.Leontief <- gemMoney_3_2(dstl.Leontief)
-node_plot(ge.Leontief$dstl[[1]])
 ge.Leontief$p
 
 ## CES-type firm
@@ -85,11 +79,16 @@ node_plot(dst.CES.firm)
 dstl.CES <- list(dst.CES.firm, dst.household)
 
 ge.CES <- gemMoney_3_2(dstl.CES)
-node_plot(ge.CES$dstl[[1]])
-node_plot(ge.CES$dstl[[2]])
 ge.CES$p
 p.money <- ge.CES$p
 p.money["money"] <- p.money["money"] / interest.rate
 p.money <- p.money / p.money["money"] # prices in terms of the asset price of the currency
 p.money
+
+## The price of money is the interest rate.
+## The other prices are in terms of the asset price of the currency.
+gemMoney_3_2(dstl.CES,
+             numeraire = c("money" = interest.rate)
+)
+
 }

@@ -19,15 +19,8 @@
 #' @param supply.money the supply of money.
 #' @param names.commodity names of commodities.
 #' @param names.agent names of agents.
-#' @return A general equilibrium, which is a list with the following elements:
-#' \itemize{
-#' \item p - the price vector with labor as numeraire.
-#' \item D - the demand matrix.
-#' \item DV - the demand value matrix.
-#' \item SV - the supply value matrix.
-#' \item dstl - the demand structure tree list.
-#' \item ... - some elements returned by the CGE::sdm function
-#' }
+#' @param ... arguments to be to be passed to the function sdm2.
+#' @return A general equilibrium (see \code{\link{sdm2}})
 #'
 #' @examples
 #' #### Leontief-type firm
@@ -50,7 +43,6 @@
 #' dstl.Leontief <- list(dst.Leontief.firm, dst.household)
 #'
 #' ge.Leontief <- gemMoney_3_2(dstl.Leontief)
-#' node_plot(ge.Leontief$dstl[[1]])
 #' ge.Leontief$p
 #'
 #' ## CES-type firm
@@ -65,25 +57,27 @@
 #' dstl.CES <- list(dst.CES.firm, dst.household)
 #'
 #' ge.CES <- gemMoney_3_2(dstl.CES)
-#' node_plot(ge.CES$dstl[[1]])
-#' node_plot(ge.CES$dstl[[2]])
 #' ge.CES$p
 #' p.money <- ge.CES$p
 #' p.money["money"] <- p.money["money"] / interest.rate
 #' p.money <- p.money / p.money["money"] # prices in terms of the asset price of the currency
 #' p.money
+#'
+#' ## The price of money is the interest rate.
+#' ## The other prices are in terms of the asset price of the currency.
+#' gemMoney_3_2(dstl.CES,
+#'              numeraire = c("money" = interest.rate)
+#' )
+#'
 
 gemMoney_3_2 <- function(dstl,
                          supply.labor = 100,
                          supply.money = 300,
                          names.commodity = c("product", "labor", "money"),
-                         names.agent = c("firm", "household")) {
-  ge <- sdm(
-    A = function(state) {
-      p <- c(state$p)
-      names(p) <- names.commodity
-      sapply(dstl, demand_coefficient, p)
-    },
+                         names.agent = c("firm", "household"),
+                         ...) {
+  ge <- sdm2(
+    A = dstl,
     B = matrix(c(
       1, 0,
       0, 0,
@@ -96,13 +90,11 @@ gemMoney_3_2 <- function(dstl,
       tmp[2, 2] <- supply.labor
       tmp[3, 2] <- supply.money
       tmp
-    }
+    },
+    names.commodity = names.commodity,
+    names.agent = names.agent,
+    ...
   )
 
-  ge$p <- ge$p / ge$p[2] # labor as numeraire
-
-  ge <- ge_tidy(ge, names.commodity, names.agent)
-
-  ge$dstl <- dstl
   return(ge)
 }

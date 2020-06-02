@@ -6,7 +6,11 @@
 #' @param gamma the Arrow-Pratt measure of absolute risk aversion.
 #' @param p the probability vector. By default, the states are assumed to
 #' occur with equal probability.
-#' @return A list consisting of the value and the certainty equivalent.
+#' @return A list containing the following components:
+#' \itemize{
+#' \item u: the utility level.
+#' \item CE: the certainty equivalent.
+#' }
 #' @examples
 #' mu <- 5 # mu <- 8
 #' a <- 1

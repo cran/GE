@@ -7,7 +7,7 @@
 #' @param ... arguments passed to print.Node.
 #' @examples
 #' \donttest{
-#' dst <- node_set("firm", NA,
+#' dst <- node_new("firm",
 #'                 type = "SCES",
 #'                 alpha = 2, beta = c(0.8, 0.2),
 #'                 es = 0.5,
@@ -17,7 +17,7 @@
 #' node_print(dst)
 #'
 #' ####
-#' dst <- node_set("firm", NA,
+#' dst <- node_new("firm",
 #'                 type = "FUNC",
 #'                 func = min,
 #'                 "wheat", "iron"

@@ -11,22 +11,28 @@
 #' @return Invisibly returns the parent node of those new nodes.
 #' @examples
 #' \donttest{
-#' dst.firm <- node_set(
-#'   "output", NA,
-#'   "prod1",
-#'   "prod2"
+#' dst.firm <- node_new(
+#'   "output",
+#'   "prod1",  "prod2"
 #' )
 #' plot(dst.firm)
-#' 
-#' dst.VA <- node_set(
-#'   "VA", NA,
-#'   "lab",
-#'   "cap"
+#'
+#' dst.VA <- node_new(
+#'   "VA",
+#'   "lab",  "cap"
 #' )
-#' 
-#' node_insert(dst.firm, "prod1", dst.VA, "prod3")
+#'
+#' node_insert(
+#'   dst.firm, "prod1",
+#'   dst.VA, "prod3"
+#' )
+#' node_set(
+#'   dst.firm, "output",
+#'   "prod4"
+#' )
 #' plot(dst.firm)
 #' }
+
 node_insert <- function(tree, node.name, ...) {
   the.parent <- node_set(tree, node.name)$parent
   if (is.null(the.parent)) {
@@ -60,6 +66,6 @@ node_insert <- function(tree, node.name, ...) {
 
     the.parent$AddChildNode(node_set(tmp.parent, name.k))
   }
-  
+
   invisible(the.parent)
 }

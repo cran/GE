@@ -24,20 +24,25 @@ It modifies the tree given by the argument (see the package data.tree).
 }
 \examples{
 \donttest{
-dst.firm <- node_set(
-  "output", NA,
-  "prod1",
-  "prod2"
+dst.firm <- node_new(
+  "output",
+  "prod1",  "prod2"
 )
 plot(dst.firm)
 
-dst.VA <- node_set(
-  "VA", NA,
-  "lab",
-  "cap"
+dst.VA <- node_new(
+  "VA",
+  "lab",  "cap"
 )
 
-node_insert(dst.firm, "prod1", dst.VA, "prod3")
+node_insert(
+  dst.firm, "prod1",
+  dst.VA, "prod3"
+)
+node_set(
+  dst.firm, "output",
+  "prod4"
+)
 plot(dst.firm)
 }
 }

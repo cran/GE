@@ -15,7 +15,11 @@ CRRA(x, gamma, p = rep(1/length(x), length(x)))
 occur with equal probability.}
 }
 \value{
-A list consisting of the value and the certainty equivalent.
+A list containing the following components:
+\itemize{
+\item u: the utility level.
+\item CE: the certainty equivalent.
+}
 }
 \description{
 Compute the value and the certainty equivalent of the CRRA utility function.
@@ -29,4 +33,14 @@ pd <- dnorm(x, mean = mu, sd = sigma)
 gamma <- 0.8
 # the ratio of risk premium to expected return (i.e. the relative risk premium).
 (mu - CRRA(x, gamma, pd)$CE) / mu
+
+####
+df <- apply_expand.grid(
+  function(arg) {
+    CRRA(arg["x"], arg["gamma"])$u
+  },
+  x = seq(0.5, 3, 0.1),
+  gamma = c(0.5, 1, 2, 3)
+)
+coplot(result ~ x | as.factor(gamma), data = df)
 }

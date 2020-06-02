@@ -15,7 +15,11 @@ CARA(x, gamma, p = rep(1/length(x), length(x)))
 occur with equal probability.}
 }
 \value{
-A list consisting of the value and the certainty equivalent.
+A list containing the following components:
+\itemize{
+\item u: the utility level.
+\item CE: the certainty equivalent.
+}
 }
 \description{
 Compute the value and the certainty equivalent of the CARA utility function, i.e. -exp(-gamma*x). In general equilibrium analysis, the CARA utility function has an interval scale like temperature.

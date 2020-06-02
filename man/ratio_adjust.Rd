@@ -7,7 +7,7 @@
 ratio_adjust(
   ratio,
   coef = 0.8,
-  method = c("log", "left.linear", "max", "linear")
+  method = c("log", "left.linear", "trunc.log", "linear")
 )
 }
 \arguments{
@@ -28,7 +28,7 @@ For a positive ratio and the following methods, the return values are as follows
 \itemize{
 \item log : coef * log(ratio) + 1, if ratio >= 1; 1 / (coef * log(1 / ratio) + 1), if ratio < 1.
 \item left.linear : 1 / (coef * (1 / ratio - 1) + 1), if ratio >= 1; 1 + coef * (ratio - 1), if ratio < 1.
-\item max : max(coef * log(ratio) + 1, 0).
+\item trunc.log : max(coef * log(ratio) + 1, 0).
 \item linear : coef * (ratio - 1) + 1.
 }
 }
@@ -40,6 +40,5 @@ x <- seq(0.01, 2, 0.01)
 plot(x, x, type = "l")
 lines(x, ratio_adjust(x, 0.8, method = "log"), col = "red")
 lines(x, ratio_adjust(x, 0.8, method = "left.linear"), col = "blue")
-lines(x, ratio_adjust(x, 0.8, method = "max"), col = "green")
-
+lines(x, ratio_adjust(x, 0.8, method = "trunc.log"), col = "green")
 }

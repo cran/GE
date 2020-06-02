@@ -77,6 +77,13 @@ node_set(dst.firm, "VA",
   "land"
 )
 print(dst.firm, "type", "alpha", "beta", "es")
+
+## find a node
+x <- node_set(dst.firm, "VA")
+node_print(x)
 }
 
+}
+\seealso{
+\code{\link{node_new}}
 }
