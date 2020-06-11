@@ -307,7 +307,7 @@ gemInputOutputTable_8_8 <- function(IT,
 
   # dst.hh ------------------------------------------------------------------
   dst.hh <- Node$new("hh",
-    type = "bond",
+    type = "FIN",
     beta = prop.table(c(
       sum(IT[, "sector.hh"]) - IT["bond.ROW", "sector.hh"],
       IT["bond.ROW", "sector.hh"]

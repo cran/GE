@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_5_4.R
 \name{gemInputOutputTable_5_4}
 \alias{gemInputOutputTable_5_4}
-\title{A General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1)}
+\title{A General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017)}
 \usage{
 gemInputOutputTable_5_4(
   dstl,

@@ -68,7 +68,7 @@ apply_expand.grid <- function(FUN, ...) {
 
   param <- expand.grid(...)
 
-  for (k in 1:length(first.names)) {
+  for (k in seq_along(first.names)) {
     if (first.names[k] == "" && is.name(param.list[k])) {
       first.names[k] <- as.character(param.list[k])
     }

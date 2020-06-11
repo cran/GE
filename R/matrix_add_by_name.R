@@ -58,7 +58,7 @@ matrix_add_by_name <- function(M, ...) {
   if (length(M.list) > 0) {
     name.list <- match.call(expand.dots = FALSE)$`...`
 
-    for (k in 1:length(M.list)) {
+    for (k in seq_along(M.list)) {
       name.M2 <- as.character(name.list[[k]])
       M2 <- as.matrix(M.list[[k]])
       result <- add.by.name(result, M2)

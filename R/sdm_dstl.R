@@ -8,7 +8,7 @@
 #' @param dstl a demand structure tree list.
 #' @param names.commodity names of commodities.
 #' @param names.agent names of agents.
-#' @param ... arguments to be to be passed to the function CGE::sdm.
+#' @param ... arguments to be passed to the function CGE::sdm.
 #' @return A general equilibrium, which is a list with the following elements:
 #' \itemize{
 #' \item D - the demand matrix.

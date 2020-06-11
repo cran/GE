@@ -6,8 +6,8 @@
 #' and land) and 2 agents (i.e. a firm and a consumer). The numeraire is labor.
 #' @param dstl the demand structure tree list.
 #' @param endowment the endowment 3-vector.
-#' The endowment of the product can be NA or a positive number.
-#' The endowments of labor and land should be positive numbers.
+#' The endowment of the product is a non-negative number.
+#' The endowments of labor and land are positive numbers.
 #' @return A general equilibrium.
 #' @references http://essentialmicroeconomics.com/ChapterY5/SlideChapter5-1.pdf
 #' @references http://homepage.ntu.edu.tw/~josephw/MicroTheory_Lecture_11a_RobinsonCrusoeEconomy.pdf
@@ -51,7 +51,7 @@
 #'
 #' dstl <- list(dst.firm, dst.Robinson)
 #'
-#' ge <- gemRobinson_3_2(dstl, endowment = c(NA, 12, 1))
+#' ge <- gemRobinson_3_2(dstl, endowment = c(0, 12, 1))
 #' ge
 #'
 #' ## another example

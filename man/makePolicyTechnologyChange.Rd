@@ -11,7 +11,8 @@ makePolicyTechnologyChange(
 )
 }
 \arguments{
-\item{adjumentment.ratio}{a scalar. The attributes alpha and a will be multiplied by adjumentment.ratio.}
+\item{adjumentment.ratio}{a scalar. The attributes alpha will be multiplied by adjumentment.ratio.
+The attributes a will be divided by adjumentment.ratio.}
 
 \item{agent}{a vector specifying the indices or names of agents.}
 

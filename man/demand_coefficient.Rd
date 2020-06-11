@@ -7,9 +7,9 @@
 demand_coefficient(node, p)
 }
 \arguments{
-\item{node}{the demand structural tree.}
+\item{node}{a demand structural tree.}
 
-\item{p}{the price vector with names of commodities.}
+\item{p}{a price vector with names of commodities.}
 }
 \value{
 A vector consisting of demand coefficients.
@@ -19,6 +19,8 @@ Given a price vector, this function computes the demand coefficients of an agent
 The class of a demand structural tree is Node defined by the package data.tree.
 }
 \details{
+Demand coefficients often indicate the quantity of various commodities needed by an economic agent in order to obtain a unit of output or utility,
+and these commodities can include both real commodities and financial instruments such as tax receipts, stocks, bonds and currency.\cr
 The demand for various commodities by an economic agent can be expressed by a demand structure tree.
 Each non-leaf node can be regarded as the output of all its child nodes.
 Each node can be regarded as an input of its parent node.
@@ -35,7 +37,7 @@ alpha and es are scalars. beta is a vector. These parameters are parameters of a
 which is a vector and is the parameter of a Leontief function.
 \item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta.
 These parameters are parameters of a Cobb-Douglas function.
-\item FIN. That is the financial type. FIN can also be written as money, dividends, bonds and taxes.
+\item FIN. That is the financial type.
 In this case, this node also has the parameter rate or beta.
 If the parameter beta is not NULL, then the parameter rate will be ignored.
 The parameter rate applies to all situations, while the parameter beta only applies for some special cases.
@@ -87,7 +89,7 @@ demand_coefficient(dst, p = c(wheat = 1, iron = 2))
 SCES_A(alpha = 2, Beta = c(0.8, 0.2), p = c(1, 2), es = 0.5)
 CES_A(sigma = 1 - 1 / 0.5, alpha = 2, Beta = c(0.8, 0.2), p = c(1, 2), Theta = c(0.8, 0.2))
 
-#### a func-type node
+#### a FUNC-type node
 dst <- node_new("firm",
   type = "FUNC",
   func = function(p) {
@@ -107,7 +109,6 @@ CES_A(sigma = -1, alpha = 2, Beta = c(0.8, 0.2), p = c(1, 2), Theta = c(0.8, 0.2
 
 ####
 p <- c(wheat = 1, iron = 3, labor = 2, capital = 4)
-
 dst <- node_new("firm 1",
   type = "SCES", sigma = -1, alpha = 1, beta = c(1, 1),
   "cc1", "cc2"

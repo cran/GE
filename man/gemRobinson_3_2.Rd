@@ -10,8 +10,8 @@ gemRobinson_3_2(dstl, endowment)
 \item{dstl}{the demand structure tree list.}
 
 \item{endowment}{the endowment 3-vector.
-The endowment of the product can be NA or a positive number.
-The endowments of labor and land should be positive numbers.}
+The endowment of the product is a non-negative number.
+The endowments of labor and land are positive numbers.}
 }
 \value{
 A general equilibrium.
@@ -63,7 +63,7 @@ dst.firm <- node_new("output",
 
 dstl <- list(dst.firm, dst.Robinson)
 
-ge <- gemRobinson_3_2(dstl, endowment = c(NA, 12, 1))
+ge <- gemRobinson_3_2(dstl, endowment = c(0, 12, 1))
 ge
 
 ## another example

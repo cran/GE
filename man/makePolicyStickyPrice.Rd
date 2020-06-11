@@ -4,12 +4,14 @@
 \alias{makePolicyStickyPrice}
 \title{Make a Policy of Sticky Price}
 \usage{
-makePolicyStickyPrice(stickiness = 0.5, time.win = c(1, Inf))
+makePolicyStickyPrice(stickiness = 0.5, time.win = c(1, Inf), tolCond = 1e-06)
 }
 \arguments{
 \item{stickiness}{a stickiness value between 0 and 1.}
 
 \item{time.win}{the time window vector, i.e. a 2-vector specifying the start time and end time of policy implementation.}
+
+\item{tolCond}{the tolerance condition for computing the market-clearing price vector.}
 }
 \value{
 A policy function, which is often used as an argument of the function sdm2.

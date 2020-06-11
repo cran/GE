@@ -1,10 +1,9 @@
 #' @export
 #' @title A General Equilibrium Model with Tax (see Cardenete et al., 2012).
 #' @aliases gemTax_5_4
-#' @description This is a general equilibrium model with tax (see chapter 4, Cardenete et al., 2012).
-#' @details A general equilibrium model with 5 commodities (i.e. product 1, product 2, labor, capital goods,
-#' and tax) and 4 agents (i.e. 2 firms and 2 consumers).
-#' Both firms pay ad valorem output tax to consumers.
+#' @description A general equilibrium model with tax (see chapter 4, Cardenete et al., 2012),
+#' wherein there are 5 commodities (i.e. product 1, product 2, labor, capital goods,
+#' and tax receipt) and 4 agents (i.e. 2 firms and 2 consumers).
 #'
 #' @param dstl the demand structure tree list.
 #' @param names.commodity names of commodities.
@@ -16,15 +15,7 @@
 #' @param supply.lab.consumer2 the labor supply of consumer 2.
 #' @param supply.cap.consumer2 the capital supply of consumer 2.
 #' @param policy.tax a tax policy function (see \code{\link{sdm2}}).
-#' @return A general equilibrium, which is a list with the following elements:
-#' \itemize{
-#' \item p - the price vector with labor as numeraire.
-#' \item D - the demand matrix.
-#' \item DV - the demand value matrix.
-#' \item SV - the supply value matrix.
-#' \item ... - some elements returned by the CGE::sdm function
-#' }
-#'
+#' @return A general equilibrium (see \code{\link{sdm2}}), wherein labor is the numeraire.
 #' @references Manuel Alejandro Cardenete, Ana-Isabel Guerra, Ferran Sancho (2012, ISBN: 9783642247453) Applied General Equilibrium: An Introduction. Springer-Verlag Berlin Heidelberg.
 #' @examples
 #' \donttest{

@@ -37,22 +37,12 @@ gemTax_5_4(
 \item{policy.tax}{a tax policy function (see \code{\link{sdm2}}).}
 }
 \value{
-A general equilibrium, which is a list with the following elements:
-\itemize{
-\item p - the price vector with labor as numeraire.
-\item D - the demand matrix.
-\item DV - the demand value matrix.
-\item SV - the supply value matrix.
-\item ... - some elements returned by the CGE::sdm function
-}
+A general equilibrium (see \code{\link{sdm2}}), wherein labor is the numeraire.
 }
 \description{
-This is a general equilibrium model with tax (see chapter 4, Cardenete et al., 2012).
-}
-\details{
-A general equilibrium model with 5 commodities (i.e. product 1, product 2, labor, capital goods,
-and tax) and 4 agents (i.e. 2 firms and 2 consumers).
-Both firms pay ad valorem output tax to consumers.
+A general equilibrium model with tax (see chapter 4, Cardenete et al., 2012),
+wherein there are 5 commodities (i.e. product 1, product 2, labor, capital goods,
+and tax receipt) and 4 agents (i.e. 2 firms and 2 consumers).
 }
 \examples{
 \donttest{

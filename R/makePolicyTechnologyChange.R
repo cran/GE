@@ -5,7 +5,8 @@
 #' An attribute alpha is usually a parameter of a CES or CD function.
 #' An attribute a is usually a parameter of a Leontief function.
 #' For demand structure trees that do not contain these two attributes, this function has no effect.
-#' @param adjumentment.ratio a scalar. The attributes alpha and a will be multiplied by adjumentment.ratio.
+#' @param adjumentment.ratio a scalar. The attributes alpha will be multiplied by adjumentment.ratio.
+#' The attributes a will be divided by adjumentment.ratio.
 #' @param agent a vector specifying the indices or names of agents.
 #' @param time.win the time window vector, i.e. a 2-vector specifying the start time and end time of policy implementation.
 #' @return A policy function, which is often used as an argument of the function sdm2.
@@ -64,7 +65,7 @@ makePolicyTechnologyChange <- function(adjumentment.ratio = 1.1,
       for (index.k in agent.index) {
         dstl[[index.k]]$Do(function(node) {
           if (!is.null(node$alpha)) node$alpha <- node$alpha * adjumentment.ratio
-          if (!is.null(node$a)) node$a <- node$a * adjumentment.ratio
+          if (!is.null(node$a)) node$a <- node$a / adjumentment.ratio
         },
         filterFun = isNotLeaf
         )

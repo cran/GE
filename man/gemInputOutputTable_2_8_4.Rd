@@ -14,8 +14,8 @@ gemInputOutputTable_2_8_4(
   capital.supply.ROW = sum(IT["capital.ROW", ]),
   money.interest.supply.CHN = 5,
   money.interest.supply.ROW = 30,
-  es.productDI.production.CHN = 0.5,
-  es.productDI.production.ROW = 0.5,
+  es.DIProduct.production.CHN = 0.5,
+  es.DIProduct.production.ROW = 0.5,
   es.laborCapital.production.CHN = 0.75,
   es.laborCapital.production.ROW = 0.75,
   es.consumption.CHN = 0.5,
@@ -48,10 +48,10 @@ that is, the exogenous money supply multiplied by the exogenous interest rate.}
 
 \item{money.interest.supply.ROW}{the money interest supply of ROW.}
 
-\item{es.productDI.production.CHN}{the elasticity of substitution between
+\item{es.DIProduct.production.CHN}{the elasticity of substitution between
 domestic product and imported product used by the production sector of CHN.}
 
-\item{es.productDI.production.ROW}{the elasticity of substitution between
+\item{es.DIProduct.production.ROW}{the elasticity of substitution between
 domestic product and imported product used by the production sector of ROW.}
 
 \item{es.laborCapital.production.CHN}{the elasticity of substitution between
@@ -78,7 +78,7 @@ domestic product and imported product used by the investment sector of ROW.}
 
 \item{return.dstl}{If TRUE, the demand structure tree will be returned.}
 
-\item{...}{arguments to be transferred to the function sdm of the package CGE.}
+\item{...}{arguments to be transferred to the function \code{\link{sdm2}}.}
 }
 \value{
 A general equilibrium, which usually is a list with the following elements:
@@ -93,7 +93,7 @@ the price of a currency is the interest per unit of currency.
 \item p.money - the price vector with CHN money as numeraire
 if both interest.rate.CHN and interest.rate.CHN are not NA.
 \item dstl - the demand structure tree list of sectors if return.dstl == TRUE.
-\item ... - some elements returned by the CGE::sdm function
+\item ... - some elements returned by the function \code{\link{sdm2}}.
 }
 }
 \description{
@@ -227,7 +227,7 @@ geTmp$eri.CHN
 geTmp <- gemInputOutputTable_2_8_4(
   IT = ITExample,
   capital.supply.CHN = sum(ITExample["capital.CHN", ]) * 1.2,
-  es.productDI.production.CHN = 0.3,
+  es.DIProduct.production.CHN = 0.3,
   return.dstl = TRUE
 )
 geTmp$eri.CHN

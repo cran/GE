@@ -46,7 +46,7 @@ SCES_A <- function(sigma=1-1/es, alpha, Beta, p, es=NA) {
     )
   } else {
     result <- c()
-    for (k in 1:length(sigma)) {
+    for (k in seq_along(sigma)) {
       switch(as.character(sigma[k]),
         "0" = {
           tmp.result <- CD_A(alpha = prod(Beta[, k]^-Beta[, k]), Beta = Beta[, k], p = p)

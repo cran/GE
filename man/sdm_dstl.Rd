@@ -13,7 +13,7 @@ sdm_dstl(dstl, names.commodity, names.agent, ...)
 
 \item{names.agent}{names of agents.}
 
-\item{...}{arguments to be to be passed to the function CGE::sdm.}
+\item{...}{arguments to be passed to the function CGE::sdm.}
 }
 \value{
 A general equilibrium, which is a list with the following elements:

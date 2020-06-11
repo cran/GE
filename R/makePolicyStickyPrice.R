@@ -7,6 +7,7 @@
 #' When the stickiness value is 1, the current prices will keep unchanged.
 #' @param stickiness a stickiness value between 0 and 1.
 #' @param time.win the time window vector, i.e. a 2-vector specifying the start time and end time of policy implementation.
+#' @param tolCond the tolerance condition for computing the market-clearing price vector.
 #' @return A policy function, which is often used as an argument of the function sdm2.
 #' @note Three major price adjustment methods can be used in the structural dynamic model.
 #' The corresponding three kinds of prices are exploratory prices (the default case), market clearing prices, and sticky prices.
@@ -41,13 +42,14 @@
 #' matplot(ge$ts.p, type = "b", pch = 20)
 #' }
 #'
-makePolicyStickyPrice <- function(stickiness = 0.5, time.win = c(1, Inf)) {
+makePolicyStickyPrice <- function(stickiness = 0.5, time.win = c(1, Inf), tolCond = 1e-6) {
   function(time, state, dstl) {
     if (time >= time.win[1] && time <= time.win[2]) {
       instantaneous.equilibrium <- sdm2(dstl,
         B = 0 * state$S, S0Exg = state$S,
         names.commodity = state$names.commodity,
-        names.agent = state$names.agent
+        names.agent = state$names.agent,
+        tolCond = tolCond
       )
       p.market.clearing <- instantaneous.equilibrium$p
       state$p <- state$p * stickiness + (1 - stickiness) * p.market.clearing

@@ -525,6 +525,7 @@ sdm2 <- function(A,
   toleranceRec <- matrix(1, maxIteration, 1)
 
   for (k.iteration in 1:maxIteration) {
+    time <- 1
     for (t in 2:numberOfPeriods) {
       time <- time + 1
       xtp1 <- xNext(xtp1)

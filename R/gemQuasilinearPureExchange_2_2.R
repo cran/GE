@@ -1,8 +1,7 @@
 #' @export
 #' @title A Pure Exchange Economy with a Quasilinear Utility Function
 #' @aliases gemQuasilinearPureExchange_2_2
-#' @description An example of a pure exchange economy with a quasilinear utility function,
-#' which is provided by Prof. Karaivanov (see the reference).
+#' @description An example of a pure exchange economy with a quasilinear utility function (Karaivanov, see the reference).
 #' @details Suppose there are only two goods (bananas and fish) and 2 consumers (Annie and Ben) in an exchange economy.
 #' Annie has a utility function x_1^(1/3) * x_2^(2/3) where x_1 is the amount of fish she eats and x_2 is the amount of
 #' bananas she eats.
@@ -43,7 +42,7 @@
 #' ge.mat <- gemQuasilinearPureExchange_2_2(A = A)
 #' ge.mat
 #'
-#' ## another computation method of the economy above
+#' ## Use a dstl and a policy function to compute the general equilibrium above.
 #' dst.consumer1 <- node_new("util",
 #'                           type = "CD", alpha = 1, beta = c(1 / 3, 2 / 3),
 #'                           "fish", "banana"

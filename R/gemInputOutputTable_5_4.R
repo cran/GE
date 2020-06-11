@@ -1,5 +1,5 @@
 #' @export
-#' @title A General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1)
+#' @title A General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017)
 #' @aliases gemInputOutputTable_5_4
 #' @description This is a general equilibrium model based on a 5x4 input-output table (see Zhang Xin, 2017, Table 8.6.1).
 #' @details Given a 5x4 input-output table (e.g., see Zhang Xin, 2017, Table 8.6.1), this model calculates

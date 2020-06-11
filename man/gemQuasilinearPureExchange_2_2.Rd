@@ -22,8 +22,7 @@ or a function A(state) which returns a 2-by-2 matrix (see \code{\link{sdm2}}).}
 A general equilibrium.
 }
 \description{
-An example of a pure exchange economy with a quasilinear utility function,
-which is provided by Prof. Karaivanov (see the reference).
+An example of a pure exchange economy with a quasilinear utility function (Karaivanov, see the reference).
 }
 \details{
 Suppose there are only two goods (bananas and fish) and 2 consumers (Annie and Ben) in an exchange economy.
@@ -61,7 +60,7 @@ A <- function(state) {
 ge.mat <- gemQuasilinearPureExchange_2_2(A = A)
 ge.mat
 
-## another computation method of the economy above
+## Use a dstl and a policy function to compute the general equilibrium above.
 dst.consumer1 <- node_new("util",
                           type = "CD", alpha = 1, beta = c(1 / 3, 2 / 3),
                           "fish", "banana"

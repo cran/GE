@@ -20,11 +20,14 @@ This function has side-effects, it modifies the tree given by the argument (see 
 }
 \examples{
 \donttest{
-dst <- node_set(
-  "firm", NA,
+dst <- node_new(
+  "firm",
   "lab", "cap", "land"
 )
-node_prune(dst, "cap", "land")
+node_prune(
+  dst,
+  "cap", "land"
+)
 plot(dst)
 }
 }
