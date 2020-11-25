@@ -229,7 +229,7 @@
 #' matplot(ge.ST$ts.z, type = "l")
 #'
 #' #### economic cycles and an interest rate policy for the firm
-#' dst.firm <- node_new("cc", #composite commodity
+#' dst.firm <- node_new("cc", # composite commodity
 #'   type = "FIN",
 #'   rate = c(1, 0.25),
 #'   "cc1", "money"
@@ -475,7 +475,9 @@ sdm2 <- function(A,
     })
     names.leaf <- unlist(names.leaf)
     if (!all(is.element(names.leaf, names.commodity))) {
-      stop("Li: The names of some leaf nodes are not included in names.commodity.")
+      message("Li: The names of some leaf nodes are not included in names.commodity:")
+      message(paste(setdiff(names.leaf, names.commodity), sep = ", "))
+      stop()
     } else
     if (!setequal(names.leaf, names.commodity)) {
       message("Li: Some names in names.commodity do not have corresponding leaf nodes: ")

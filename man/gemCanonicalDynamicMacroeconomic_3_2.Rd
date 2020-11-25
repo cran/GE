@@ -109,3 +109,6 @@ Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomi
 
 Li Xiangyang (2018, ISBN: 9787302497745) Dynamic Stochastic General Equilibrium (DSGE) Model: Theory, Methodology, and Dynare Practice. Tsinghua University Press. (In Chinese)
 }
+\seealso{
+The market clearing path (alias instantaneous equilibrium path, iep) can be computed with the function \code{\link{policyMarketClearingPrice}}.
+}

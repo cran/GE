@@ -25,7 +25,8 @@ and land) and 2 agents (i.e. a firm and a consumer). The numeraire is labor.
 }
 \examples{
 \donttest{
-#### a general equilibrium model with 2 basic commodities (i.e. labor and land) and 1 agent
+#### a general equilibrium model with 2 basic commodities (i.e. labor and land)
+#### and 1 agent (see the first reference)
 dst.Robinson <- node_new("util",
   type = "CD", alpha = 1, beta = c(0.5, 0.5),
   "prod", "lab"
@@ -66,12 +67,11 @@ dstl <- list(dst.firm, dst.Robinson)
 ge <- gemRobinson_3_2(dstl, endowment = c(0, 12, 1))
 ge
 
-## another example
+## another example (see the second reference)
 dst.firm$alpha <- 1
 
 ge <- gemRobinson_3_2(dstl, endowment = c(3, 144, 1))
 ge
-
 
 #### a Robinson Crusoe economy with labor and two types of land
 dst.Robinson <- node_new("util",

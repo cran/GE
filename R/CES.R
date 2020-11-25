@@ -14,14 +14,18 @@
 #' \donttest{
 #' CES(1, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))
 #' }
-
+#'
 CES <- function(sigma, alpha, beta, x, theta = NULL) {
   if (length(sigma) != length(alpha)) {
     message("Li: length(sigma)!=length(alpha)")
   }
 
   if (sigma == 0) {
-    return(alpha * prod(x^beta))
+    if (is.null(theta)) {
+      return(alpha * prod(x^beta))
+    } else {
+      return(alpha * prod((x / theta)^beta))
+    }
   }
 
   if (sigma == -Inf) {

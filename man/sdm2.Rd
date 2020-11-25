@@ -283,7 +283,7 @@ ge.ST <- sdm2(
 matplot(ge.ST$ts.z, type = "l")
 
 #### economic cycles and an interest rate policy for the firm
-dst.firm <- node_new("cc", #composite commodity
+dst.firm <- node_new("cc", # composite commodity
   type = "FIN",
   rate = c(1, 0.25),
   "cc1", "money"

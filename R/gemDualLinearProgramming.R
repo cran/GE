@@ -29,7 +29,7 @@
 #' @references Stapel, Elizabeth. Linear Programming: Introduction. Purplemath. Available from https://www.purplemath.com/modules/linprog.htm
 #' @examples
 #' \donttest{
-#' #### The Dakota example of Winston (2003, section 6.3, 6.6 and 6.8)
+#' #### the Dakota example of Winston (2003, section 6.3, 6.6 and 6.8)
 #' A <- matrix(c(
 #'   0, 0, 0, 1,
 #'   8, 6, 1, 0,
@@ -76,7 +76,7 @@
 #' ge2$z
 #' ge2$p / ge2$p[1]
 #'
-#' #### An example in the mit reference.
+#' #### an example in the mit reference
 #' A <- matrix(c(
 #'   0, 0, 0, 1,
 #'   0.5, 2, 1, 0,
@@ -100,7 +100,7 @@
 #' ge$z
 #' ge$p / ge$p[1]
 #'
-#' #### An example in the stanford reference.
+#' #### an example in the stanford reference
 #' A <- matrix(c(
 #'   0, 0, 1,
 #'   4.44, 0, 0,
@@ -128,7 +128,7 @@
 #' ge$z
 #' ge$p / ge$p[1]
 #'
-#' #### An example in the utexas reference.
+#' #### an example in the utexas reference
 #' A <- matrix(c(
 #'   0, 0, 1,
 #'   0, 1, 0,
@@ -154,7 +154,7 @@
 #' ge$z
 #' ge$p / ge$p[1]
 #'
-#' #### The Giapetto example of Winston (2003, section 3.1)
+#' #### the Giapetto example of Winston (2003, section 3.1)
 #' A <- matrix(c(
 #'   0, 0, 1,
 #'   2, 1, 0,
@@ -182,7 +182,7 @@
 #' ge$z
 #' ge$p
 #'
-#' #### The Dorian example (a minimization problem) of Winston (2003, section 3.2)
+#' #### the Dorian example (a minimization problem) of Winston (2003, section 3.2)
 #' A <- matrix(c(
 #'   0, 0, 1,
 #'   7, 2, 0,
@@ -208,7 +208,7 @@
 #' ge$p
 #' ge$z
 #'
-#' #### The diet example (a minimization problem) of Winston (2003, section 3.4)
+#' #### the diet example (a minimization problem) of Winston (2003, section 3.4)
 #' A <- matrix(c(
 #'   0, 0, 0, 0, 1,
 #'   400, 3, 2, 2, 0,

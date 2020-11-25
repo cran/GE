@@ -119,6 +119,37 @@
 #'   numeraire = "banana"
 #' )
 #' ge.4_4
+#'
+#' #### an example with a LES (linear expenditure system) utility function
+#' demand_LES <- function(p, w,
+#'                        gamma = c(0.1, 0.2),
+#'                        beta = c(0.4, 0.6)) {
+#'   d <- c()
+#'   discretionary.income <- w - sum(p * gamma)
+#'   for (k in seq_along(gamma)) {
+#'     d[k] <- gamma[k] + beta[k] * discretionary.income / p[k]
+#'   }
+#'
+#'   d
+#' }
+#'
+#' A <- function(state) {
+#'   a1 <- CD_A(1, rbind(1 / 3, 2 / 3), state$p)
+#'   a2 <- demand_LES(state$p, state$w[2])
+#'   cbind(a1, a2)
+#' }
+#'
+#' sdm2(
+#'   A = A,
+#'   B = matrix(0, 2, 2),
+#'   S0Exg = matrix(c(
+#'     3, 4,
+#'     7, 0
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("fish", "banana"),
+#'   names.agent = c("Annie", "Ben"),
+#'   numeraire = "banana"
+#' )
 #' }
 
 
