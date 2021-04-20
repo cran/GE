@@ -1,4 +1,4 @@
-e089dee068b146dd6e2834c52a860aac *DESCRIPTION
+419eea8f12260b64c53eef0ebfdedb8d *DESCRIPTION
 cc1f7c598afc31ab78535bf80b423c03 *NAMESPACE
 7218872b84dbf0e3c86dd51afeacf2a2 *R/CARA.R
 5f64e4ec92c0601327c366a15341d48c *R/CES.R
@@ -36,7 +36,7 @@ d3ebada028f7952a9f2047a3bc9ae069 *R/makePolicyTechnologyChange.R
 cf301a97522c53c8d1504e02c223b014 *R/node_insert.R
 8e78a675e536b91427642fa86d8b557e *R/node_new.R
 ad54c1dd8f923bbbc3bfb257ea118597 *R/node_plot.R
-4f29d9f438abae1e58ce23997692384a *R/node_print.R
+8ec40939c6acad2ea66ee83a8f42c8cc *R/node_print.R
 e1e72ad3c678609bc5e1633b9d7fd046 *R/node_prune.R
 5196effd3ee1bad4dfd9aaa6e58bfbbd *R/node_replace.R
 76b188a445d32d02865e43a769bae0b0 *R/node_set.R
@@ -48,7 +48,7 @@ f6e78db01e5cc89cd37f9631500cdcc2 *R/ratio_adjust.R
 d600e5b54f114f852a9893fbe1af05ab *R/sdm_dstl.R
 298240c66a173ae4cd0dba4e1c8cfbd2 *R/structural_function.R
 8a54ad2d396ee65302478fa00d82d410 *man/CARA.Rd
-5ac231becbca34cdc77d3e6b9563e11f *man/CES.Rd
+0de81d7fa67f6c8a3262b1dc53bcdafb *man/CES.Rd
 b795f62b4ff39d438b7336fc93129d4e *man/CRRA.Rd
 4f4c1db1f3729380ae82f9c2fb06bce1 *man/SCES.Rd
 22e48b6f7c2b2cce1d627c6be60f523b *man/SCES_A.Rd

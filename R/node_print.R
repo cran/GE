@@ -27,7 +27,7 @@
 #' }
 #'
 node_print <- function(node, ...) {
-  the.fields <- node$fieldsAll
+  the.fields <- node$attributesAll
   the.fields <- setdiff(the.fields, "func")
   args <- c(node, as.list(the.fields), list(...))
   do.call(print, args)

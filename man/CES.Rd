@@ -27,4 +27,5 @@ CES function, e.g. alpha * (beta1 * (x1 / theta1)^sigma + beta2 * (x2 / theta2)^
 \donttest{
 CES(1, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))
 }
+
 }
