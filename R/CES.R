@@ -30,9 +30,9 @@ CES <- function(sigma, alpha, beta, x, theta = NULL) {
 
   if (sigma == -Inf) {
     if (is.null(theta)) {
-      return(min(x))
+      return(alpha * min(x))
     } else {
-      return(min(x / theta))
+      return(alpha * min(x / theta))
     }
   }
 
