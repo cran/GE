@@ -17,9 +17,25 @@
 #' plot(x, y)
 #' lines(x, log(x), col = "blue")
 #' lines(x, sqrt(x), col = "red")
+#'
+#' ####
+#' f <- function(theta) {
+#' p <- c(1, 1)
+#' structural_function(
+#'   theta,
+#'   c(15, 20),
+#'   function(p) CD_A(alpha = 5, Beta = c(0.6, 0.4), p),
+#'   function(p) CD_A(alpha = 15, Beta = c(0.6, 0.4), p),
+#'   p
+#' )
+#' }
+#'
+#' tmp <- sapply(1:25,f)
+#' matplot(t(tmp), type="l")
+
 structural_function <- function(theta, transition.interval, f1, f2, ...) {
-  value1 <- ifelse(is.function(f1), f1(...), f1)
-  value2 <- ifelse(is.function(f2), f2(...), f2)
+  if (is.function(f1)) value1 <- f1(...) else value1 <- f1
+  if (is.function(f2)) value2 <- f2(...) else value2 <- f2
 
   if (theta <= transition.interval[1]) {
     return(value1)

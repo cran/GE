@@ -6,7 +6,7 @@
 #' Generally, this function is passed to the function sdm2 as an argument to compute the market clearing path.
 #' And in this case, the argument A of the function sdm2 must be a demand structure tree list.
 #' @param time the current time.
-#' @param dstl the demand structure tree list in the model.
+#' @param A a demand structure tree list (i.e. dstl, see demand_coefficient), a demand coefficient n-by-m matrix (alias demand structure matrix) or a function A(state) which returns an n-by-m matrix.
 #' @param state the current state.
 #' @return A list consisting of p, S and B which specify the prices, supplies and supply coefficient matrix after adjustment.
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
@@ -141,8 +141,8 @@
 #' matplot(ge$ts.p, type = "b", pch = 20)
 #' }
 
-policyMarketClearingPrice <- function(time, dstl, state) {
-  instantaneous.equilibrium <- sdm2(dstl,
+policyMarketClearingPrice <- function(time, A, state) {
+  instantaneous.equilibrium <- sdm2(A,
                                     B = 0 * state$S, S0Exg = state$S,
                                     names.commodity = state$names.commodity,
                                     names.agent = state$names.agent

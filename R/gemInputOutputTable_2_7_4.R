@@ -40,7 +40,7 @@
 #'   15, 0, 0, 0, 0, 0, 0, 0,
 #'   2, 0, 0, 0, 0, 0, 0, 0,
 #'   0, 9, 0, 0, 0, 2, 0, 0,
-#'   3, 0, 0, 0, 0, 0, 0, 0,
+#'   3, 0, 0, 1, 0, 0, 0, 0,
 #'   6, 0, 0, 0, 0, 0, 0, 0,
 #'   8, 3, 3, 0, 0, 0, 0, 0,
 #'   0, 0, 0, 13, 150, 316, 258, 0,
@@ -49,7 +49,7 @@
 #'   0, 2, 0, 0, 0, 269, 0, 0,
 #'   0, 0, 0, 0, 35, 0, 0, 1,
 #'   0, 0, 0, 0, 172, 0, 0, 0,
-#'   0, 0, 0, 0, 1, 0, 13, 0
+#'   0, 0, 0, 0, 1, 5, 13, 0
 #' ), 14, 8, TRUE)
 #'
 #' OT <- matrix(c(
@@ -112,10 +112,15 @@
 #' ge.LSC <- gemInputOutputTable_2_7_4(IT, OT.LSC)
 #' ge.LSC$p
 #' ge.LSC$z
+#'
+#' #### tariff rate change in CHN
+#' IT.TRC <- IT
+#' IT.TRC["tax.CHN","foreign.trade.CHN"] <- IT.TRC["tax.CHN","foreign.trade.CHN"] * 1.2
+#' ge.TRC <- gemInputOutputTable_2_7_4(IT.TRC, OT)
+#' ge.TRC$p
+#' ge.TRC$z
 #' }
 #'
-
-
 gemInputOutputTable_2_7_4 <- function(IT, OT,
                                       es.DIProduct.production.CHN = 3,
                                       es.DIProduct.production.ROW = 3,

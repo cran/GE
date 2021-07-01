@@ -45,6 +45,7 @@
 #' \item time - the current time.
 #' \item dstl - the demand structure tree list in the model, which can be adjusted in the policy function
 #' and it need not be returned.
+#' \item A - the same as the parameter A of sdm2.
 #' \item state - the current state, which is a list.
 #' state$p is the current price vector with names.
 #' state$S is the current supply matrix.
@@ -395,6 +396,7 @@ sdm2 <- function(A,
           )
         }
         if (is.list(A) && ("dstl" %in% kth.policy.arg.names)) kth.policy.arg$dstl <- A
+        if ("A" %in% kth.policy.arg.names) kth.policy.arg$A <- A
         if ("state.history" %in% kth.policy.arg.names) {
           kth.policy.arg$state.history <- list(
             p = t(p),

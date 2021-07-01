@@ -4,12 +4,12 @@
 \alias{policyMarketClearingPrice}
 \title{Market-Clearing-Price Policy Function}
 \usage{
-policyMarketClearingPrice(time, dstl, state)
+policyMarketClearingPrice(time, A, state)
 }
 \arguments{
 \item{time}{the current time.}
 
-\item{dstl}{the demand structure tree list in the model.}
+\item{A}{a demand structure tree list (i.e. dstl, see demand_coefficient), a demand coefficient n-by-m matrix (alias demand structure matrix) or a function A(state) which returns an n-by-m matrix.}
 
 \item{state}{the current state.}
 }

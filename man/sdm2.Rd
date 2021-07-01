@@ -85,6 +85,7 @@ The return value is a price n-vector. The default price adjustment method is p *
 \item time - the current time.
 \item dstl - the demand structure tree list in the model, which can be adjusted in the policy function
 and it need not be returned.
+\item A - the same as the parameter A of sdm2.
 \item state - the current state, which is a list.
 state$p is the current price vector with names.
 state$S is the current supply matrix.
