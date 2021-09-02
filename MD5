@@ -1,5 +1,5 @@
-11a0f7f94d5d0017d60efdf853da8e20 *DESCRIPTION
-df8af24dec28918fb505c1909b1f1412 *NAMESPACE
+db78dcb158dde1cd5a12f3536e3a57c3 *DESCRIPTION
+cd9d796ed4f5ea222a22371be4954415 *NAMESPACE
 7218872b84dbf0e3c86dd51afeacf2a2 *R/CARA.R
 f5a5cccf0e30839de457a1bb161a46f1 *R/CES.R
 4844046ed3fbb99ecd371890a0d80f79 *R/CRRA.R
@@ -25,6 +25,8 @@ c3544803534fdaddc23ee936ab3cf911 *R/gemInputOutputTable_Leontief_3_3.R
 2741520b2f67c91a162ed330731a16dd *R/gemTax_5_4.R
 cb4041983943ed3c8a9b7454b17ccc71 *R/gemTwoCountryPureExchange.R
 30bf2461ad5c326a29681902eed8384b *R/gemTwoCountryPureExchange_Bond.R
+9bc6c11d57ce66be8e2a623c8f3117bb *R/gemTwoCountry_Bond_7_4.R
+f8d05b5e1b01f37b0ef160737999f7cd *R/gemTwoCountry_Tariff_9_5.R
 92bf97de1911c545e500f8e0e3d2452a *R/growth_rate.R
 543227d805cf501679b536c96f34e6d5 *R/intertemporal_utility.R
 ab57df9c1ed1ede7635bac66f5557039 *R/iterate.R
@@ -73,6 +75,8 @@ cb758212437a79cc769dd5b1a58cd1da *man/gemQuasilinearPureExchange_2_2.Rd
 cbacc0b9574737b1f96f49f75bdb5b07 *man/gemTax_5_4.Rd
 e5be75855ba6f8992c291d79a22cf5ad *man/gemTwoCountryPureExchange.Rd
 66858905a57d2c1843f5e46c25cdb6bf *man/gemTwoCountryPureExchange_Bond.Rd
+426d7cc569702880f71d6ef4024277e9 *man/gemTwoCountry_Bond_7_4.Rd
+63c4158ca70937880486b219dd39fff9 *man/gemTwoCountry_Tariff_9_5.Rd
 1030a86f2159924d43f8eae7a3a1632d *man/growth_rate.Rd
 18da79ca138c33a19f380bfadb0930fe *man/intertemporal_utility.Rd
 0dccf907379b88b0a86fc21eee80ce53 *man/iterate.Rd
