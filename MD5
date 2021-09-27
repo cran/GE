@@ -1,5 +1,5 @@
-db78dcb158dde1cd5a12f3536e3a57c3 *DESCRIPTION
-cd9d796ed4f5ea222a22371be4954415 *NAMESPACE
+4dd0c6cb1c0945ef4233ab8a63b88256 *DESCRIPTION
+9bbaa7dcb493a367e72e6a41e8874bc0 *NAMESPACE
 7218872b84dbf0e3c86dd51afeacf2a2 *R/CARA.R
 f5a5cccf0e30839de457a1bb161a46f1 *R/CES.R
 4844046ed3fbb99ecd371890a0d80f79 *R/CRRA.R
@@ -10,7 +10,8 @@ c9359864cae90cd69beaa58c532a6c3c *R/demand_coefficient.R
 c59183142cbca3720d6305b828c00840 *R/ge_tidy.R
 160d3792dc414f0b2088ef001c229f67 *R/gemCanonicalDynamicMacroeconomic_3_2.R
 7285508d46cb8ee788d920c4fab3c124 *R/gemDualLinearProgramming.R
-2134e07a3b1db0b7e8b37941a8cb53e4 *R/gemInputOutputTable_2_7_4.R
+b9a4b56b8e330bb323bc82d206d62249 *R/gemInputOutputTable_2_7_2.R
+2cf95d4093ec0cce878bbfa6fd0f2bf4 *R/gemInputOutputTable_2_7_4.R
 16333e62039ed5dd4fc9f48265691a7c *R/gemInputOutputTable_2_8_4.R
 db2b92cf1256d5e909cf94a214f123cd *R/gemInputOutputTable_5_4.R
 513e9e5ee5be7e8947edbac7f7473df7 *R/gemInputOutputTable_7_4.R
@@ -60,7 +61,8 @@ a9b0614a470d82f626929f882d561c28 *man/apply_expand.grid.Rd
 4028b938747a7b65e5a68aba7c74ce26 *man/ge_tidy.Rd
 9117cda0c52df9cd2f0f7e417e0b760d *man/gemCanonicalDynamicMacroeconomic_3_2.Rd
 fe48b17ec96f7e9585540c524258e4ac *man/gemDualLinearProgramming.Rd
-aa659450dffee4ea948433a973dee93b *man/gemInputOutputTable_2_7_4.Rd
+4bdfa61cdec627044d5ed2f1b6c2d78d *man/gemInputOutputTable_2_7_2.Rd
+a9efafdefc2455e6efddf6d214441a06 *man/gemInputOutputTable_2_7_4.Rd
 da1a58297ea698f3e44c584a4bea0cdd *man/gemInputOutputTable_2_8_4.Rd
 07e30ef807fc49d5b4e2408273fd70d6 *man/gemInputOutputTable_5_4.Rd
 7e25bcb84e75137b5abb8cd24c1b6d9c *man/gemInputOutputTable_7_4.Rd

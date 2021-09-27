@@ -66,7 +66,7 @@ This general equilibrium model is based on a two-country (i.e. CHN and ROW) inpu
 Each country contains 4 sectors and 7 commodities (or subjects).
 The 4 sectors are production, consumption, investment and foreign trade.
 The 7 commodities (or subjects) are product, labor, capital goods, bond, tax, dividend, imported product.
-Hence the input-output table has 16 rows and 8 columns.
+Hence the input-output table has 14 rows and 8 columns.
 }
 \examples{
 \donttest{
