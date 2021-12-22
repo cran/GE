@@ -29,7 +29,8 @@ sdm2(
 }
 \arguments{
 \item{A}{a demand structure tree list (i.e. dstl, see \code{\link{demand_coefficient}}), a demand coefficient n-by-m matrix (alias demand structure matrix)
-or a function A(state) which returns an n-by-m matrix (see the sdm function).
+or a function A(state) which returns an n-by-m matrix. Wherein the argument state is a list consisting of t (the time), p (the current price vector),
+last.z (the output and utility vector at time t-1), w (the current wealth vector) and last.A (the demand coefficient matrix at time t-1).
 When the calculation process involves policy functions, dstl is strongly recommended.
 Some policy functions in this package only support dstl.}
 
@@ -91,6 +92,7 @@ state$p is the current price vector with names.
 state$S is the current supply matrix.
 state$last.z is the last output and utility vector.
 state$B is the current supply coefficient matrix.
+state$last.A is the demand coefficient matrix at time t-1.
 state$names.commodity contains the names of commodities.
 state$names.agent contains the names of agents.
 \item state.history - the state history, which is a list consisting of the time series of p, S, q, and z.

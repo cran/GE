@@ -14,7 +14,6 @@ node_plot(node, ...)
 \description{
 A wrapper of the function plot.Node of the packages data.tree.
 If a non-leaf node has a type attribute, then the attribute will be shown.
-And if a type attribute is CES, it will be shown as SCES.
 }
 \seealso{
 \code{\link{demand_coefficient}}

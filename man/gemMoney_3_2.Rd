@@ -67,27 +67,27 @@ dstl.Leontief <- list(dst.Leontief.firm, dst.household)
 ge.Leontief <- gemMoney_3_2(dstl.Leontief)
 ge.Leontief$p
 
-## CES-type firm
-dst.CES.firm <- Clone(dst.Leontief.firm)
-node_set(dst.CES.firm, "cc1",
-  type = "SCES", a = NULL, alpha = 1, beta = c(0.6, 0.2),
+## SCES-type firm
+dst.SCES.firm <- Clone(dst.Leontief.firm)
+node_set(dst.SCES.firm, "cc1",
+  type = "SCES", alpha = 1, beta = c(0.6, 0.2),
   es = 0 # es is the elasticity of substitution.
 )
 
-node_plot(dst.CES.firm)
+node_plot(dst.SCES.firm)
 
-dstl.CES <- list(dst.CES.firm, dst.household)
+dstl.SCES <- list(dst.SCES.firm, dst.household)
 
-ge.CES <- gemMoney_3_2(dstl.CES)
-ge.CES$p
-p.money <- ge.CES$p
+ge.SCES <- gemMoney_3_2(dstl.SCES)
+ge.SCES$p
+p.money <- ge.SCES$p
 p.money["money"] <- p.money["money"] / interest.rate
 p.money <- p.money / p.money["money"] # prices in terms of the asset price of the currency
 p.money
 
 ## The price of money is the interest rate.
 ## The other prices are in terms of the asset price of the currency.
-gemMoney_3_2(dstl.CES,
+gemMoney_3_2(dstl.SCES,
              numeraire = c("money" = interest.rate)
 )
 

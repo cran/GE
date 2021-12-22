@@ -19,8 +19,9 @@
 #' This relationship can sometimes be represented by a production function or a utility function.
 #' The type attribute of each non-leaf node can take the following values.
 #' \itemize{
-#' \item SCES. SCES can also be written as CES. In this case, this node also has parameters alpha, beta and es (or sigma = 1 - 1 / es).
+#' \item SCES. In this case, this node also has parameters alpha, beta and es (or sigma = 1 - 1 / es).
 #' alpha and es are scalars. beta is a vector. These parameters are parameters of a standard CES function (see \code{\link{SCES}} and \code{\link{SCES_A}}).
+#' \item CES. In this case, this node also has parameters alpha, beta, theta (optional) and es (or sigma = 1 - 1 / es) (see CGE::CES_A).
 #' \item Leontief. In this case, this node also has the parameter a,
 #' which is a vector and is the parameter of a Leontief function.
 #' \item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta.
@@ -179,8 +180,7 @@ demand_coefficient <- function(node, p) {
       {
         node$type
       },
-      "SCES" = ,
-      "CES" = {
+      "SCES" = {
         if (!is.null(node$es)) {
           the.input.coef <- SCES_A(
             alpha = node$alpha, Beta = node$beta, p = the.input.p, es = node$es
@@ -190,6 +190,17 @@ demand_coefficient <- function(node, p) {
             node$sigma, node$alpha, node$beta, the.input.p
           )
         }
+      },
+      "CES" = {
+        if (!is.null(node$es)) {
+          tmp.sigma <- 1 - 1 / node$es
+        } else {
+          tmp.sigma <- node$sigma
+        }
+        the.input.coef <- CES_A(
+          sigma = tmp.sigma, alpha = node$alpha, Beta = node$beta,
+          p = the.input.p, Theta = node$theta
+        )
       },
       "CD" = {
         the.input.coef <- CD_A(node$alpha, node$beta, the.input.p)

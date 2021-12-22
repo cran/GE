@@ -9,10 +9,10 @@
 #' \item trunc.log : max(coef * log(ratio) + 1, 0).
 #' \item linear : coef * (ratio - 1) + 1.
 #' }
-#' @param ratio a positive numeric vector.
-#' @param coef a positive number.
+#' @param ratio a numeric vector or a positive numeric n-by-m matrix.
+#' @param coef a positive number, a positive numeric vector or a positive numeric n-by-m matrix.
 #' @param method a character string specifying the adjustment method.
-#' @return A vector.
+#' @return A vector or a matrix with dimensions the same as the argument ratio.
 #' @examples
 #' ratio_adjust(10, 0.8)
 #' ratio_adjust(0.1, 0.8)
@@ -22,8 +22,14 @@
 #' lines(x, ratio_adjust(x, 0.8, method = "log"), col = "red")
 #' lines(x, ratio_adjust(x, 0.8, method = "left.linear"), col = "blue")
 #' lines(x, ratio_adjust(x, 0.8, method = "trunc.log"), col = "green")
+#'
+#' X <- replicate(3, x)
+#' Y <- ratio_adjust(X, c(0.8, 1, 1.2))
+#' matplot(x, Y, type = "l")
 ratio_adjust <- function(ratio, coef = 0.8,
                          method = c("log", "left.linear", "trunc.log", "linear")) {
+  ratio <- t(ratio)
+
   switch(method[1],
     log = { # symmetric
       result <- ifelse(ratio >= 1,
@@ -45,5 +51,5 @@ ratio_adjust <- function(ratio, coef = 0.8,
     }
   )
 
-  return(result)
+  return(t(result))
 }

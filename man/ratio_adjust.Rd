@@ -11,14 +11,14 @@ ratio_adjust(
 )
 }
 \arguments{
-\item{ratio}{a positive numeric vector.}
+\item{ratio}{a numeric vector or a positive numeric n-by-m matrix.}
 
-\item{coef}{a positive number.}
+\item{coef}{a positive number, a positive numeric vector or a positive numeric n-by-m matrix.}
 
 \item{method}{a character string specifying the adjustment method.}
 }
 \value{
-A vector.
+A vector or a matrix with dimensions the same as the argument ratio.
 }
 \description{
 Adjust ratios to new values.
@@ -41,4 +41,8 @@ plot(x, x, type = "l")
 lines(x, ratio_adjust(x, 0.8, method = "log"), col = "red")
 lines(x, ratio_adjust(x, 0.8, method = "left.linear"), col = "blue")
 lines(x, ratio_adjust(x, 0.8, method = "trunc.log"), col = "green")
+
+X <- replicate(3, x)
+Y <- ratio_adjust(X, c(0.8, 1, 1.2))
+matplot(x, Y, type = "l")
 }

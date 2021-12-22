@@ -31,8 +31,9 @@ This attribute describes the input-output relationship between the child nodes a
 This relationship can sometimes be represented by a production function or a utility function.
 The type attribute of each non-leaf node can take the following values.
 \itemize{
-\item SCES. SCES can also be written as CES. In this case, this node also has parameters alpha, beta and es (or sigma = 1 - 1 / es).
+\item SCES. In this case, this node also has parameters alpha, beta and es (or sigma = 1 - 1 / es).
 alpha and es are scalars. beta is a vector. These parameters are parameters of a standard CES function (see \code{\link{SCES}} and \code{\link{SCES_A}}).
+\item CES. In this case, this node also has parameters alpha, beta, theta (optional) and es (or sigma = 1 - 1 / es) (see CGE::CES_A).
 \item Leontief. In this case, this node also has the parameter a,
 which is a vector and is the parameter of a Leontief function.
 \item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta.

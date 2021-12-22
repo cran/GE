@@ -1,6 +1,6 @@
 #' @export
-#' @title A CES-type General Equilibrium Model based on an Input-Output Table.
-#' @aliases gemInputOutputTable_CES_3_3
+#' @title A SCES-type General Equilibrium Model based on an Input-Output Table.
+#' @aliases gemInputOutputTable_SCES_3_3
 #' @description Given a 3x3 input-output table (e.g., see Zhang Xin, 2017, Table 2.2.2), this model can be
 #' used to calculate the corresponding equilibrium.
 #' This input-output table contains two firms and one household.
@@ -21,7 +21,7 @@
 #' @references Zhang Xin. (2017, ISBN: 9787543227637). Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
 #' @examples
 #' x <- 75
-#' gemInputOutputTable_CES_3_3(
+#' gemInputOutputTable_SCES_3_3(
 #'   input = matrix(c(
 #'     200, 300, 100,
 #'     x, 320, 530,
@@ -31,7 +31,7 @@
 #'   es = 0.5
 #' )
 
-gemInputOutputTable_CES_3_3 <- function(input = matrix(c(
+gemInputOutputTable_SCES_3_3 <- function(input = matrix(c(
                                           200, 300, 100,
                                           150, 320, 530,
                                           250, 380, 0

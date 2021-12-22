@@ -9,13 +9,16 @@
 #' @param beta a vector consisting of the beta coefficients.
 #' @param x a vector consisting of the inputs.
 #' @param theta a vector consisting of the theta coefficients.
+#' @param es the elasticity of substitution. If es is not NA, the value of sigma will be ignored.
 #' @return The output or utility level.
 #' @examples
 #' \donttest{
 #' CES(1, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))
 #' }
 #'
-CES <- function(sigma, alpha, beta, x, theta = NULL) {
+CES <- function(sigma = 1 - 1 / es, alpha, beta, x, theta = NULL, es = NA) {
+  if (!is.na(es)) sigma <- 1 - 1 / es
+
   if (length(sigma) != length(alpha)) {
     message("Li: length(sigma)!=length(alpha)")
   }

@@ -4,7 +4,7 @@
 \alias{CES}
 \title{CES Function}
 \usage{
-CES(sigma, alpha, beta, x, theta = NULL)
+CES(sigma = 1 - 1/es, alpha, beta, x, theta = NULL, es = NA)
 }
 \arguments{
 \item{sigma}{the sigma coefficient.}
@@ -16,6 +16,8 @@ CES(sigma, alpha, beta, x, theta = NULL)
 \item{x}{a vector consisting of the inputs.}
 
 \item{theta}{a vector consisting of the theta coefficients.}
+
+\item{es}{the elasticity of substitution. If es is not NA, the value of sigma will be ignored.}
 }
 \value{
 The output or utility level.

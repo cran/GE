@@ -7,7 +7,8 @@
 #' Some rarely used parameters in the function sdm have been deleted.
 #' This function is the core of this package.
 #' @param A a demand structure tree list (i.e. dstl, see \code{\link{demand_coefficient}}), a demand coefficient n-by-m matrix (alias demand structure matrix)
-#' or a function A(state) which returns an n-by-m matrix (see the sdm function).
+#' or a function A(state) which returns an n-by-m matrix. Wherein the argument state is a list consisting of t (the time), p (the current price vector),
+#' last.z (the output and utility vector at time t-1), w (the current wealth vector) and last.A (the demand coefficient matrix at time t-1).
 #' When the calculation process involves policy functions, dstl is strongly recommended.
 #' Some policy functions in this package only support dstl.
 #' @param B	a supply coefficient n-by-m matrix (alias supply structure matrix).
@@ -51,6 +52,7 @@
 #' state$S is the current supply matrix.
 #' state$last.z is the last output and utility vector.
 #' state$B is the current supply coefficient matrix.
+#' state$last.A is the demand coefficient matrix at time t-1.
 #' state$names.commodity contains the names of commodities.
 #' state$names.agent contains the names of agents.
 #' \item state.history - the state history, which is a list consisting of the time series of p, S, q, and z.
@@ -343,6 +345,7 @@ sdm2 <- function(A,
                  ts = FALSE,
                  policy = NULL,
                  exchangeFunction = F_Z) {
+
   ##### definition of the economic transition function xNext
   xNext <- function(xt) {
     p_t <- xt$p
@@ -368,7 +371,6 @@ sdm2 <- function(A,
       p_tp1 <- prop.table(p_tp1)
     }
 
-
     S_tp1 <- Y_t + dg(depreciationCoef * (1 - q_t)) %*% S_t
 
     if (!all(is.na(S0Exg))) {
@@ -390,7 +392,7 @@ sdm2 <- function(A,
           tmp.p <- as.vector(p_tp1)
           names(tmp.p) <- names.commodity
           kth.policy.arg$state <- list(
-            p = tmp.p, S = S_tp1, last.z = z_t, B = B,
+            p = tmp.p, S = S_tp1, last.z = z_t, B = B, last.A = last.A,
             names.commodity = names.commodity,
             names.agent = names.agent
           )
@@ -427,9 +429,10 @@ sdm2 <- function(A,
         A_tp1 <-
           A(list(
             p = p_tp1,
-            z = z_t,
+            last.z = z_t,
             w = t(p_tp1) %*% S_tp1,
-            t = time
+            t = time,
+            last.A = last.A
           ))
       },
       "list" = {
@@ -438,6 +441,7 @@ sdm2 <- function(A,
         A_tp1 <- sapply(A, demand_coefficient, tmp.p)
       }
     )
+    last.A <<- A_tp1
 
     tmp <- exchangeFunction(A_tp1, p_tp1, S_tp1)
     q_tp1 <- tmp$q
@@ -467,6 +471,7 @@ sdm2 <- function(A,
   # beginning ---------------------------------------------------------------
   n <- nrow(B)
   m <- ncol(B)
+  last.A <- matrix(1 / n, n, m) # 20211204
 
   if (!all(is.na(S0Exg))) SupplyExogenous <- S0Exg
 
@@ -509,7 +514,6 @@ sdm2 <- function(A,
     S0[is.na(S0)] <- 0
   }
 
-
   time <- 1
 
   xtp1 <- xNext(list(
@@ -524,7 +528,6 @@ sdm2 <- function(A,
   S[, , 1] <- xtp1$S
   q[, 1] <- xtp1$q
   z[, 1] <- xtp1$z
-
 
   toleranceRec <- matrix(1, maxIteration, 1)
 
@@ -599,7 +602,6 @@ sdm2 <- function(A,
     }
   } # for (k.iteration in 1:maxIteration)
 
-
   # result ------------------------------------------------------------------
   result$tolerance <- tolerance
   result$p <- p0
@@ -620,9 +622,10 @@ sdm2 <- function(A,
       result$A <-
         A(list(
           p = result$p,
-          z = result$z,
+          last.z = result$z,
           w = result$p %*% tmpS,
-          t = 1
+          t = 1,
+          last.A = last.A
         ))
     },
     "list" = {
