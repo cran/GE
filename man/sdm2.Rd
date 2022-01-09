@@ -64,11 +64,11 @@ If it is a number with a name, e.g. c("lab" = 0.5), then the name is assumed to 
 and the number is assumed to be the price of the numeraire commodity,
 even though the price of the numeraire commodity usually is 1.}
 
-\item{tolCond}{the tolerance condition.}
+\item{tolCond}{the relative tolerance condition.}
 
-\item{maxIteration}{the maximum iteration count. If the main purpose of running this function is to do simulation instead of calculating equilibrium, then maxIteration should be set to 1.}
+\item{maxIteration}{the maximum number of (outer) iteration. If the main purpose of running this function is to do simulation instead of calculating equilibrium, then maxIteration should be set to 1.}
 
-\item{numberOfPeriods}{the period number in each iteration, which should not be less than 20.}
+\item{numberOfPeriods}{the period number (i.e. the number of inner iterations) in each (outer) iteration, which should not be less than 20.}
 
 \item{depreciationCoef}{the depreciation coefficient (i.e. 1 minus the depreciation rate) of the unsold products.}
 
@@ -107,7 +107,7 @@ which will be put into the return value of the sdm2.}
 \value{
 A list usually containing the following components:
 \itemize{
-\item tolerance - the tolerance of the results.
+\item tolerance - the relative tolerance of the results.
 \item p - equilibrium prices.
 \item z- equilibrium exchange levels (i.e. activity levels, output levels or utility levels).
 \item S - the equilibrium supply matrix at the initial period.
@@ -127,7 +127,7 @@ A list usually containing the following components:
 }
 \description{
 A new version of the sdm function in the package CGE.
-Now the  parameter A can be a demand structure tree list.
+Now the parameter A can be a demand structure tree list.
 Hence we actually no longer need the function \code{\link{sdm_dstl}}.
 Some rarely used parameters in the function sdm have been deleted.
 This function is the core of this package.

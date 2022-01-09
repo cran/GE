@@ -17,7 +17,7 @@
 #' This problem can be solved by the linear programming method.\cr
 #' Now let us regard the problem above as a general equilibrium problem.
 #' The Dakota Furniture Company can be regarded as a consumer who obtains 1 unit of utility from 1 dollar and owns lumber and two types of skilled labor.
-#' There are four commodities (i.e. dollar, desk, table and chair) and four agents (i.e. a desk producer, a table producer, a chair producer and the consumer Dakota) in this problem.
+#' There are four commodities (i.e. dollar, lumber and two types of skilled labor) and four agents (i.e. a desk producer, a table producer, a chair producer and the consumer Dakota) in this problem.
 #' We need to compute the equilibrium activity levels and the equilibrium prices,
 #' which are also the solutions of the (dual) linear programming problems (i.e. the utility-maximizing problem of the consumer and the cost-minimizing problem of the producers).
 #' @return  A general equilibrium.
@@ -49,32 +49,41 @@
 #' }
 #'
 #' ## Compute the equilibrium by the function CGE::sdm.
-#' gemDualLinearProgramming(A = A, B = B, S0Exg = S0Exg)
+#' ge <- gemDualLinearProgramming(A = A, B = B, S0Exg = S0Exg)
+#'
+#' ge$p / ge$p[1]
+#' ge$z
 #'
 #' ## Compute the equilibrium by the function sdm2.
 #' ## The function policyMeanValue is used to accelerate convergence.
 #' ge <- sdm2(
 #'   A = A, B = B, S0Exg = S0Exg,
-#'   policy = policyMeanValue
+#'   policy = policyMeanValue,
+#'   names.commodity = c("dollar", "lumber", "lab1", "lab2"),
+#'   names.agent = c("desk producer", "table producer", "chair producer", "consumer"),
+#'   numeraire = "dollar"
 #' )
 #'
 #' ge$z
-#' ge$p / ge$p[1]
+#' ge$p
 #'
 #' ## Compute the general equilibrium above and
 #' ## the market-clearing path by the function sdm2.
 #' ## Warning: time consuming.
 #' ge2 <- sdm2(
-#'   A = matrix_to_dstl(A), B = B, S0Exg = S0Exg,
+#'   A = A, B = B, S0Exg = S0Exg,
 #'   policy = makePolicyStickyPrice(stickiness = 0, tolCond = 1e-4),
 #'   maxIteration = 1,
 #'   numberOfPeriods = 60,
+#'   names.commodity = c("dollar", "lumber", "lab1", "lab2"),
+#'   names.agent = c("desk producer", "table producer", "chair producer", "consumer"),
+#'   numeraire = "dollar",
 #'   ts = TRUE
 #' )
 #'
 #' matplot(ge2$ts.p, type = "l")
 #' ge2$z
-#' ge2$p / ge2$p[1]
+#' ge2$p
 #'
 #' #### an example in the mit reference
 #' A <- matrix(c(
@@ -98,7 +107,7 @@
 #' )
 #'
 #' ge$z
-#' ge$p / ge$p[1]
+#' ge$p
 #'
 #' #### an example in the stanford reference
 #' A <- matrix(c(
@@ -126,7 +135,7 @@
 #' )
 #'
 #' ge$z
-#' ge$p / ge$p[1]
+#' ge$p
 #'
 #' #### an example in the utexas reference
 #' A <- matrix(c(
@@ -152,7 +161,7 @@
 #' )
 #'
 #' ge$z
-#' ge$p / ge$p[1]
+#' ge$p
 #'
 #' #### the Giapetto example of Winston (2003, section 3.1)
 #' A <- matrix(c(

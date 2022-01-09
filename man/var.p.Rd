@@ -5,14 +5,14 @@
 \alias{sd.p}
 \title{Population Variance and Population Standard Deviation}
 \usage{
-var.p(x, w = rep(1, length(x)), na.rm = FALSE)
+var.p(x, wt = rep(1, length(x)), na.rm = FALSE)
 
-sd.p(x, w = rep(1, length(x)), na.rm = FALSE)
+sd.p(x, wt = rep(1, length(x)), na.rm = FALSE)
 }
 \arguments{
 \item{x}{a numeric vector.}
 
-\item{w}{a numeric vector of weights.
+\item{wt}{a numeric vector of weights.
 By default all elements of x are given the same weight.}
 
 \item{na.rm}{a logical value indicating whether NA values should be stripped before the computation proceeds.}
@@ -30,10 +30,10 @@ The function var.p computes a population variance. The function sd.p computes a 
 \examples{
 var.p(1:6)
 
-var.p(x = 1:5, w = 6:10)
+var.p(x = 1:5, wt = 6:10)
 var.p(x = rep(1:5, 6:10))
 
-sd.p(x = 1:5, w = 6:10)
+sd.p(x = 1:5, wt = 6:10)
 sd.p(x = rep(1:5, 6:10))
 
 }

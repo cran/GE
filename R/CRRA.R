@@ -2,9 +2,9 @@
 #' @title Constant Relative Risk Aversion (CRRA) Utility Function
 #' @aliases CRRA
 #' @description Compute the value and the certainty equivalent of the CRRA utility function.
-#' @param x a vector of all possible states (e.g. returns).
+#' @param x a payoff k-vector.
 #' @param gamma the relative risk aversion coefficient.
-#' @param p the probability vector. By default, the states are assumed to
+#' @param prob a probability k-vector. By default, the states are assumed to
 #' occur with equal probability.
 #' @return A list containing the following components:
 #' \itemize{
@@ -32,12 +32,12 @@
 #' coplot(result ~ x | as.factor(gamma), data = df)
 
 
-CRRA <- function(x, gamma, p = rep(1 / length(x), length(x))) {
+CRRA <- function(x, gamma, prob = rep(1 / length(x), length(x))) {
   if (gamma == 1) {
-    u <- weighted.mean(log(x), p)
+    u <- weighted.mean(log(x), prob)
     CE <- exp(u)
   } else {
-    u <- weighted.mean((x^(1 - gamma) - 1) / (1 - gamma), p)
+    u <- weighted.mean((x^(1 - gamma) - 1) / (1 - gamma), prob)
     CE <- (u * (1 - gamma) + 1)^(1 / (1 - gamma))
   }
 

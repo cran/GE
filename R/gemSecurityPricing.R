@@ -1,40 +1,49 @@
 #' @export
-#' @title Some Examples of Security Pricing
+#' @title Compute Security Market Equilibria for Some Simple Cases
 #' @aliases gemSecurityPricing
-#' @description Some examples illustrating how to find the equilibrium of a security market by computing marginal utility of securities (see Sharpe, 2008).
+#' @description Compute the equilibrium of a security market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
+#' @param S a supply n-by-m matrix of securities.
+#' @param USP a unit security payoff k-by-n matrix.
+#' @param uf a utility function or a utility function list.
+#' @param muf a (Bernoulli) marginal utility function or a (Bernoulli) marginal utility function list.
+#' @param wt a weight (or probability) k-vector of event states (i.e. time and nature states).
+#' When the argument muf is NULL, wt will be ignored.
+#' @param ratio_adjust_coef a scalar indicating the adjustment velocity of demand structure.
 #' @param ... arguments to be passed to the function sdm2.
 #' @return  A general equilibrium.
 #' @references Danthine, J. P., Donaldson, J. (2005, ISBN: 9780123693808) Intermediate Financial Theory. Elsevier Academic Press.
 #' @references Sharpe, William F. (2008, ISBN: 9780691138503) Investors and Markets: Portfolio Choices, Asset Prices, and Investment Advice. Princeton University Press.
+#' @references Wang Jiang (2006, ISBN: 9787300073477) Financial Economics. Beijing: China Renmin University Press. (In Chinese)
 #' @references Xu Gao (2018, ISBN: 9787300258232) Twenty-five Lectures on Financial Economics. Beijing: China Renmin University Press. (In Chinese)
+#' @references https://web.stanford.edu/~wfsharpe/apsim/index.html
+#' @seealso \code{\link{gemSecurityPricingExample}}.
 #' @examples
 #' \donttest{
+#' gemSecurityPricing(muf = function(x) 1 / x)
+#'
+#' gemSecurityPricing(
+#'   S = cbind(c(1, 0), c(0, 2)),
+#'   muf = function(x) 1 / x
+#' )
+#'
+#' gemSecurityPricing(
+#'   USP = cbind(c(1, 0), c(0, 2)),
+#'   muf = function(x) 1 / x
+#' )
+#'
 #' #### an example of Danthine and Donaldson (2005, section 8.3).
-#' uf <- function(x) 0.5 * x[1] + 0.9 * (1 / 3 * log(x[2]) + 2 / 3 * log(x[3]))
-#'
 #' ge <- gemSecurityPricing(
-#'   A = function(state) {
-#'     VMU <- marginal_utility(state$last.A %*% dg(state$last.z), diag(3), uf, state$p)
-#'     Ratio <- sweep(VMU, 2, colMeans(VMU), "/")
-#'
-#'     A <- state$last.A * Ratio
-#'     prop.table(A, 2)
-#'   },
-#'   B = matrix(0, 3, 2),
-#'   S0Exg = matrix(c(
+#'   S = matrix(c(
 #'     10, 5,
 #'     1, 4,
 #'     2, 6
 #'   ), 3, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3"),
-#'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1",
-#'   ts = TRUE
+#'   uf = function(x) 0.5 * x[1] + 0.9 * (1 / 3 * log(x[2]) + 2 / 3 * log(x[3]))
 #' )
 #'
 #' ge$p
 #'
-#' #### an example of Sharpe (2008, chapter 2)
+#' #### an example of Sharpe (2008, chapter 2, case 1)
 #' secy1 <- c(1, 0, 0, 0, 0)
 #' secy2 <- c(0, 1, 1, 1, 1)
 #' secy3 <- c(0, 5, 3, 8, 4) - 3 * secy2
@@ -43,107 +52,211 @@
 #' USP <- cbind(secy1, secy2, secy3, secy4)
 #'
 #' prob <- c(0.15, 0.25, 0.25, 0.35)
-#' w <- prop.table(c(1, 0.96 * prob)) # weights
+#' wt <- prop.table(c(1, 0.96 * prob)) # weights
 #'
-#' gamma.agt1 <- 1.5
-#' gamma.agt2 <- 2.5
-#'
-#' ge <- sdm2(
-#'   A = function(state) {
-#'     Payoff <- USP %*% (state$last.A %*% dg(state$last.z))
-#'
-#'     VMU <- marginal_utility(Payoff, USP, list(
-#'       function(x) CES(alpha = 1, beta = w, x = x, es = 1 / gamma.agt1),
-#'       function(x) CES(alpha = 1, beta = w, x = x, es = 1 / gamma.agt2)
-#'     ), price = state$p)
-#'     Ratio <- sweep(VMU, 2, colMeans(VMU), "/")
-#'
-#'     A <- state$last.A * ratio_adjust(Ratio, coef = 0.05, method = "linear")
-#'
-#'     A <- prop.table(A, 2)
-#'   },
-#'   B = matrix(0, 4, 2),
-#'   S0Exg = matrix(c(
+#' geSharpe1 <- gemSecurityPricing(
+#'   S = matrix(c(
 #'     49, 49,
 #'     30, 30,
 #'     10, 0,
 #'     0, 10
 #'   ), 4, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3", "secy4"),
-#'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1"
+#'   USP = USP,
+#'   uf = list(
+#'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
+#'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5)
+#'   )
+#' )
+#' geSharpe1$p
+#' geSharpe1$p[3:4] + 3 * geSharpe1$p[2]
+#'
+#' ## an example of Sharpe (2008, chapter 3, case 2)
+#' geSharpe2 <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     49, 49, 98, 98,
+#'     30, 30, 60, 60,
+#'     10, 0, 20, 0,
+#'     0, 10, 0, 20
+#'   ), 4, 4, TRUE),
+#'   USP = USP,
+#'   uf = list(
+#'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
+#'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5),
+#'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
+#'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5)
+#'   )
 #' )
 #'
-#' ge$p
-#' ge$p[3:4] + 3 * ge$p[2]
+#' geSharpe2$p
+#' geSharpe2$p[3:4] + 3 * geSharpe2$p[2]
+#' geSharpe2$D
 #'
-#' #### an example of Xu (2018, section 10.4)
-#' secy1 <- c(1, 0, 0)
-#' secy2 <- c(0, 1, 0)
-#' secy3 <- c(0, 0, 1)
-#' prob <- c(0.5, 0.5)
-#' w <- c(1, prob)
-#' USP <- cbind(secy1, secy2, secy3)
+#' ## an example of Sharpe (2008, chapter 3, case 3)
+#' geSharpe3 <- gemSecurityPricing(USP,
+#'   uf = function(x) (x - x^2 / 400) %*% wt,
+#'   S = matrix(c(
+#'     49, 98,
+#'     30, 60,
+#'     5, 10,
+#'     5, 10
+#'   ), 4, 2, TRUE)
+#' )
+#' geSharpe3$p
+#' geSharpe3$p[3:4] + 3 * geSharpe3$p[2]
 #'
-#' gamma.agt1 <- 1
-#' gamma.agt2 <- 0.5
+#' # the same as above
+#' geSharpe3b <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     49, 98,
+#'     30, 60,
+#'     5, 10,
+#'     5, 10
+#'   ), 4, 2, TRUE),
+#'   USP = USP,
+#'   muf = function(x) (1 - x / 200),
+#'   wt = wt
+#' )
 #'
-#' ge <- sdm2(
-#'   A = function(state) {
-#'     Payoff <- USP %*% (state$last.A %*% dg(state$last.z))
+#' geSharpe3b$p
+#' geSharpe3b$p[3:4] + 3 * geSharpe3b$p[2]
 #'
-#'     VMU <- marginal_utility(Payoff, USP, list(
-#'       # Here CRRA(...)$u, CRRA(...)$CE and CES functions are interexchangeable.
-#'       function(x) CRRA(x, gamma = gamma.agt1, p = w)$u,
-#'       function(x) CES(alpha = 1, beta = w, x = x, es = 1 / gamma.agt2)
-#'     ), state$p)
-#'     Ratio <- sweep(VMU, 2, colMeans(VMU), "/")
+#' ## an example of Sharpe (2008, chapter 3, case 4)
+#' geSharpe4 <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     49, 98,
+#'     30, 60,
+#'     5, 10,
+#'     5, 10
+#'   ), 4, 2, TRUE),
+#'   USP,
+#'   muf = function(x) abs((x - 20)^(-1)), wt = wt,
+#'   maxIteration = 100,
+#'   numberOfPeriods = 300,
+#'   ts = TRUE
+#' )
 #'
-#'     A <- state$last.A * Ratio
-#'     prop.table(A, 2)
-#'   },
-#'   B = matrix(0, 3, 2),
-#'   S0Exg = matrix(c(
+#' geSharpe4$p
+#' geSharpe4$p[3:4] + 3 * geSharpe4$p[2]
+#'
+#' #### an example of Wang (2006, example 10.1, P146)
+#' geWang <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     1, 0,
+#'     0, 2,
+#'     0, 1
+#'   ), 3, 2, TRUE),
+#'   muf = list(
+#'     function(x) 1 / x,
+#'     function(x) 1 / sqrt(x)
+#'   ),
+#'   wt = c(0.5, 0.25, 0.25)
+#' )
+#'
+#' geWang$p # c(1, (1 + sqrt(17)) / 16)
+#'
+#' # the same as above
+#' geWang.b <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     1, 0,
+#'     0, 2,
+#'     0, 1
+#'   ), 3, 2, TRUE), wt = c(0.5, 0.25, 0.25),
+#'   uf = list(
+#'     function(x) log(x) %*% c(0.5, 0.25, 0.25),
+#'     function(x) 2 * sqrt(x) %*% c(0.5, 0.25, 0.25)
+#'   )
+#' )
+#'
+#' geWang.b$p
+#'
+#' #### an example of Xu (2018, section 10.4, P151)
+#' wt <- c(1, 0.5, 0.5)
+#' ge <- gemSecurityPricing(
+#'   S = matrix(c(
 #'     1, 0,
 #'     0, 0.5,
 #'     0, 2
 #'   ), 3, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3"),
-#'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1",
+#'   uf = list(
+#'     function(x) CRRA(x, gamma = 1, p = wt)$u,
+#'     function(x) CRRA(x, gamma = 0.5, p = wt)$u
+#'   )
+#' )
+#'
+#' ge$p # c(1, (1 + sqrt(5)) / 4, (1 + sqrt(17)) / 16)
+#'
+#' #### an example of incomplete market
+#' ge <- gemSecurityPricing(
+#'   USP = cbind(c(1, 1), c(2, 1)),
+#'   uf = list(
+#'     function(x) sum(log(x)) / 2,
+#'     function(x) sum(sqrt(x))
+#'   ),
+#'   ratio_adjust_coef = 0.1,
+#'   priceAdjustmentVelocity = 0.05,
+#'   policy = makePolicyMeanValue(span = 100),
 #'   maxIteration = 1,
-#'   ts = TRUE
+#'   numberOfPeriods = 2000,
 #' )
 #'
 #' ge$p
 #'
-#' ## the same as above.
-#' dst.agt1 <- node_new("util",
-#'   type = "CD", alpha = 1, beta = c(0.5, 0.25, 0.25),
-#'   "secy1", "secy2", "secy3"
-#' )
-#'
-#' dst.agt2 <- node_new("util",
-#'   type = "CES", alpha = 1, beta = c(2, 1, 1), sigma = 0.5,
-#'   "secy1", "secy2", "secy3"
-#' )
-#'
-#' ge <- sdm2(
-#'   A = list(dst.agt1, dst.agt2),
-#'   B = matrix(0, 3, 2),
-#'   S0Exg = matrix(c(
-#'     1, 0,
-#'     0, 0.5,
-#'     0, 2
-#'   ), 3, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3"),
-#'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1",
+#' ## the same as above
+#' ge.b <- gemSecurityPricing(
+#'   USP = cbind(c(1, 1), c(2, 1)),
+#'   muf = list(
+#'     function(x) 1 / x,
+#'     function(x) 1 / sqrt(x)
+#'   ),
+#'   wt = c(0.5, 0.5),
+#'   ratio_adjust_coef = 0.1,
+#'   priceAdjustmentVelocity = 0.05,
+#'   policy = makePolicyMeanValue(span = 100),
 #'   maxIteration = 1,
+#'   numberOfPeriods = 2000,
 #'   ts = TRUE
 #' )
 #'
-#' ge$p
+#' ge.b$p
+#' matplot(ge.b$ts.p, type = "l")
 #' }
+#'
+gemSecurityPricing <- function(S = diag(2), USP = diag(nrow(S)),
+                               uf = NULL,
+                               muf = NULL, wt = rep(1, nrow(S)),
+                               ratio_adjust_coef = 0.05,
+                               ...) {
+  n <- nrow(S)
+  m <- ncol(S)
 
-gemSecurityPricing <- function(...) sdm2(...)
+  ge <- sdm2(
+    A = function(state) {
+      Payoff <- USP %*% (state$last.A %*% dg(state$last.z))
+
+      if (is.null(muf)) {
+        VMU <- marginal_utility(Payoff, USP, uf, price = state$p)
+      } else {
+        VMU <- marginal_utility(Payoff, USP, price = state$p, muf = muf, wt = wt)
+      }
+
+      VMU <- pmax(VMU, 1e-10)
+
+      Ratio <- sweep(VMU, 2, colMeans(VMU), "/")
+
+      A <- state$last.A * ratio_adjust(Ratio, coef = ratio_adjust_coef, method = "linear")
+
+      A <- prop.table(A, 2)
+    },
+    B = matrix(0, n, m),
+    S0Exg = S,
+    names.commodity = paste0("secy", 1:n),
+    names.agent = paste0("agt", 1:m),
+    numeraire = "secy1",
+    ...
+  )
+
+  ge$Payoff <- USP %*% ge$D
+  ge$marginal_utility <- marginal_utility(ge$Payoff, USP, uf = uf, price = ge$p, muf = muf, wt = wt)
+
+  ge
+}

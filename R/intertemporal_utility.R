@@ -22,7 +22,7 @@
 intertemporal_utility <- function(x, beta = 1, gamma = 1) {
   n <- length(x)
   prop <- beta^(0:(n - 1))
-  tmp <- CRRA(x, gamma = gamma, p = prop)
+  tmp <- CRRA(x, gamma = gamma, prob = prop)
   u.intertemporal <- unname(tmp$u * sum(prop))
   list(u.intertemporal = u.intertemporal, CE = tmp$CE)
 }

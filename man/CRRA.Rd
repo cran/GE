@@ -4,14 +4,14 @@
 \alias{CRRA}
 \title{Constant Relative Risk Aversion (CRRA) Utility Function}
 \usage{
-CRRA(x, gamma, p = rep(1/length(x), length(x)))
+CRRA(x, gamma, prob = rep(1/length(x), length(x)))
 }
 \arguments{
-\item{x}{a vector of all possible states (e.g. returns).}
+\item{x}{a payoff k-vector.}
 
 \item{gamma}{the relative risk aversion coefficient.}
 
-\item{p}{the probability vector. By default, the states are assumed to
+\item{prob}{a probability k-vector. By default, the states are assumed to
 occur with equal probability.}
 }
 \value{

@@ -3,7 +3,7 @@
 #' @aliases gemOLGPureExchange_2_2
 #' @description Some examples of the basic overlapping generations model for an exchange economy.
 #' @param ... arguments to be passed to the function sdm2.
-#' @details As Samuelson (1958) writes, break each life up into thirds.
+#' @details As Samuelson (1958) wrote, break each life up into thirds.
 #' Agents get one unit of payoff in period 1 and one unit in period 2; in period 3 they retire and get nothing.
 #' Suppose there are three agents in each period, namely age1, age2 and age3.
 #' In the next period, the present age1 will become age2, the present age2 will become age3,
@@ -17,6 +17,10 @@
 #' In the present exchange process, the utility function of age1 is c1^(1 / 3) * x2^(2 / 3), wherein x2 is the payoff of the next period,
 #' and the utility function of age2 is c2^(1 / 2) * c3^(1 / 2).
 #' @references Samuelson, P. A. (1958) An Exact Consumption-Loan Model of Interest with or without the Social Contrivance of Money. Journal of Political Economy, vol. 66(6): 467-482.
+#' @seealso {
+#' \code{\link{gemOLGTimeCircle}}
+#' \code{\link{gemOLGFinancialInstrument}}
+#' }
 #' @examples
 #' \donttest{
 #' dst.age1 <- node_new(
@@ -48,15 +52,12 @@
 #'   }
 #' )
 #'
-#' ge$p[2]
-#' ## the same as above
-#' 3 / 2 + sqrt(13) / 2
-#'
+#' ge$p # c(1, 3 / 2 + sqrt(13) / 2)
 #' ge$S
 #' ge$D
 #'
 #'
-#' #### Now suppose only age2 gets payoff and age1 does not.
+#' ## Suppose only age2 gets payoff and age1 does not.
 #' ge <- sdm2(
 #'   A = list(dst.age1, dst.age2),
 #'   B = matrix(0, 2, 2),
@@ -74,8 +75,134 @@
 #'   }
 #' )
 #'
-#' ge$p[2]
+#' ge$p
 #' ge$S
+#' ge$D
+#'
+#' #### Suppose the utility function is c1^(2 / 10) * c2^(5 / 10) * c3^(3 / 10).
+#' dst.age1 <- node_new(
+#'   "util",
+#'   type = "CD", alpha = 1, beta = c(2 / 10, 8 / 10),
+#'   "payoff1", "payoff2"
+#' )
+#'
+#' dst.age2 <- node_new(
+#'   "util",
+#'   type = "CD", alpha = 1, beta = c(5 / 8, 3 / 8),
+#'   "payoff1", "payoff2"
+#' )
+#' ge <- sdm2(
+#'   A = list(dst.age1, dst.age2),
+#'   B = matrix(0, 2, 2),
+#'   S0Exg = matrix(c(
+#'     0, 1,
+#'     1, 0
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("payoff1", "payoff2"),
+#'   names.agent = c("age1", "age2"),
+#'   numeraire = "payoff1",
+#'   policy = function(time, state) {
+#'     pension <- (state$last.A[, 2] * state$last.z[2])[2]
+#'     if (time > 1) state$S[1, 2] <- state$S[1, 2] - pension
+#'     state
+#'   }
+#' )
+#'
+#' ge$p
+#' ge$S
+#' ge$D
+#'
+#' #### Suppose there are banks in the first economy.
+#' dst.bank1 <- node_new(
+#'   "payoff2",
+#'   type = "Leontief", a = 1,
+#'   "payoff1"
+#' )
+#'
+#' dst.bank2 <- node_new(
+#'   "payoff3",
+#'   type = "Leontief", a = 1,
+#'   "payoff2"
+#' )
+#'
+#' dst.consumer <- node_new(
+#'   "util",
+#'   type = "CD", alpha = 1, beta = c(1 / 3, 1 / 3, 1 / 3),
+#'   "payoff1", "payoff2", "payoff3"
+#' )
+#'
+#' ge <- sdm2(
+#'   A = list(dst.bank1, dst.bank2, dst.consumer),
+#'   B = matrix(c(
+#'     0, 0, 0,
+#'     1, 0, 0,
+#'     0, 1, 0
+#'   ), 3, 3, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA, 1,
+#'     NA, NA, 1,
+#'     NA, NA, NA
+#'   ), 3, 3, TRUE),
+#'   names.commodity = c("payoff1", "payoff2", "payoff3"),
+#'   names.agent = c("bank1", "bank2", "consumer"),
+#'   numeraire = "payoff1"
+#' )
+#'
+#' ge$p
+#' ge$S
+#' ge$D
+#'
+#' ## Assume that banks can earn interest through foreign investment.
+#' dst.bank1$a <- 0.8
+#' dst.bank2$a <- 0.8
+#' ge <- sdm2(
+#'   A = list(dst.bank1, dst.bank2, dst.consumer),
+#'   B = matrix(c(
+#'     0, 0, 0,
+#'     1, 0, 0,
+#'     0, 1, 0
+#'   ), 3, 3, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA, 1,
+#'     NA, NA, 1,
+#'     NA, NA, NA
+#'   ), 3, 3, TRUE),
+#'   names.commodity = c("payoff1", "payoff2", "payoff3"),
+#'   names.agent = c("bank1", "bank2", "consumer"),
+#'   numeraire = "payoff1"
+#' )
+#'
+#' ge$p
+#' ge$S
+#' ge$D
+#' ge$DV
+#'
+#' #### Another calculation method for the first economy.
+#' n <- 18 # the number of agents. The number of payoff types is n+2.
+#' payoff.age2 <- 1
+#' payoff.age3 <- 1e-10
+#' S <- diag(1, n + 2, n)
+#' S <- S + rbind(0, diag(payoff.age2, n + 1, n)) + rbind(0, 0, diag(payoff.age3, n, n))
+#'
+#' dstl <- list()
+#' for (k in 1:n) {
+#'   dstl[[k]] <- node_new(
+#'     "util",
+#'     type = "CD", alpha = 1,
+#'     beta = c(1 / 3, 1 / 3, 1 / 3),
+#'     paste0("payoff", k), paste0("payoff", k + 1), paste0("payoff", k + 2)
+#'   )
+#' }
+#'
+#' ge <- sdm2(
+#'   A = dstl,
+#'   B = matrix(0, n + 2, n, TRUE),
+#'   S0Exg = S,
+#'   names.commodity = paste0("payoff", 1:(n + 2)),
+#'   numeraire = "payoff1"
+#' )
+#'
+#' diff(log(ge$p)) # log(3 / 2 + sqrt(13) / 2)
 #' ge$D
 #' }
 #'

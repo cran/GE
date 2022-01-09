@@ -17,9 +17,9 @@ policyMeanValue(time, state, state.history)
 A list consisting of p, S and B which specify the prices, supplies and supply coefficient matrix after adjustment.
 }
 \description{
-When the time index is an integer multiple of 200, this policy sets the current prices and supplies to the average of the previous 199 periods.
+When the time index is an integer multiple of 200, this policy sets the current prices and supplies to the averages of the previous 199 periods.
 This policy function is mainly used as an argument of the function sdm2 in order to accelerate convergence when calculating general equilibrium.
 }
 \seealso{
-\code{\link{sdm2}}, \code{\link{gemDualLinearProgramming}}.
+\code{\link{makePolicyMeanValue}} \code{\link{sdm2}}  \code{\link{gemDualLinearProgramming}}.
 }

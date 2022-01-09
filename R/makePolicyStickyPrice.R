@@ -43,9 +43,9 @@
 #' }
 #'
 makePolicyStickyPrice <- function(stickiness = 0.5, time.win = c(1, Inf), tolCond = 1e-6) {
-  function(time, state, dstl) {
+  function(time, state, A) {
     if (time >= time.win[1] && time <= time.win[2]) {
-      instantaneous.equilibrium <- sdm2(dstl,
+      instantaneous.equilibrium <- sdm2(A,
         B = 0 * state$S, S0Exg = state$S,
         names.commodity = state$names.commodity,
         names.agent = state$names.agent,
