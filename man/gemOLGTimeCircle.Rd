@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemOLGTimeCircle.R
 \name{gemOLGTimeCircle}
 \alias{gemOLGTimeCircle}
-\title{A Time-Circle Model (Closed Loop Overlapping Generations Model)}
+\title{Time-Circle Models (Closed Loop Overlapping Generations Models)}
 \usage{
 gemOLGTimeCircle(...)
 }
@@ -10,7 +10,7 @@ gemOLGTimeCircle(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of a time-circle model, which usually contains overlapping generations.
+Some examples of time-circle models, which usually contain overlapping generations.
 When we connect together the head and tail of time of a dynamic model, we get a time-circle model which
 treats time as a circle of finite length instead of a straight line of infinite length.
 The (discounted) output of the final period will enter the utility function and the production function
@@ -18,13 +18,85 @@ of the first period, which implies the influence mechanism of the past on the pr
 just like the influence mechanism of the present on the future.
 A time-circle OLG model may be called a reincarnation model.
 
+In a time-circle model, time can be thought of as having no beginning and no end.
+And we can assume all souls meet in a single market (see Shell, 1971),
+or there are implicit financial instruments that facilitate transactions between adjacent generations.
+
 As in the Arrow–Debreu approach, in the following examples with production, we assume that firms operate independently and are not owned by consumers.
 That is, there is no explicit property of firms as the firms do not make pure profit at equilibrium (constant return to scale)
 (see de la Croix and Michel, 2002, page 292).
 }
 \examples{
 \donttest{
+#### a time-circle pure exchange economy with two-period-lived consumers
+## In this exampe, each agent sells some labor to the previous generation
+## and buys some labor from the next generation.
+
+# Here n can tend to infinity.
+n <- 4 # the number of periods and consumers (i.e. laborers).
+lab.age1 <- 1 # labor endowment of age1
+lab.age2 <- 0 # labor endowment of age2
+
+S <- lab.age1 * diag(n) + lab.age2 * diag(n)[, c(2:n, 1)]
+
+# Suppose each consumer has a utility function log(c1) + log(c2).
+beta.consumer <- c(0.5, 0.5)
+index <- c(1:n, 1)
+dstl.consumer <- list()
+for (k in 1:n) {
+  dstl.consumer[[k]] <- node_new(
+    "util",
+    type = "CD", alpha = 1,
+    beta = beta.consumer,
+    paste0("lab", index[k]), paste0("lab", index[k + 1])
+  )
+}
+
+ge <- sdm2(
+  A = dstl.consumer,
+  B = matrix(0, n, n, TRUE),
+  S0Exg = S,
+  names.commodity = paste0("lab", 1:n),
+  numeraire = "lab1"
+)
+
+ge$p
+ge$D
+ge$S
+
+## Introduce population growth into the above pure exchange economy.
+GRExg <- 0.03 # the population growth rate
+
+S <- S \%*\% diag((1 + GRExg)^(0:(n - 1)))
+S[1, n] <- S[1, n] * (1 + GRExg)^-n
+
+dstl.consumer[[n]] <- node_new(
+  "util",
+  type = "CD", alpha = 1,
+  beta = beta.consumer,
+  paste0("lab", n), "cc1"
+)
+node_set(dstl.consumer[[n]],
+         "cc1",
+         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+         "lab1"
+)
+
+ge <- sdm2(
+  A = dstl.consumer,
+  B = matrix(0, n, n, TRUE),
+  S0Exg = S,
+  names.commodity = paste0("lab", 1:n),
+  numeraire = "lab1"
+)
+
+ge$p
+ge$D
+ge$DV
+ge$S
+
 #### a time-circle pure exchange economy with three-period-lived consumers
+## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
 ## See gemOLGPureExchange_2_2.
 n <- 5 # the number of periods and consumers (i.e. laborers).
 lab.age1 <- 1 # labor endowment of age1
@@ -34,11 +106,12 @@ S <- lab.age1 * diag(n) + lab.age2 * diag(n)[, c(2:n, 1)] + lab.age3 * diag(n)[,
 
 index <- c(1:n, 1, 2)
 dstl.consumer <- list()
+beta.consumer <- c(1 / 3, 1 / 3, 1 / 3)
 for (k in 1:n) {
   dstl.consumer[[k]] <- node_new(
     "util",
     type = "CD", alpha = 1,
-    beta = c(1 / 6, 2 / 6, 3 / 6),
+    beta = beta.consumer,
     paste0("lab", index[k]), paste0("lab", index[k + 1]), paste0("lab", index[k + 2])
   )
 }
@@ -54,28 +127,11 @@ ge <- sdm2(
 ge$p
 ge$D
 
-#### Introduce population growth into the above economy.
-n <- 5 # the number of periods and consumers.
-lab.age1 <- 1
-lab.age2 <- 1
-lab.age3 <- 0
-S <- lab.age1 * diag(n) + lab.age2 * diag(n)[, c(2:n, 1)] + lab.age3 * diag(n)[, c(3:n, 1:2)]
-
+## Introduce population growth into the above pure exchange economy.
 GRExg <- 0.03 # the population growth rate
 S <- S \%*\% diag((1 + GRExg)^(0:(n - 1)))
 S[1, n - 1] <- S[1, n - 1] * (1 + GRExg)^-n
 S[1:2, n] <- S[1:2, n] * (1 + GRExg)^-n
-
-dstl.consumer <- list()
-beta.consumer <- c(1 / 6, 2 / 6, 3 / 6)
-for (k in 1:(n - 2)) {
-  dstl.consumer[[k]] <- node_new(
-    "util",
-    type = "CD", alpha = 1,
-    beta = beta.consumer,
-    paste0("lab", k), paste0("lab", k + 1), paste0("lab", k + 2)
-  )
-}
 
 dstl.consumer[[n - 1]] <- node_new(
   "util",
@@ -112,10 +168,31 @@ ge <- sdm2(
 )
 
 ge$p
-diff(log(ge$p)) # -log(1 + GRExg)
+growth_rate(ge$p) + 1   # 1 / (1 + GRExg)
 ge$D
+ge$DV
+
+## Suppose each consumer has a Leontief-type utility function min(c1, c2, c3).
+discount.factor <- c(1, 1 / (1 + GRExg), 1 / (1 + GRExg)^2)
+beta.consumer <- prop.table(discount.factor)
+
+lapply(dstl.consumer, function(dst) dst$beta <- beta.consumer)
+
+ge <- sdm2(
+  A = dstl.consumer,
+  B = matrix(0, n, n, TRUE),
+  S0Exg = S,
+  names.commodity = paste0("lab", 1:n),
+  numeraire = "lab1"
+)
+
+ge$p
+growth_rate(ge$p) + 1 # 1 / (1 + GRExg)
+ge$D
+ge$DV
 
 #### a time-circle model with production and two-period-lived consumers
+## Suppose each consumer has a utility function log(c1) + log(c2).
 n <- 5 # the number of periods, consumers and firms.
 S <- matrix(NA, 2 * n, 2 * n)
 
@@ -126,22 +203,24 @@ B <- matrix(0, 2 * n, 2 * n)
 B[1:n, 1:n] <- diag(n)[, c(2:n, 1)]
 
 dstl.firm <- list()
+beta.firm <- c(1 / 3, 2 / 3)
 for (k in 1:n) {
   dstl.firm[[k]] <- node_new(
     "prod",
     type = "CD", alpha = 5,
-    beta = c(1 / 3, 2 / 3),
+    beta = beta.firm,
     paste0("lab", k), paste0("prod", k)
   )
 }
 
 index <- c(1:n, 1)
+beta.consumer <- c(1 / 2, 1 / 2)
 dstl.consumer <- list()
 for (k in 1:n) {
   dstl.consumer[[k]] <- node_new(
     "util",
     type = "CD", alpha = 1,
-    beta = c(1 / 3, 2 / 3),
+    beta = beta.consumer,
     paste0("prod", index[k]), paste0("prod", index[k + 1])
   )
 }
@@ -158,40 +237,11 @@ ge <- sdm2(
 ge$p
 ge$D
 
-#### Introduce population growth into the above economy.
-n <- 5 # the number of periods, consumers and firms.
+## Introduce population growth into the above economy.
 GRExg <- 0.03 # the population growth rate
-S <- matrix(NA, 2 * n, 2 * n)
 
-S.lab.consumer <- diag((1 + GRExg)^(0:(n - 1)), n)
-S[(n + 1):(2 * n), (n + 1):(2 * n)] <- S.lab.consumer
-
-B <- matrix(0, 2 * n, 2 * n)
-B[1:n, 1:n] <- diag(n)[, c(2:n, 1)]
+S[(n + 1):(2 * n), (n + 1):(2 * n)] <- diag((1 + GRExg)^(0:(n - 1)), n)
 B[1,n] <- (1 + GRExg)^(-n)
-
-beta.firm <- c(3 / 5, 2 / 5)
-beta.consumer <- c(1 / 3, 2 / 3)
-
-dstl.firm <- list()
-for (k in 1:n) {
-  dstl.firm[[k]] <- node_new(
-    "prod",
-    type = "CD", alpha = 5,
-    beta = beta.firm,
-    paste0("lab", k), paste0("prod", k)
-  )
-}
-
-dstl.consumer <- list()
-for (k in 1:(n-1)) {
-  dstl.consumer[[k]] <- node_new(
-    "util",
-    type = "CD", alpha = 1,
-    beta = beta.consumer,
-    paste0("prod", k), paste0("prod", k + 1)
-  )
-}
 
 dstl.consumer[[n]] <- node_new(
   "util",
@@ -218,9 +268,10 @@ ge <- sdm2(
 )
 
 ge$p
-diff(log(ge$p[1:n]))
-diff(log(ge$p[(n + 1):(2 * n)]))
+growth_rate(ge$p[1:n]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[(n + 1):(2 * n)]) + 1   # 1 / (1 + GRExg)
 ge$D
+ge$DV
 
 #### a time-circle model with production and one-period-lived consumers
 ## These consumers also can be regarded as infinite-lived carpe diem agents,
@@ -238,8 +289,8 @@ B <- matrix(0, 2 * n, 2 * n)
 B[1:n, 1:n] <- diag(n)[, c(2:n, 1)]
 B[1, n] <- discount.factor.last.output
 
-beta.firm <- c(3 / 5, 2 / 5)
-beta.consumer <- c(1 / 3, 2 / 3)
+beta.firm <- c(1 / 3, 2 / 3)
+beta.consumer <- c(1 / 2, 1 / 2)
 
 dstl.firm <- list()
 for (k in 1:n) {
@@ -275,8 +326,8 @@ ge <- sdm2(
 )
 
 ge$p
-diff(log(ge$p[1:n]))
-diff(log(ge$p[(n + 1):(2 * n)]))
+growth_rate(ge$p[1:n]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[(n + 1):(2 * n)]) + 1   # 1 / (1 + GRExg)
 ge$D
 
 ## the reduced form of the above model
@@ -317,6 +368,7 @@ ge2$p
 ge2$D
 
 #### a time-circle model with production and three-period-lived consumers
+## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
 n <- 6 # the number of periods, consumers and firms.
 GRExg <- 0.03 # the population growth rate
 S <- matrix(NA, 2 * n, 2 * n)
@@ -324,7 +376,7 @@ S <- matrix(NA, 2 * n, 2 * n)
 S.lab.consumer <- rbind(diag((1 + GRExg)^(0:(n - 1)), n), 0) +
   rbind(0, diag((1 + GRExg)^(0:(n - 1)), n))
 S.lab.consumer <- S.lab.consumer[1:n, ]
-S.lab.consumer[1, 6] <- (1 + GRExg)^-1
+S.lab.consumer[1, n] <- (1 + GRExg)^-1
 
 S[(n + 1):(2 * n), (n + 1):(2 * n)] <- S.lab.consumer
 
@@ -333,7 +385,7 @@ B[1:n, 1:n] <- diag(n)[, c(2:n, 1)]
 B[1, n] <- (1 + GRExg)^(-n)
 
 beta.firm <- c(2 / 5, 3 / 5)
-beta.consumer <- c(1 / 6, 3 / 6, 2 / 6)
+beta.consumer <- c(1 / 3, 1 / 3, 1 / 3)
 
 dstl.firm <- list()
 for (k in 1:n) {
@@ -395,22 +447,24 @@ ge <- sdm2(
 )
 
 ge$p
-diff(log(ge$p[1:n]))
-diff(log(ge$p[(n + 1):(2 * n)]))
+growth_rate(ge$p[1:n]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[(n + 1):(2 * n)]) + 1   # 1 / (1 + GRExg)
 ge$D
+ge$DV
 }
 
 }
 \references{
-Samuelson, P. A. (1958) An Exact Consumption-Loan Model of Interest with or without the Social Contrivance of Money. Journal of Political Economy, vol. 66(6): 467-482.
-
 de la Croix, David and Philippe Michel (2002, ISBN: 9780521001151) A Theory of Economic Growth: Dynamics and Policy in Overlapping Generations. Cambridge University Press.
 
 Diamond, Peter (1965) National Debt in a Neoclassical Growth Model. American Economic Review. 55 (5): 1126-1150.
+
+Samuelson, P. A. (1958) An Exact Consumption-Loan Model of Interest with or without the Social Contrivance of Money. Journal of Political Economy, vol. 66(6): 467-482.
+
+Shell, Karl (1971) Notes on the Economics of Infinity. Journal of Political Economy. 79 (5): 1002–1011.
 }
 \seealso{
 {
 \code{\link{gemOLGPureExchange_2_2}}
-\code{\link{gemOLGFinancialInstrument}}
 }
 }

@@ -27,7 +27,7 @@
 #'
 #' dstl <- list(dst.CHN, dst.USA)
 #'
-#' ge <- gemTwoCountryPureExchange(dstl,
+#' ge <- sdm2(dstl,
 #'   names.commodity = c("lab.CHN", "lab.USA"),
 #'   names.agent = c("CHN", "USA"),
 #'   B = matrix(0, 2, 2, TRUE),
@@ -42,7 +42,7 @@
 #' technology.level.CHN^(1 / es.DFProd - 1)
 #'
 #' ## supply change
-#' geSC <- gemTwoCountryPureExchange(dstl,
+#' geSC <- sdm2(dstl,
 #'   names.commodity = c("lab.CHN", "lab.USA"),
 #'   names.agent = c("CHN", "USA"),
 #'   B = matrix(0, 2, 2, TRUE),
@@ -56,7 +56,7 @@
 #'
 #' ## preference change
 #' dst.CHN$beta <- c(0.6, 0.4)
-#' gePC <- gemTwoCountryPureExchange(dstl,
+#' gePC <- sdm2(dstl,
 #'   names.commodity = c("lab.CHN", "lab.USA"),
 #'   names.agent = c("CHN", "USA"),
 #'   B = matrix(0, 2, 2, TRUE),
@@ -101,7 +101,7 @@
 #'
 #' dstl <- list(dst.CHN, dst.USA)
 #'
-#' ge <- gemTwoCountryPureExchange(dstl,
+#' ge <- sdm2(dstl,
 #'   names.commodity = c(
 #'     "lab.CHN", "money.CHN",
 #'     "lab.USA", "money.USA"
@@ -120,7 +120,7 @@
 #' ge$p["money.USA"] / ge$p["money.CHN"] # the exchange rate
 #'
 #' #### supply change
-#' geSC <- gemTwoCountryPureExchange(dstl,
+#' geSC <- sdm2(dstl,
 #'   names.commodity = c(
 #'     "lab.CHN", "money.CHN",
 #'     "lab.USA", "money.USA"
@@ -139,7 +139,7 @@
 #'
 #' ## preference change
 #' dst.CHN$beta <- c(0.6, 0.4)
-#' gePC <- gemTwoCountryPureExchange(dstl,
+#' gePC <- sdm2(dstl,
 #'   names.commodity = c(
 #'     "lab.CHN", "money.CHN",
 #'     "lab.USA", "money.USA"
@@ -190,7 +190,7 @@
 #'
 #' dstl <- list(dst.CHN, dst.USA)
 #'
-#' ge <- gemTwoCountryPureExchange(dstl,
+#' ge <- sdm2(dstl,
 #'   names.commodity = c(
 #'     "lab.CHN", "money.CHN",
 #'     "lab.USA", "money.USA"
@@ -209,7 +209,7 @@
 #' ge$p["money.USA"] / ge$p["money.CHN"] # the exchange rate
 #'
 #' ## supply change and high substitution elasticity
-#' geSC <- gemTwoCountryPureExchange(dstl,
+#' geSC <- sdm2(dstl,
 #'   names.commodity = c(
 #'     "lab.CHN", "money.CHN",
 #'     "lab.USA", "money.USA"

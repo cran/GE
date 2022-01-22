@@ -86,8 +86,8 @@
 #' \item ts.q - the time series of sales rates in the last iteration.
 #' \item policy.data - the policy data.
 #' }
-#' @note In the package CGE, the instantaneous equilibrium path (alias market clearing path) is computed by the function iep.
-#' In this package, the instantaneous equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
+#' @note In the package CGE, the temporary equilibrium path (alias market clearing path, instantaneous equilibrium path) is computed by the function iep.
+#' In this package, the temporary equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
 #' @note The order of implementation of various policies is critical.
 #' When a policy list contains a supply policy, a technology (i.e. dstl) policy, a price policy (e.g. a market-clearing-price policy) and a B policy
 #' (i.e. a policy adjusting the argument B), both the supply policy and the technology policy should be placed before the price policy,
@@ -568,7 +568,7 @@ sdm2 <- function(A,
 
     if (!all(is.na(S0Exg))) {
       # There are exogenous supplies.
-      if (GRExg != 0) {
+      if ((length(GRExg) == 1) && (GRExg != 0)) {
         z0 <- z0 / (1 + GRExg)^numberOfPeriods
         S0 <- S0 / (1 + GRExg)^numberOfPeriods
         SupplyExogenous <<- S0Exg

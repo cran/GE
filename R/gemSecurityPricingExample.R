@@ -14,7 +14,7 @@
 #' #### an example of Danthine and Donaldson (2005, section 8.3).
 #' uf <- function(x) 0.5 * x[1] + 0.9 * (1 / 3 * log(x[2]) + 2 / 3 * log(x[3]))
 #'
-#' ge <- gemSecurityPricingExample(
+#' ge <- sdm2(
 #'   A = function(state) {
 #'     VMU <- marginal_utility(state$last.A %*% dg(state$last.z), diag(3), uf, state$p)
 #'     Ratio <- sweep(VMU, 2, colMeans(VMU), "/")

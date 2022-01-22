@@ -58,7 +58,7 @@ dstl <- list(
   dst.firm.ROW, dst.household.ROW
 )
 
-ge <- gemTwoCountry_Tariff_9_5(dstl,
+ge <- sdm2(dstl,
   names.commodity = c(
     "prod.CHN", "lab.CHN", "cap.CHN", "imported.prod.CHN", "tariff.CHN",
     "prod.ROW", "lab.ROW", "cap.ROW", "bond.ROW"

@@ -33,7 +33,7 @@
 #'
 #' dstl <- list(dst.CHN, dst.USA)
 #'
-#' ge <- gemTwoCountryPureExchange(dstl,
+#' ge <- sdm2(dstl,
 #'   names.commodity = c("lab.CHN", "lab.USA", "bond.USA"),
 #'   names.agent = c("CHN", "USA"),
 #'   B = matrix(0, 3, 2, TRUE),
@@ -90,7 +90,7 @@
 #'
 #' dstl <- list(dst.CHN, dst.USA)
 #'
-#' ge <- gemTwoCountryPureExchange(dstl,
+#' ge <- sdm2(dstl,
 #'   names.commodity = c(
 #'     "lab.CHN", "money.CHN",
 #'     "lab.USA", "money.USA",

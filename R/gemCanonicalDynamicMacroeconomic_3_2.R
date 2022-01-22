@@ -16,12 +16,12 @@
 #' @return A general equilibrium (see \code{\link{sdm2}})
 #' @references Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomic General Equilibrium Models (Second Edition). Vernon Press.
 #' @references Li Xiangyang (2018, ISBN: 9787302497745) Dynamic Stochastic General Equilibrium (DSGE) Model: Theory, Methodology, and Dynare Practice. Tsinghua University Press. (In Chinese)
-#' @seealso The market clearing path (alias instantaneous equilibrium path, iep) can be computed with the function \code{\link{policyMarketClearingPrice}}.
+#' @seealso The market clearing path (alias temporary equilibrium path, instantaneous equilibrium path) can be computed with the function \code{\link{policyMarketClearingPrice}}.
 #' @examples
 #' \donttest{
 #' gemCanonicalDynamicMacroeconomic_3_2()
 #'
-#' #### a market-clearing path (alias instantaneous equilibrium path)
+#' #### a market-clearing path (alias temporary equilibrium path)
 #' ge <- gemCanonicalDynamicMacroeconomic_3_2(
 #'   policy.price = policyMarketClearingPrice,
 #'   ts = TRUE,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemOLGPureExchange_2_2.R
 \name{gemOLGPureExchange_2_2}
 \alias{gemOLGPureExchange_2_2}
-\title{The Basic Overlapping Generations Model for an Exchange Economy (see Samuelson, 1958)}
+\title{The Basic Overlapping Generations pure exchange Model (see Samuelson, 1958)}
 \usage{
 gemOLGPureExchange_2_2(...)
 }
@@ -10,7 +10,7 @@ gemOLGPureExchange_2_2(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of the basic overlapping generations model for an exchange economy.
+This is the basic overlapping generations pure exchange model.
 }
 \details{
 As Samuelson (1958) wrote, break each life up into thirds.
@@ -24,11 +24,15 @@ In each period, age1 and age2 will exchange their payoffs of the present period 
 Age2 will sell some present payoff and buy some future payoff as pension, and age1 quite the contrary.
 Age3 just takes away the pension and need not take part in the exchange.
 Hence there are only two agents in the pure exchange economy.
-In the present exchange process, the utility function of age1 is c1^(1 / 3) * x2^(2 / 3), wherein x2 is the payoff of the next period,
+In the present exchange process, the utility function of age1 is c1^(1 / 3) * x2^(2 / 3), wherein x2 is the revenue of the next period,
 and the utility function of age2 is c2^(1 / 2) * c3^(1 / 2).
+}
+\note{
+We can also suppose only age2 gets payoff and age1 does not.
 }
 \examples{
 \donttest{
+#### the basic overlapping generations (inefficient) exchange model
 dst.age1 <- node_new(
   "util",
   type = "CD", alpha = 1, beta = c(1 / 3, 2 / 3),
@@ -41,7 +45,7 @@ dst.age2 <- node_new(
   "payoff1", "payoff2"
 )
 
-ge <- gemOLGPureExchange_2_2(
+ge <- sdm2(
   A = list(dst.age1, dst.age2),
   B = matrix(0, 2, 2),
   S0Exg = matrix(c(
@@ -53,7 +57,7 @@ ge <- gemOLGPureExchange_2_2(
   numeraire = "payoff1",
   policy = function(time, state) {
     pension <- (state$last.A[, 2] * state$last.z[2])[2]
-    if (time > 1) state$S[1, 2] <- state$S[1, 2] - pension
+    if (time > 1) state$S[1, 2] <- 1 - pension
     state
   }
 )
@@ -61,129 +65,9 @@ ge <- gemOLGPureExchange_2_2(
 ge$p # c(1, 3 / 2 + sqrt(13) / 2)
 ge$S
 ge$D
-
-
-## Suppose only age2 gets payoff and age1 does not.
-ge <- sdm2(
-  A = list(dst.age1, dst.age2),
-  B = matrix(0, 2, 2),
-  S0Exg = matrix(c(
-    0, 1,
-    1, 0
-  ), 2, 2, TRUE),
-  names.commodity = c("payoff1", "payoff2"),
-  names.agent = c("age1", "age2"),
-  numeraire = "payoff1",
-  policy = function(time, state) {
-    pension <- (state$last.A[, 2] * state$last.z[2])[2]
-    if (time > 1) state$S[1, 2] <- state$S[1, 2] - pension
-    state
-  }
-)
-
-ge$p
-ge$S
-ge$D
-
-#### Suppose the utility function is c1^(2 / 10) * c2^(5 / 10) * c3^(3 / 10).
-dst.age1 <- node_new(
-  "util",
-  type = "CD", alpha = 1, beta = c(2 / 10, 8 / 10),
-  "payoff1", "payoff2"
-)
-
-dst.age2 <- node_new(
-  "util",
-  type = "CD", alpha = 1, beta = c(5 / 8, 3 / 8),
-  "payoff1", "payoff2"
-)
-ge <- sdm2(
-  A = list(dst.age1, dst.age2),
-  B = matrix(0, 2, 2),
-  S0Exg = matrix(c(
-    0, 1,
-    1, 0
-  ), 2, 2, TRUE),
-  names.commodity = c("payoff1", "payoff2"),
-  names.agent = c("age1", "age2"),
-  numeraire = "payoff1",
-  policy = function(time, state) {
-    pension <- (state$last.A[, 2] * state$last.z[2])[2]
-    if (time > 1) state$S[1, 2] <- state$S[1, 2] - pension
-    state
-  }
-)
-
-ge$p
-ge$S
-ge$D
-
-#### Suppose there are banks in the first economy.
-dst.bank1 <- node_new(
-  "payoff2",
-  type = "Leontief", a = 1,
-  "payoff1"
-)
-
-dst.bank2 <- node_new(
-  "payoff3",
-  type = "Leontief", a = 1,
-  "payoff2"
-)
-
-dst.consumer <- node_new(
-  "util",
-  type = "CD", alpha = 1, beta = c(1 / 3, 1 / 3, 1 / 3),
-  "payoff1", "payoff2", "payoff3"
-)
-
-ge <- sdm2(
-  A = list(dst.bank1, dst.bank2, dst.consumer),
-  B = matrix(c(
-    0, 0, 0,
-    1, 0, 0,
-    0, 1, 0
-  ), 3, 3, TRUE),
-  S0Exg = matrix(c(
-    NA, NA, 1,
-    NA, NA, 1,
-    NA, NA, NA
-  ), 3, 3, TRUE),
-  names.commodity = c("payoff1", "payoff2", "payoff3"),
-  names.agent = c("bank1", "bank2", "consumer"),
-  numeraire = "payoff1"
-)
-
-ge$p
-ge$S
-ge$D
-
-## Assume that banks can earn interest through foreign investment.
-dst.bank1$a <- 0.8
-dst.bank2$a <- 0.8
-ge <- sdm2(
-  A = list(dst.bank1, dst.bank2, dst.consumer),
-  B = matrix(c(
-    0, 0, 0,
-    1, 0, 0,
-    0, 1, 0
-  ), 3, 3, TRUE),
-  S0Exg = matrix(c(
-    NA, NA, 1,
-    NA, NA, 1,
-    NA, NA, NA
-  ), 3, 3, TRUE),
-  names.commodity = c("payoff1", "payoff2", "payoff3"),
-  names.agent = c("bank1", "bank2", "consumer"),
-  numeraire = "payoff1"
-)
-
-ge$p
-ge$S
-ge$D
 ge$DV
 
-#### Another calculation method for the first economy.
+#### another calculation method for the first economy
 n <- 18 # the number of agents. The number of payoff types is n+2.
 payoff.age2 <- 1
 payoff.age3 <- 1e-10
@@ -208,8 +92,9 @@ ge <- sdm2(
   numeraire = "payoff1"
 )
 
-diff(log(ge$p)) # log(3 / 2 + sqrt(13) / 2)
+growth_rate(ge$p) + 1    # 3 / 2 + sqrt(13) / 2
 ge$D
+
 }
 
 }
@@ -219,6 +104,5 @@ Samuelson, P. A. (1958) An Exact Consumption-Loan Model of Interest with or with
 \seealso{
 {
 \code{\link{gemOLGTimeCircle}}
-\code{\link{gemOLGFinancialInstrument}}
 }
 }

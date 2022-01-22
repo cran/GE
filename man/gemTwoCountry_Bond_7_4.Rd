@@ -50,7 +50,7 @@ dst.household.ROW <- node_new("util",
 
 dstl <- list(dst.firm.CHN, dst.household.CHN, dst.firm.ROW, dst.household.ROW)
 
-ge <- gemTwoCountry_Bond_7_4(dstl,
+ge <- sdm2(dstl,
   names.commodity = c(
     "prod.CHN", "lab.CHN", "cap.CHN",
     "prod.ROW", "lab.ROW", "cap.ROW", "bond.ROW"
@@ -152,30 +152,30 @@ dst.household.ROW <- node_new("util",
 
 dstl <- list(dst.firm.CHN, dst.household.CHN, dst.firm.ROW, dst.household.ROW)
 
-ge <- gemTwoCountry_Bond_7_4(dstl,
-                             names.commodity = c(
-                               "prod.CHN", "lab.CHN", "cap.CHN",
-                               "prod.ROW", "lab.ROW", "cap.ROW", "bond.ROW"
-                             ),
-                             names.agent = c(
-                               "firm.CHN", "household.CHN",
-                               "firm.ROW", "household.ROW"
-                             ),
-                             B = {
-                               tmp <- matrix(0, 7, 4, TRUE)
-                               tmp[1, 1] <- tmp[4, 3] <- 1
-                               tmp
-                             },
-                             S0Exg = {
-                               tmp <- matrix(NA, 7, 4, TRUE)
-                               tmp[2, 2] <- OT["lab.CHN", "household.CHN"]
-                               tmp[3, 2] <- OT["cap.CHN", "household.CHN"]
-                               tmp[5, 4] <- OT["lab.ROW", "household.ROW"]
-                               tmp[6, 4] <- OT["cap.ROW", "household.ROW"]
-                               tmp[7, 4] <- OT["bond.ROW", "household.ROW"]
-                               tmp
-                             },
-                             numeraire = "lab.CHN"
+ge <- sdm2(dstl,
+  names.commodity = c(
+    "prod.CHN", "lab.CHN", "cap.CHN",
+    "prod.ROW", "lab.ROW", "cap.ROW", "bond.ROW"
+  ),
+  names.agent = c(
+    "firm.CHN", "household.CHN",
+    "firm.ROW", "household.ROW"
+  ),
+  B = {
+    tmp <- matrix(0, 7, 4, TRUE)
+    tmp[1, 1] <- tmp[4, 3] <- 1
+    tmp
+  },
+  S0Exg = {
+    tmp <- matrix(NA, 7, 4, TRUE)
+    tmp[2, 2] <- OT["lab.CHN", "household.CHN"]
+    tmp[3, 2] <- OT["cap.CHN", "household.CHN"]
+    tmp[5, 4] <- OT["lab.ROW", "household.ROW"]
+    tmp[6, 4] <- OT["cap.ROW", "household.ROW"]
+    tmp[7, 4] <- OT["bond.ROW", "household.ROW"]
+    tmp
+  },
+  numeraire = "lab.CHN"
 )
 
 ge$p

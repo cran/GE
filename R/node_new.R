@@ -7,7 +7,8 @@
 #' The parameter name of a value will be treated as the name of an attribute.\cr
 #' A value without a parameter name will be treated as a child node or the name of a child node.
 #' If the class of the value is Node, it will be added as a child.
-#' If the class of the value is character, a child node will be created with the value as the name.
+#' If the class of the value is character, a child node (or some child nodes) will be created with the value
+#' as the name (or names).
 #' @return A tree (i.e. a Node object).
 #' @examples
 #' \donttest{
@@ -19,6 +20,13 @@
 #' dst <- node_new(
 #'   "firm",
 #'   "lab", "cap", dst1
+#' )
+#' print(dst)
+#'
+#' # the same as above
+#' dst <- node_new(
+#'   "firm",
+#'   c("lab", "cap"), dst1
 #' )
 #' print(dst)
 #'

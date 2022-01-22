@@ -21,7 +21,8 @@ If a value is NULL, the corresponding attribute should exist and will be deleted
 
 A value without a parameter name will be treated as a child node or the name of a child node.
 If the class of the value is Node, it will be added as a child.
-If the class of the value is character, a child node will be created with the value as the name.}
+If the class of the value is character, a child node (or some child nodes) will be created with the value
+as the name (or names).}
 }
 \value{
 Invisibly returns the node.
@@ -41,6 +42,13 @@ print(dst1)
 dst <- node_set(
   "firm", NA,
   "lab", "cap", dst1
+)
+print(dst)
+
+# the same as above
+dst <- node_set(
+  "firm", NA,
+  c("lab", "cap"), dst1
 )
 print(dst)
 
