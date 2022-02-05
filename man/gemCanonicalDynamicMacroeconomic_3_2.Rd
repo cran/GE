@@ -40,7 +40,7 @@ A general equilibrium (see \code{\link{sdm2}})
 A canonical dynamic macroeconomic general equilibrium model (see Torres, 2016, Table 2.1 and 2.2).
 }
 \details{
-A general equilibrium model with 3 commodities (i.e. product, labor, and stock)
+A general equilibrium model with 3 commodities (i.e. product, labor and equity shares)
 and 2 agents (i.e. a firm and a consumer). Labor is the numeraire.
 }
 \examples{
@@ -102,7 +102,6 @@ ge <- gemCanonicalDynamicMacroeconomic_3_2(
   beta1.consumer = 1
 )
 }
-
 }
 \references{
 Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomic General Equilibrium Models (Second Edition). Vernon Press.

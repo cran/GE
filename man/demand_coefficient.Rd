@@ -63,7 +63,7 @@ dst <- node_new("firm",
 print(dst, "type")
 node_print(dst)
 plot(dst)
-node_plot(dst)
+node_plot(dst, TRUE)
 
 demand_coefficient(dst, p = c(wheat = 1, iron = 2)) # the same as a = c(0.5, 0.1)
 

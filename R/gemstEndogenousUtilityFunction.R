@@ -3,6 +3,8 @@
 #' @aliases gemstEndogenousUtilityFunction
 #' @description This is an example of the market-clearing path with an endogenous utility function.
 #' The parameters of the utility function will change with the utility level.
+#'
+#' To deal with non-homothetic preferences, we can simply use an endogenous CES-type utility function instead of a utility function with a more complex form.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{

@@ -31,35 +31,6 @@
 #' }
 #'
 #' apply_expand.grid(f, p1 = seq(0.1, 10, 0.1), es = c(0.3, 0.5, 1))
-#'
-#' ####
-#' f <- function(x) {
-#'   IT17 <- matrix(c(
-#'     1.47, 6.47, 0.57, 2.51,
-#'     2.18, 76.32, 12.83, 44.20,
-#'     0.82, 19.47, 23.33, 35.61,
-#'     6.53, 13.92, 21.88, 0,
-#'     0.23, 4.05, 6.76, 0,
-#'     -0.34, 6.43, 3.40, 0,
-#'     0.13, 8.87, 10.46, 0
-#'   ), 7, 4, TRUE)
-#'
-#'   product.output <- c(11.02, 135.53, 79.23)
-#'
-#'   rownames(IT17) <- c("agri", "manu", "serv", "lab", "cap", "tax", "dividend")
-#'   colnames(IT17) <- c("sector.agri", "sector.manu", "sector.serv", "sector.hh")
-#'
-#'   ge <- gemInputOutputTable_7_4(
-#'     IT = IT17,
-#'     product.output = product.output,
-#'     supply.labor = x[1],
-#'     supply.capital = x[2]
-#'   )
-#'
-#'   ge$p
-#' }
-#'
-#' apply_expand.grid(f, supply.labor = seq(10, 20, 10), supply.capital = seq(8, 16, 4))
 #' }
 
 apply_expand.grid <- function(FUN, ...) {

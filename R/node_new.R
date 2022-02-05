@@ -1,7 +1,13 @@
 #' @export
 #' @title Create a Tree
 #' @aliases node_new
-#' @description Create a tree by the \code{\link{node_set}} function.
+#' @description Create a tree by the \code{\link{node_set}} function and the package data.tree.
+#'
+#' As the package data.tree says:
+#'
+#' "One of most important things to note about data.tree is that it exhibits reference semantics.
+#' In a nutshell, this means that you can modify your tree along the way, without having to reassign it to a variable after each modification.
+#' By and large, this is a rather exceptional behavior in R, where value-semantics is king most of the time."
 #' @param root.name a character string specifying the name of the root node.
 #' @param ... attribute names and values (e.g. alpha=1).
 #' The parameter name of a value will be treated as the name of an attribute.\cr
@@ -41,7 +47,8 @@
 #'   type = "CD", alpha = 1, beta = c(0.5, 0.5),
 #'   "lab", "cap"
 #' )
-#' node_print(dst)
+#' node_plot(dst)
+#' node_plot(dst, TRUE)
 #'
 #' }
 #'

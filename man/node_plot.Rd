@@ -4,10 +4,12 @@
 \alias{node_plot}
 \title{Plot a Tree and Show the Type Attribute}
 \usage{
-node_plot(node, ...)
+node_plot(node, param = FALSE, ...)
 }
 \arguments{
 \item{node}{a tree (i.e. a Node object).}
+
+\item{param}{If TRUE, those parameters such as alpha, beta, es etc. will be shown.}
 
 \item{...}{arguments to be to be passed to the function plot.Node.}
 }

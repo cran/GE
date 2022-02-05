@@ -16,9 +16,9 @@
 #' )
 #'
 #' dst.household.CHN <- node_new("util",
-#'   type = "FIN", rate = c(1, 0.028),
+#'   type = "FIN", rate = c(1, outbound.investment.rate = 0.028),
 #'   "cc1", "bond.ROW"
-#' ) # 0.1 is the amount of foreign investment corresponding to each unit of cc1.
+#' )
 #'
 #' node_set(dst.household.CHN, "cc1",
 #'   type = "SCES", alpha = 1, beta = c(0.93, 0.07), es = es.DFProd,

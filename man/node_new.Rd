@@ -20,7 +20,13 @@ as the name (or names).}
 A tree (i.e. a Node object).
 }
 \description{
-Create a tree by the \code{\link{node_set}} function.
+Create a tree by the \code{\link{node_set}} function and the package data.tree.
+
+As the package data.tree says:
+
+"One of most important things to note about data.tree is that it exhibits reference semantics.
+In a nutshell, this means that you can modify your tree along the way, without having to reassign it to a variable after each modification.
+By and large, this is a rather exceptional behavior in R, where value-semantics is king most of the time."
 }
 \examples{
 \donttest{
@@ -53,7 +59,8 @@ dst <- node_new("firm",
   type = "CD", alpha = 1, beta = c(0.5, 0.5),
   "lab", "cap"
 )
-node_print(dst)
+node_plot(dst)
+node_plot(dst, TRUE)
 
 }
 

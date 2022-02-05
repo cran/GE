@@ -7,12 +7,13 @@
 #' @param sigma the sigma coefficient.
 #' @param alpha the alpha coefficient.
 #' @param beta a vector consisting of the beta coefficients.
-#' @param x a vector consisting ofthe inputs.
+#' @param x a vector consisting of the inputs.
 #' @param es the elasticity of substitution. If es is not NA, the value of sigma will be ignored.
 #' @return The output or utility level.
 #' @examples
 #' \donttest{
-#' SCES(alpha = 1, beta = c(0.6, 0.4), x = c(0.6, 0.4), es = 0.5)
+#' beta <- c(0.6, 0.4)
+#' SCES(alpha = 1, beta = beta, x = beta, es = 0.5)
 #' }
 #'
 SCES <- function(sigma = 1 - 1 / es, alpha, beta, x, es = NA) {

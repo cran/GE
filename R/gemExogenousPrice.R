@@ -1,7 +1,7 @@
 #' @export
-#' @title Some Examples of Price Regulation
-#' @aliases gemPriceRegulation
-#' @description Some examples of price regulation.
+#' @title Some Examples with Exogenous Price (Price Regulation)
+#' @aliases gemExogenousPrice
+#' @description Some examples with exogenous price (price regulation).
 #' When a price regulation policy is imposed in a structural dynamic model,
 #' the economy may converge to a fixed point (i.e. a price regulation equilibrium)
 #' where the market does not clear.
@@ -23,7 +23,7 @@
 #' f <- function(pExg = NULL, policy = NULL) {
 #'   ge <- sdm2(
 #'     A = list(dst.firm, dst.consumer),
-#'     B = diag(c(1, 0), 2, 2),
+#'     B = diag(c(1, 0)),
 #'     S0Exg = {
 #'       S0Exg <- matrix(NA, 2, 2)
 #'       S0Exg[2, 2] <- 100
@@ -62,13 +62,35 @@
 #'   state
 #' })
 #'
-#' ## The price regulation policy is implemented from the tenth period.
+#' ## The price regulation policy is implemented from the 10th period.
 #' f(policy = function(time, state) {
 #'   if (time >= 10) state$p <- c(0.16, 1)
 #'   state
 #' })
 #'
+#' ## The price regulation policy is implemented from the 30th period.
+#' f(policy = function(time, state) {
+#'   if (time >= 30) state$p <- c(0.16, 1)
+#'   state
+#' })
+#'
+#' ## price ceil
+#' f(policy = function(time, state) {
+#'   if (time >= 30) {
+#'     state$p <- state$p / state$p[2]
+#'     if (state$p[1] > 0.15) state$p[1] <- 0.15
+#'   }
+#'   state
+#' })
+#'
+#' ##
+#' ge <- f(policy = function(time, state) {
+#'   if (time >= 30) state$p <- c(0.17, 1)
+#'   state
+#' })
+#'
+#' tail(ge$ts.q)
 #' }
 
 
-gemPriceRegulation <- function(...) sdm2(...)
+gemExogenousPrice <- function(...) sdm2(...)

@@ -18,7 +18,7 @@
 #' dst.household.CHN <- node_new("util",
 #'   type = "FIN", rate = c(1, 0.028),
 #'   "cc1", "bond.ROW"
-#' ) # 0.1 is the amount of foreign investment corresponding to
+#' ) # 0.1 is the amount of outbound investment corresponding to
 #' # each unit of cc1 (i.e. composite commodity 1).
 #'
 #' node_set(dst.household.CHN, "cc1",
@@ -108,14 +108,14 @@
 #'                          "lab.CHN", "cap.CHN"
 #' )
 #'
-#' # the amount of foreign investment corresponding to
+#' # the amount of outbound investment corresponding to
 #' # each unit of composite commodity 1 used by household.
-#' foreign.investment.rate <- IT["bond.ROW", "household.CHN"] /
+#' outbound.investment.rate <- IT["bond.ROW", "household.CHN"] /
 #'   sum(IT[c("prod.CHN", "prod.ROW"), "household.CHN"])
 #'
 #' dst.household.CHN <- node_new("util",
 #'                              type = "FIN",
-#'                              rate = c(1, foreign.investment.rate),
+#'                              rate = c(1, outbound.investment.rate),
 #'                              "cc1", "bond.ROW"
 #' )
 #'

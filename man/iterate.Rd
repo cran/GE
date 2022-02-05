@@ -32,6 +32,13 @@ f <- function(x, a) prop.table(c(sum(x), a * prod(x)^(1 / 2)))
 iterate(x, f, 100, a = 3)
 iterate(x, f, 100, tol = 1e-5, a = 3)
 
+##
+iterate(x, function(x) {
+  result <- c(sin(x[1]^2 + x[2]^2), dnorm(x[1] + x[2]))
+  prop.table(abs(result))
+}, 30)
+
+##
 x <- c(1, 2, 3)
 f <- function(x) {
   n <- length(x)
@@ -42,5 +49,4 @@ f <- function(x) {
 }
 iterate(x, f, 100)
 }
-
 }

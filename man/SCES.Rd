@@ -13,7 +13,7 @@ SCES(sigma = 1 - 1/es, alpha, beta, x, es = NA)
 
 \item{beta}{a vector consisting of the beta coefficients.}
 
-\item{x}{a vector consisting ofthe inputs.}
+\item{x}{a vector consisting of the inputs.}
 
 \item{es}{the elasticity of substitution. If es is not NA, the value of sigma will be ignored.}
 }
@@ -26,7 +26,8 @@ wherein beta1 + beta2 == 1.
 }
 \examples{
 \donttest{
-SCES(alpha = 1, beta = c(0.6, 0.4), x = c(0.6, 0.4), es = 0.5)
+beta <- c(0.6, 0.4)
+SCES(alpha = 1, beta = beta, x = beta, es = 0.5)
 }
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_easy_5_4.R
 \name{gemInputOutputTable_easy_5_4}
 \alias{gemInputOutputTable_easy_5_4}
-\title{An Easy General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017)}
+\title{An Easy General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1)}
 \usage{
 gemInputOutputTable_easy_5_4(
   IT = cbind(sector.agri = c(agri = 260, manu = 345, serv = 400, lab = 200, cap = 160),
@@ -58,7 +58,7 @@ sector.serv <- c(150, 390, 320, 400, 210)
 sector.hh <- c(635, 600, 100, 0, 0)
 
 IT <- cbind(sector.agri, sector.manu, sector.serv, sector.hh)
-rownames(IT) <-  c("agri", "manu", "serv", "lab", "cap")
+rownames(IT) <- c("agri", "manu", "serv", "lab", "cap")
 
 ge <- gemInputOutputTable_easy_5_4(IT)
 

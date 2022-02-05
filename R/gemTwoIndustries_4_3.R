@@ -1,0 +1,109 @@
+#' @export
+#' @title A 4-by-3 Economy with Two Industries
+#' @aliases gemTwoIndustries_4_3
+#' @description A 4-by-3 economy with two industries.
+#' @param ... arguments to be passed to the function sdm2.
+#' @references Ju, Jiandong, Justin Yifu Lin, Qing Liu, Kang Shi (2020) Structural Changes and the Real Exchange Rate Dynamics. Journal of International Money and Finance, Vol. 107, pp: 102192.
+#' @examples
+#' \donttest{
+#' dst.manu <- node_new("output",
+#'                      type = "SCES", es = 1, alpha = 1,
+#'                      beta = c(0.2, 0.8),
+#'                      "lab", "cap"
+#' )
+#'
+#' dst.serv <- node_new("output",
+#'                      type = "SCES", es = 1, alpha = 1,
+#'                      beta = c(0.8, 0.2),
+#'                      "lab", "cap"
+#' )
+#'
+#' dst.consumer <- node_new("util",
+#'                          type = "SCES", es = 1, alpha = 1,
+#'                          beta = c(0.5, 0.5),
+#'                          "manu", "serv"
+#' )
+#'
+#' dstl <- list(dst.manu, dst.serv, dst.consumer)
+#'
+#' S0Exg <- matrix(NA, 4, 3)
+#' S0Exg[3:4, 3] <- c(100, 100)
+#'
+#' f <- function(dstl, S0Exg) {
+#'   sdm2(
+#'     A = dstl,
+#'     B = matrix(c(
+#'       1, 0, 0,
+#'       0, 1, 0,
+#'       0, 0, 0,
+#'       0, 0, 0
+#'     ), 4, 3, TRUE),
+#'     S0Exg = S0Exg,
+#'     names.commodity = c("manu", "serv", "lab", "cap"),
+#'     names.agent = c("manu", "serv", "consumer"),
+#'     numeraire = c("manu")
+#'   )
+#' }
+#'
+#' ge <- f(dstl = dstl, S0Exg = S0Exg)
+#'
+#' ge$D
+#' ge$p
+#'
+#' ##
+#' dstl2 <- lapply(dstl, Clone)
+#' dstl2[[1]]$alpha <- 2
+#'
+#' ge <- f(dstl = dstl2, S0Exg = S0Exg)
+#' ge$D
+#' ge$p
+#'
+#' ##
+#' S0Exg2 <- S0Exg
+#' S0Exg2[3, 3] <- 200 # labor supply
+#' ge <- f(dstl = dstl, S0Exg = S0Exg2)
+#' ge$D
+#' ge$p
+#'
+#' ##
+#' S0Exg3 <- S0Exg
+#' S0Exg3[4, 3] <- 200 # capital supply
+#' ge <- f(dstl = dstl, S0Exg = S0Exg3)
+#' ge$D
+#' ge$p
+#'
+#' ##
+#' dstl3 <- lapply(dstl, Clone)
+#' dstl3[[3]]$beta <- c(0.2, 0.8)
+#' ge <- f(dstl = dstl3, S0Exg = S0Exg)
+#' ge$D
+#' ge$p
+#'
+#' ## exogenous wage rate
+#' S0Exg4 <- S0Exg
+#' S0Exg4[3, 3] <- 1000 # labor supply
+#'
+#' ge <- sdm2(
+#'   A = dstl2,
+#'   B = matrix(c(
+#'     1, 0, 0,
+#'     0, 1, 0,
+#'     0, 0, 0,
+#'     0, 0, 0
+#'   ), 4, 3, TRUE),
+#'   S0Exg = S0Exg4,
+#'   names.commodity = c("manu", "serv", "lab", "cap"),
+#'   names.agent = c("manu", "serv", "consumer"),
+#'   numeraire = c("manu"),
+#'   pExg = c(1, NA, 1, NA),
+#'   maxIteration = 1,
+#'   ts = TRUE
+#' )
+#'
+#' matplot(ge$ts.z, type = "l")
+#' matplot(ge$ts.q, type = "l")
+#' tail(ge$ts.q)
+#' ge$p
+#' }
+
+gemTwoIndustries_4_3 <- function(...) sdm2(...)

@@ -1,5 +1,5 @@
 #' @export
-#' @title Temporary Equilibrium Paths
+#' @title Some Examples of Temporary Equilibrium Paths
 #' @aliases gemTemporaryEquilibriumPath
 #' @description Some examples of temporary equilibrium paths with sticky decisions of a firm, that is,
 #' the firm adjusts its technology sluggishly when the prices change.
@@ -49,7 +49,7 @@
 #'
 #'   ge <- sdm2(
 #'     A = list(dst.firm, dst.consumer),
-#'     B = diag(c(1, 0), 2, 2),
+#'     B = diag(c(1, 0)),
 #'     S0Exg = {
 #'       S0Exg <- matrix(NA, 2, 2)
 #'       S0Exg[2, 2] <- 100

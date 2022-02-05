@@ -3,6 +3,8 @@
 #' @aliases gemstEndogenousProductionFunction
 #' @description This is an example of the market-clearing path with an endogenous production function.
 #' The parameter of the production function will change with the output level.
+#'
+#' To deal with locally or globally increasing returns to scale, we can simply use an endogenous CES-type production function instead of a production function with a more complex form.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
@@ -46,6 +48,5 @@
 #'
 #' matplot(ge$ts.z, type = "b", pch = 20)
 #' }
-#'
 
 gemstEndogenousProductionFunction <- function(...) sdm2(...)

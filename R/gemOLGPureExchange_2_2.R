@@ -1,5 +1,5 @@
 #' @export
-#' @title The Basic Overlapping Generations pure exchange Model (see Samuelson, 1958)
+#' @title The Basic Overlapping Generations Pure Exchange Model (see Samuelson, 1958)
 #' @aliases gemOLGPureExchange_2_2
 #' @description This is the basic overlapping generations pure exchange model.
 #' @param ... arguments to be passed to the function sdm2.

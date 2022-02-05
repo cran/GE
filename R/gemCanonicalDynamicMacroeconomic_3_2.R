@@ -2,7 +2,7 @@
 #' @title A Canonical Dynamic Macroeconomic General Equilibrium Model (see Torres, 2016)
 #' @aliases gemCanonicalDynamicMacroeconomic_3_2
 #' @description A canonical dynamic macroeconomic general equilibrium model (see Torres, 2016, Table 2.1 and 2.2).
-#' @details A general equilibrium model with 3 commodities (i.e. product, labor, and stock)
+#' @details A general equilibrium model with 3 commodities (i.e. product, labor and equity shares)
 #' and 2 agents (i.e. a firm and a consumer). Labor is the numeraire.
 #' @param discount.factor the intertemporal discount factor.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
@@ -76,7 +76,7 @@
 #'   beta1.consumer = 1
 #' )
 #' }
-#'
+
 gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
                                                  depreciation.rate = 0.06,
                                                  beta1.firm = 0.35,
@@ -97,7 +97,7 @@ gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
       result[3] <- p[1] * result[1] * return.rate / p[3]
       result
     },
-    "prod", "lab", "stock"
+    "prod", "lab", "equity.share"
   )
 
   dst.consumer <- node_new("util",
@@ -125,7 +125,7 @@ gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
       S0Exg[2, 2] <- S0Exg[3, 2] <- 1
       S0Exg
     },
-    names.commodity = c("prod", "lab", "stock"),
+    names.commodity = c("prod", "lab", "equity.share"),
     names.agent = c("firm", "consumer"),
     numeraire = "lab",
     policy = policy,

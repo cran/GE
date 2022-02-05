@@ -1,5 +1,5 @@
 #' @export
-#' @title An Easy General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017)
+#' @title An Easy General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1)
 #' @aliases gemInputOutputTable_easy_5_4
 #' @description This is a general equilibrium model based on a 5x4 input-output table (see Zhang Xin, 2017, Table 8.6.1).
 #' @details Given a 5x4 input-output table (e.g., see Zhang Xin, 2017, Table 8.6.1), this model calculates
@@ -30,14 +30,13 @@
 #' sector.hh <- c(635, 600, 100, 0, 0)
 #'
 #' IT <- cbind(sector.agri, sector.manu, sector.serv, sector.hh)
-#' rownames(IT) <-  c("agri", "manu", "serv", "lab", "cap")
+#' rownames(IT) <- c("agri", "manu", "serv", "lab", "cap")
 #'
 #' ge <- gemInputOutputTable_easy_5_4(IT)
 #'
 #' ####
 #' ge <- gemInputOutputTable_easy_5_4(supply.capital = 1870)
 #' prop.table(ge$z[1:3])
-
 gemInputOutputTable_easy_5_4 <- function(IT = cbind(
                                            sector.agri = c(agri = 260, manu = 345, serv = 400, lab = 200, cap = 160),
                                            sector.manu = c(agri = 320, manu = 390, serv = 365, lab = 250, cap = 400),
@@ -61,78 +60,74 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
   d.serv <- IT[, 3]
   d.hh <- IT[, 4]
 
-  dst.agri <- Node$new("sector.agri",
-    type = "SCES", sigma = 1 - 1 / es.agri,
+  dst.agri <- node_new("sector.agri",
+    type = "SCES", es = es.agri,
     alpha = 1,
-    beta = prop.table(c(
-      sum(d.agri[1:3]),
-      sum(d.agri[4:5])
-    ))
+    beta = prop.table(
+      c(sum(d.agri[1:3]), sum(d.agri[4:5]))
+    ),
+    "cc1.agri", "cc2.agri"
   )
-  dst.agri$AddChild("cc1.agri",
+  node_set(dst.agri, "cc1.agri",
     type = "Leontief",
-    a = prop.table(d.agri[1:3])
-  )$
-    AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
-    parent$
-    AddSibling("cc2.agri",
-    type = "SCES", sigma = 1 - 1 / es.VA.agri,
+    a = prop.table(d.agri[1:3]),
+    "agri", "manu", "serv"
+  )
+  node_set(dst.agri, "cc2.agri",
+    type = "SCES", es = es.VA.agri,
     alpha = 1,
-    beta = prop.table(d.agri[4:5])
-  )$
-    AddChild("lab")$AddSibling("cap")
+    beta = prop.table(d.agri[4:5]),
+    "lab", "cap"
+  )
+
+
+  dst.manu <- node_new("sector.manu",
+    type = "SCES", es = es.manu,
+    alpha = 1,
+    beta = prop.table(
+      c(sum(d.manu[1:3]), sum(d.manu[4:5]))
+    ),
+    "cc1.manu", "cc2.manu"
+  )
+  node_set(dst.manu, "cc1.manu",
+    type = "Leontief",
+    a = prop.table(d.manu[1:3]),
+    "agri", "manu", "serv"
+  )
+  node_set(dst.manu, "cc2.manu",
+    type = "SCES", es = es.VA.manu,
+    alpha = 1,
+    beta = prop.table(d.manu[4:5]),
+    "lab", "cap"
+  )
+
+  dst.serv <- node_new("sector.serv",
+    type = "SCES", es = es.serv,
+    alpha = 1,
+    beta = prop.table(
+      c(sum(d.serv[1:3]), sum(d.serv[4:5]))
+    ),
+    "cc1.serv", "cc2.serv"
+  )
+  node_set(dst.serv, "cc1.serv",
+    type = "Leontief",
+    a = prop.table(d.serv[1:3]),
+    "agri", "manu", "serv"
+  )
+  node_set(dst.serv, "cc2.serv",
+    type = "SCES", es = es.VA.serv,
+    alpha = 1,
+    beta = prop.table(d.serv[4:5]),
+    "lab", "cap"
+  )
 
   ##
-  dst.manu <- Node$new("sector.manu",
-    type = "SCES", sigma = 1 - 1 / es.manu,
+  dst.hh <- node_new("sector.hh",
+    type = "SCES", es = 0.5,
     alpha = 1,
-    beta = prop.table(c(
-      sum(d.manu[1:3]),
-      sum(d.manu[4:5])
-    ))
+    beta = prop.table(d.hh[1:3]),
+    "agri", "manu", "serv"
   )
-  dst.manu$AddChild("cc1.manu",
-    type = "Leontief",
-    a = prop.table(d.manu[1:3])
-  )$
-    AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
-    parent$
-    AddSibling("cc2.manu",
-    type = "SCES", sigma = 1 - 1 / es.VA.manu,
-    alpha = 1,
-    beta = prop.table(d.manu[4:5])
-  )$
-    AddChild("lab")$AddSibling("cap")
-
-  ##
-  dst.serv <- Node$new("sector.serv",
-    type = "SCES", sigma = 1 - 1 / es.serv,
-    alpha = 1,
-    beta = prop.table(c(
-      sum(d.serv[1:3]),
-      sum(d.serv[4:5])
-    ))
-  )
-  dst.serv$AddChild("cc1.serv",
-    type = "Leontief",
-    a = prop.table(d.serv[1:3])
-  )$
-    AddChild("agri")$AddSibling("manu")$AddSibling("serv")$
-    parent$
-    AddSibling("cc2.serv",
-    type = "SCES", sigma = 1 - 1 / es.VA.serv,
-    alpha = 1,
-    beta = prop.table(d.serv[4:5])
-  )$
-    AddChild("lab")$AddSibling("cap")
-
-  ##
-  dst.hh <- Node$new("sector.hh",
-    type = "SCES", sigma = -1,
-    alpha = 1,
-    beta = prop.table(d.hh[1:3])
-  )
-  dst.hh$AddChild("agri")$AddSibling("manu")$AddSibling("serv")
 
   dstl <- list(
     dst.agri,
@@ -152,15 +147,13 @@ gemInputOutputTable_easy_5_4 <- function(IT = cbind(
       result <- sapply(dstl, demand_coefficient, p)
       return(result)
     },
-    B = {
-      tmp <- matrix(c(
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-        0, 0, 0, 1
-      ), 5, 4, T)
-    },
+    B = matrix(c(
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
+      0, 0, 0, 1
+    ), 5, 4, TRUE),
     S0Exg = {
       tmp <- matrix(NA, 5, 4)
       tmp[4, 4] <- supply.labor

@@ -2,13 +2,11 @@
 % Please edit documentation in R/gemInputOutputTable_7_4.R
 \name{gemInputOutputTable_7_4}
 \alias{gemInputOutputTable_7_4}
-\title{A General Equilibrium Model based on a 7x4 Input-Output Table}
+\title{A General Equilibrium Model based on a 7x4 (Standard) Input-Output Table}
 \usage{
 gemInputOutputTable_7_4(
   IT,
-  product.output,
-  supply.labor,
-  supply.capital,
+  OT,
   es.agri = 0,
   es.manu = 0,
   es.serv = 0,
@@ -22,11 +20,7 @@ gemInputOutputTable_7_4(
 \arguments{
 \item{IT}{the input part of the input-output table in the base period (unit: trillion yuan).}
 
-\item{product.output}{the outputs of products in the base period.}
-
-\item{supply.labor}{the supply of labor.}
-
-\item{supply.capital}{the supply of capital.}
+\item{OT}{the output part of the input-output table in the base period (unit: trillion yuan).}
 
 \item{es.agri, es.manu, es.serv}{the elasticity of substitution between the intermediate input
 and the value-added input of the agriculture sector, manufacturing sector and service sector.}
@@ -45,15 +39,16 @@ A general equilibrium, which is a list with the following elements:
 \item D - the demand matrix, also called the input table. Wherein the benchmark prices are used.
 \item DV - the demand value matrix, also called the value input table. Wherein the current price is used.
 \item SV - the supply value matrix, also called the value output table. Wherein the current price is used.
-\item IT - the nonstandard input table, wherein the agricultural tax can be negative.
-\item ITV - the nonstandard value input table, wherein the agricultural tax can be negative.
 \item value.added - the value-added of the three production sectors.
 \item dstl - the demand structure tree list of sectors.
-\item ... - some elements returned by the CGE::sdm function
+\item ... - some elements returned by the sdm2 function.
 }
 }
 \description{
-This is a general equilibrium model based on a 7x4 input-output table.
+This is a general equilibrium model based on a 7x4 standard input-output table.
+There is no negative number in this standard input-output table,
+and both the input and output parts are 7x4 matrices.
+The standard input-output table consists of input and output parts with the same dimensions.
 }
 \details{
 Given a 7x4 input-output table, this model calculates
@@ -64,60 +59,66 @@ Generally speaking, the value of the elasticity of substitution in this model sh
 }
 \examples{
 \donttest{
-IT17 <- matrix(c(
+IT2017 <- matrix(c(
   1.47, 6.47, 0.57, 2.51,
   2.18, 76.32, 12.83, 44.20,
   0.82, 19.47, 23.33, 35.61,
   6.53, 13.92, 21.88, 0,
   0.23, 4.05, 6.76, 0,
-  -0.34, 6.43, 3.40, 0,
+  0, 6.43, 3.40, 0,
   0.13, 8.87, 10.46, 0
 ), 7, 4, TRUE)
 
-product.output <- c(11.02, 135.53, 79.23)
+OT2017 <- matrix(c(
+  11.02, 0, 0, 0,
+  0, 135.53, 0, 0,
+  0, 0, 79.23, 0,
+  0, 0, 0, 42.33,
+  0, 0, 0, 11.04,
+  0.34, 0, 0, 9.49,
+  0, 0, 0, 19.46
+), 7, 4, TRUE)
 
-rownames(IT17) <- c("agri", "manu", "serv", "lab", "cap", "tax", "dividend")
-colnames(IT17) <- c("sector.agri", "sector.manu", "sector.serv", "sector.hh")
+rownames(IT2017) <- rownames(OT2017) <-
+  c("agri", "manu", "serv", "lab", "cap", "tax", "dividend")
+colnames(IT2017) <- colnames(OT2017) <-
+  c("sector.agri", "sector.manu", "sector.serv", "sector.hh")
 
 ge <- gemInputOutputTable_7_4(
-  IT = IT17,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04
+  IT = IT2017,
+  OT = OT2017
 )
 
 #### labor supply reduction
+OTLSR <- OT2017
+OTLSR["lab", "sector.hh"] <- OTLSR["lab", "sector.hh"] * 0.9
 geLSR <- gemInputOutputTable_7_4(
-  IT = IT17,
-  product.output = product.output,
-  supply.labor = 42.33 * 0.9,
-  supply.capital = 11.04
+  IT = IT2017,
+  OT = OTLSR
 )
 
 geLSR$z / ge$z
 geLSR$p / ge$p
 
 #### capital accumulation
+OTCA <- OT2017
+OTCA["cap", "sector.hh"] <- OTCA["cap", "sector.hh"] * 1.1
 geCA <- gemInputOutputTable_7_4(
-  IT = IT17,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04 * 1.1
+  IT = IT2017,
+  OT = OTCA
 )
 
 geCA$z / ge$z
 geCA$p / ge$p
 
 #### technology progress
-IT.TP <- IT17
+IT.TP <- IT2017
 IT.TP ["lab", "sector.manu"] <-
   IT.TP ["lab", "sector.manu"] * 0.9
 
 geTP <- gemInputOutputTable_7_4(
   IT = IT.TP,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04
+  OT = OT2017
 )
 
 geTP$z / ge$z
@@ -129,16 +130,14 @@ IT.TP2 ["cap", "sector.manu"] <-
   IT.TP2["cap", "sector.manu"] * 1.02
 geTP2 <- gemInputOutputTable_7_4(
   IT = IT.TP2,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04
+  OT = OT2017
 )
 
 geTP2$z / ge$z
 geTP2$p / ge$p
 
 ##
-IT.TP3 <- IT17
+IT.TP3 <- IT2017
 IT.TP3 ["lab", "sector.manu"] <-
   IT.TP3 ["lab", "sector.manu"] * 0.9
 IT.TP3 ["lab", "sector.agri"] <-
@@ -146,51 +145,43 @@ IT.TP3 ["lab", "sector.agri"] <-
 
 geTP3 <- gemInputOutputTable_7_4(
   IT = IT.TP3,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04
+  OT = OT2017
 )
 
 geTP3$value.added / ge$value.added
 prop.table(geTP3$value.added) - prop.table(ge$value.added)
 
 #### demand structure change
-IT.DSC <- IT17
+IT.DSC <- IT2017
 IT.DSC["serv", "sector.hh"] <- IT.DSC ["serv", "sector.hh"] * 1.2
 
 geDSC <- gemInputOutputTable_7_4(
   IT = IT.DSC,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04
+  OT = OT2017
 )
 
 geDSC$z[1:3] / ge$z[1:3]
 geDSC$p / ge$p
 
 #### tax change
-IT.TC <- IT17
-IT.TC["tax", "sector.agri"] <- IT.TC["tax", "sector.agri"] * 2
+OT.TC <- OT2017
+OT.TC["tax", "sector.agri"] <- OT.TC["tax", "sector.agri"] * 2
 
 geTC <- gemInputOutputTable_7_4(
-  IT = IT.TC,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04
+  IT = IT2017,
+  OT = OT.TC
 )
 
 geTC$z / ge$z
 geTC$p / ge$p
 
 ##
-IT.TC2 <- IT17
+IT.TC2 <- IT2017
 IT.TC2["tax", "sector.manu"] <- IT.TC2["tax", "sector.manu"] * 0.8
 
 geTC2 <- gemInputOutputTable_7_4(
   IT = IT.TC2,
-  product.output = product.output,
-  supply.labor = 42.33,
-  supply.capital = 11.04
+  OT = OT2017
 )
 
 geTC2$z / ge$z

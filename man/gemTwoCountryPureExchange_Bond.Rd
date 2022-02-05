@@ -19,8 +19,8 @@ Some general equilibrium examples of two-country pure exchange economy with bond
 \donttest{
 es.DFProd <- 0.8 # substitution elasticity between domestic and foreign products
 technology.level.CHN <- 1
-# the amount of foreign investment corresponding to each unit of consumption
-foreign.investment.rate <- 0.1
+# the amount of outbound investment corresponding to each unit of consumption
+outbound.investment.rate <- 0.1
 
 dst.consumption <- node_new("consumption",
   type = "SCES", alpha = 1, beta = c(0.5, 0.5), es = es.DFProd,
@@ -35,7 +35,7 @@ node_set(dst.consumption, "prod.USA",
   "lab.USA"
 )
 dst.CHN <- node_new("CHN",
-  type = "FIN", rate = c(1, foreign.investment.rate),
+  type = "FIN", rate = c(1, outbound.investment.rate),
   dst.consumption, "bond.USA"
 )
 node_plot(dst.CHN)
@@ -60,7 +60,7 @@ ge$p[2]
 #### Add currencies to the example above.
 es.DFProd <- 0.8
 technology.level.CHN <- 1
-foreign.investment.rate <- 0.1
+outbound.investment.rate <- 0.1
 interest.rate <- 1e-4
 
 prod_money.CHN <- node_new("prod_money.CHN",
@@ -84,8 +84,8 @@ node_set(prod_money.USA, "prod.USA",
 dst.CHN <- node_new("CHN",
   type = "FIN",
   rate = c(
-    1, foreign.investment.rate,
-    foreign.investment.rate * interest.rate
+    1, outbound.investment.rate,
+    outbound.investment.rate * interest.rate
   ),
   "consumption", "bond.USA", "money.USA"
 )

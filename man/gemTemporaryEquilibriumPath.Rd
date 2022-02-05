@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemTemporaryEquilibriumPath.R
 \name{gemTemporaryEquilibriumPath}
 \alias{gemTemporaryEquilibriumPath}
-\title{Temporary Equilibrium Paths}
+\title{Some Examples of Temporary Equilibrium Paths}
 \usage{
 gemTemporaryEquilibriumPath(...)
 }
@@ -54,7 +54,7 @@ f <- function(stickiness.firm = 0) {
 
   ge <- sdm2(
     A = list(dst.firm, dst.consumer),
-    B = diag(c(1, 0), 2, 2),
+    B = diag(c(1, 0)),
     S0Exg = {
       S0Exg <- matrix(NA, 2, 2)
       S0Exg[2, 2] <- 100

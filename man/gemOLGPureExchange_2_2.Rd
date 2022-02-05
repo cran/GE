@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemOLGPureExchange_2_2.R
 \name{gemOLGPureExchange_2_2}
 \alias{gemOLGPureExchange_2_2}
-\title{The Basic Overlapping Generations pure exchange Model (see Samuelson, 1958)}
+\title{The Basic Overlapping Generations Pure Exchange Model (see Samuelson, 1958)}
 \usage{
 gemOLGPureExchange_2_2(...)
 }

@@ -1,0 +1,69 @@
+#' @export
+#' @title Example 7.6 (Foreign Exchange Rate) in Li (2019)
+#' @aliases gemTwoCountryForeignExchangeRate_6_6
+#' @description This is Example 7.6 in Li (2019), which illustrates foreign exchange rates.
+#' @param ... arguments to be passed to the function sdm2.
+#' @examples
+#' \donttest{
+#' dst.firm1 <- node_new("output",
+#'   type = "FIN", rate = c(1, interest.rate = 0.1),
+#'   "cc1", "money1"
+#' )
+#' node_set(dst.firm1, "cc1",
+#'   type = "CD", alpha = 1,
+#'   beta = c(0.5, 0.5),
+#'   "iron", "lab1"
+#' )
+#'
+#' dst.firm2 <- Clone(dst.firm1)
+#' node_replace(dst.firm2, "money1", "money2")
+#' node_replace(dst.firm2, "lab1", "lab2")
+#' node_plot(dst.firm2)
+#'
+#' dst.laborer1 <- node_new("util",
+#'   type = "FIN", rate = c(1, interest.rate = 0.1),
+#'   "cc1", "money1"
+#' )
+#' node_set(dst.laborer1, "cc1",
+#'   type = "Leontief", a = 1,
+#'   "wheat"
+#' )
+#'
+#' dst.money.owner1 <- Clone(dst.laborer1)
+#'
+#' dst.laborer2 <- Clone(dst.laborer1)
+#' node_replace(dst.laborer2, "money1", "money2")
+#'
+#' dst.money.owner2 <- Clone(dst.laborer2)
+#'
+#' ge <- sdm2(
+#'   A = list(
+#'     dst.firm1, dst.laborer1, dst.money.owner1,
+#'     dst.firm2, dst.laborer2, dst.money.owner2
+#'   ),
+#'   B = diag(c(1, 0, 0, 1, 0, 0)),
+#'   S0Exg = {
+#'     tmp <- matrix(NA, 6, 6)
+#'     tmp[2, 2] <- 100
+#'     tmp[3, 3] <- 600
+#'     tmp[5, 5] <- 100
+#'     tmp[6, 6] <- 100
+#'     tmp
+#'   },
+#'   names.commodity = c(
+#'     "wheat", "lab1", "money1",
+#'     "iron", "lab2", "money2"
+#'   ),
+#'   names.agent = c(
+#'     "firm1", "laborer1", "money.owner1",
+#'     "firm2", "laborer2", "money.owner2"
+#'   ),
+#'   numeraire = c("money1" = 0.1) # interest.rate
+#' )
+#'
+#' ge$p[6] / ge$p[3] # foreign exchange rate
+#'
+#' }
+
+
+gemTwoCountryForeignExchangeRate_6_6 <- function(...) sdm2(...)

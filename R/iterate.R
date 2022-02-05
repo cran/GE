@@ -20,6 +20,13 @@
 #' iterate(x, f, 100, a = 3)
 #' iterate(x, f, 100, tol = 1e-5, a = 3)
 #'
+#' ##
+#' iterate(x, function(x) {
+#'   result <- c(sin(x[1]^2 + x[2]^2), dnorm(x[1] + x[2]))
+#'   prop.table(abs(result))
+#' }, 30)
+#'
+#' ##
 #' x <- c(1, 2, 3)
 #' f <- function(x) {
 #'   n <- length(x)
@@ -30,7 +37,7 @@
 #' }
 #' iterate(x, f, 100)
 #' }
-#'
+
 iterate <- function(x, f, times = 100, tol = NA, ...) {
   n.periods <- times + 1
   result <- matrix(NA, n.periods, length(x))
