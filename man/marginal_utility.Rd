@@ -39,7 +39,7 @@ Otherwise this function computes the (delta) value marginal utility.
 For a utility function U(x), two vector x, y and a scalar price, the marginal utility is (U(x + delta * y) - U(x)) / delta, and
 the value marginal utility is (U(x + delta * y / price) - U(x)) / delta.
 For a marginal utility function M(x), three vector x, y, wt and a scalar price, the marginal utility is sum(M(x) * y * wt), and
-the value marginal utility is sum(U(x) * y * wt / price).
+the value marginal utility is sum(M(x) * y * wt / price).
 }
 \examples{
 marginal_utility(1:2, cbind(1:2, 1:1), AMV)

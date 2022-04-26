@@ -50,13 +50,13 @@
 #' )
 #'
 #' dst.consumer <- node_new("util",
-#'   type = "SCES", es = 1, alpha = 1,
+#'   type = "SCES", es = 0.5, alpha = 1,
 #'   beta = prop.table(c(280, 550, 350)),
 #'   "agri", "manu", "serv"
 #' )
 #'
 #' dst.investor <- node_new("util",
-#'   type = "SCES", es = 1, alpha = 1,
+#'   type = "SCES", es = 0.5, alpha = 1,
 #'   beta = prop.table(c(70, 320, 110)),
 #'   "agri", "manu", "serv"
 #' )

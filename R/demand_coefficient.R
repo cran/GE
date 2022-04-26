@@ -176,10 +176,7 @@ demand_coefficient <- function(node, p) {
     child.dc <- lapply(p_dc, function(x) x$dc)
 
 
-    switch(
-      {
-        node$type
-      },
+    switch(node$type,
       "SCES" = {
         if (!is.null(node$es)) {
           the.input.coef <- SCES_A(

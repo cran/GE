@@ -7,7 +7,7 @@
 #' For a utility function U(x), two vector x, y and a scalar price, the marginal utility is (U(x + delta * y) - U(x)) / delta, and
 #' the value marginal utility is (U(x + delta * y / price) - U(x)) / delta.
 #' For a marginal utility function M(x), three vector x, y, wt and a scalar price, the marginal utility is sum(M(x) * y * wt), and
-#' the value marginal utility is sum(U(x) * y * wt / price).
+#' the value marginal utility is sum(M(x) * y * wt / price).
 #' @param x a numeric k-by-m matrix or a numeric vector (i.e. a k-by-1 matrix).
 #' @param y a numeric k-by-n matrix or a numeric vector (i.e. a k-by-1 matrix).
 #' @param uf a utility function or a list consisting of m utility functions.

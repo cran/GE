@@ -5,7 +5,7 @@
 #' @description Compute the growth rates for a vector or each column of a matrix.
 #'
 #' @param x a vector or a matrix.
-#' @param log If log == TRUE, the logarithmic growth rate will be computed.
+#' @param log If log==TRUE, the logarithmic growth rate will be computed.
 #' @param first.na If first.na==FALSE, the result doesn't contain the first NA.
 #' @return a vector or a matrix consisting of growth rates.
 #' @examples
@@ -14,7 +14,7 @@
 #' growth_rate(x)
 #' }
 #'
-growth_rate <- function(x, log = FALSE, first.na = FALSE) {
+growth_rate <- function(x, log = FALSE, first.na = TRUE) {
   vector.growth.rate <- function(v) {
     result <- v[-1] / v[-length(v)] - 1
     if (first.na) {

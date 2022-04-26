@@ -1,0 +1,97 @@
+#' @export
+#' @title Some Examples of Intertemporal Models with Two Consumers and Two Types of Firms
+#' @aliases gemIntertemporal_3_4
+#' @description Some examples of intertemporal models with two consumers and two types of firms.
+#' @param ... arguments to be passed to the function sdm2.
+#' @examples
+#' \donttest{
+#' #### an example with a Cobb-Douglas intertemporal utility function
+#' np <- 5 # the number of periods, firms.
+#'
+#' n <- 3 * np - 1
+#' m <- 2 * (np - 1) + 2
+#'
+#' ## exogenous supply matrix
+#' S <- matrix(NA, n, m)
+#' S[(2 * np + 1):(3 * np - 1), (m - 1):m] <- 100
+#' S[1, (m - 1):m] <- 25 #corn1
+#' S[np + 1, (m - 1):m] <- 100 #iron1
+#'
+#' B <- matrix(0, n, m)
+#' B[2:np, 1:(np - 1)] <- B[(np + 2):(2 * np), np:(m - 2)] <-
+#'   diag(np - 1)
+#'
+#' dstl.firm.corn <- dstl.firm.iron  <- list()
+#' for (k in 1:(np - 1)) {
+#'   dstl.firm.corn[[k]] <- node_new(
+#'     "prod",
+#'     type = "CD",
+#'     alpha = 1,
+#'     beta = c(0.5, 0.5),
+#'     paste0("iron", k),
+#'     paste0("lab", k)
+#'   )
+#'
+#'   dstl.firm.iron[[k]] <- node_new(
+#'     "prod",
+#'     type = "CD",
+#'     alpha = 2,
+#'     beta = c(0.5, 0.5),
+#'     paste0("iron", k),
+#'     paste0("lab", k)
+#'   )
+#' }
+#'
+#' dst.consumer1 <- node_new(
+#'   "util",
+#'   type = "CD",
+#'   alpha = 1,
+#'   beta = prop.table(rep(1, np)),
+#'   paste0("corn", 1:np)
+#' )
+#'
+#' dst.consumer2 <- node_new(
+#'   "util",
+#'   type = "CD",
+#'   alpha = 1,
+#'   beta = prop.table(rep(1, np)),
+#'   paste0("cc", 1:np)
+#' )
+#' for (k in 1:np) {
+#'   node_set(
+#'     dst.consumer2,
+#'     paste0("cc", k),
+#'     type = "CD",
+#'     alpha = 1,
+#'     beta = c(0.5, 0.5),
+#'     paste0("corn", k),
+#'     paste0("iron", k)
+#'   )
+#' }
+#'
+#' ge <-   sdm2(
+#'   A = c(dstl.firm.corn, dstl.firm.iron, dst.consumer1, dst.consumer2),
+#'   B = B,
+#'   S0Exg = S,
+#'   names.commodity = c(paste0("corn", 1:np),
+#'                       paste0("iron", 1:np),
+#'                       paste0("lab", 1:(np - 1))),
+#'   names.agent = c(
+#'     paste0("firm.corn", 1:(np - 1)),
+#'     paste0("firm.iron", 1:(np - 1)),
+#'     "consumer1",
+#'     "consumer2"
+#'   ),
+#'   numeraire = "lab1",
+#'   ts = TRUE
+#' )
+#'
+#' ge$p
+#' ge$z
+#' ge$D
+#' ge$S
+#' ge$DV
+#' ge$SV
+#' }
+
+gemIntertemporal_3_4 <- function(...) sdm2(...)

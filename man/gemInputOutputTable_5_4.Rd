@@ -57,7 +57,23 @@ d.serv <- c(150, 390, 320, 400, 210)
 d.hh <- c(635, 600, 385, 0, 0)
 # d.hh <- c(635, 600, 100, 0, 0)
 
-D <- cbind(d.agri, d.manu, d.serv, d.hh)
+IT <- cbind(d.agri, d.manu, d.serv, d.hh)
+OT <- matrix(c(
+  1365, 0, 0, 0,
+  0, 1725, 0, 0,
+  0, 0, 1470, 0,
+  0, 0, 0, 850,
+  0, 0, 0, 770
+), 5, 4, TRUE)
+
+dimnames(IT) <- dimnames(OT) <-
+  list(
+    c("agri", "manu", "serv", "lab", "cap"),
+    c("agri", "manu", "serv", "hh")
+  )
+
+addmargins(IT)
+addmargins(OT)
 
 dst.agri <- node_new("sector.agri",
                      type = "SCES", es = es.agri,
@@ -136,6 +152,80 @@ ge <- gemInputOutputTable_5_4(dstl)
 geLSI <- gemInputOutputTable_5_4(dstl, supply.labor = 850 * 1.08)
 geLSI$p
 geLSI$z / ge$z
+
+## capital supply change
+ge.CSC <- sdm2(
+  A = dstl,
+  B = matrix(c(
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+    0, 0, 0, 1
+  ), 5, 4, TRUE),
+  S0Exg = {
+    tmp <- matrix(NA, 5, 4)
+    tmp[4, 4] <- 850
+    tmp[5, 4] <- 770
+    tmp
+  },
+  names.commodity = c("agri", "manu", "serv", "lab", "cap"),
+  names.agent = c("agri", "manu", "serv", "hh"),
+  numeraire = "lab",
+  ts = TRUE,
+  numberOfPeriods = 100,
+  maxIteration = 1,
+  z0 = c(1365, 1725, 1470, 1620),
+  p0 = rep(1, 5),
+  policy = function(time, state) {
+    if (time >= 5) {
+      state$S[5, 4] <- 880
+    }
+    state
+  }
+)
+
+matplot(ge.CSC$ts.p, type = "l")
+matplot(ge.CSC$ts.z, type = "l")
+
+## economic fluctuation: a sticky-price path
+de <- sdm2(
+  A = dstl,
+  B = matrix(c(
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+    0, 0, 0, 1
+  ), 5, 4, TRUE),
+  S0Exg = {
+    tmp <- matrix(NA, 5, 4)
+    tmp[4, 4] <- 850
+    tmp[5, 4] <- 770
+    tmp
+  },
+  names.commodity = c("agri", "manu", "serv", "lab", "cap"),
+  names.agent = c("agri", "manu", "serv", "hh"),
+  numeraire = "lab",
+  ts = TRUE,
+  numberOfPeriods = 50,
+  maxIteration = 1,
+  z0 = c(1365, 1725, 1470, 1620),
+  p0 = rep(1, 5),
+  policy = list(
+    function(time, state) {
+      if (time >= 5) {
+        state$S[5, 4] <- 880
+      }
+      state
+    },
+    makePolicyStickyPrice(0.5)
+  ),
+  priceAdjustmentVelocity = 0
+)
+
+matplot(de$ts.p, type = "o", pch = 20)
+matplot(de$ts.z, type = "o", pch = 20)
 }
 }
 \references{

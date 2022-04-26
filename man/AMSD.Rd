@@ -143,7 +143,6 @@ marginal_utility(
   function(x) AMSD(x, gamma = 0.1, prob)
 )
 }
-
 }
 \references{
 Nakamura, Yutaka (2015). Mean-Variance Utility. Journal of Economic Theory, 160: 536-556.

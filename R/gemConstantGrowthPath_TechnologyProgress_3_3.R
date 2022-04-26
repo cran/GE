@@ -1,7 +1,7 @@
 #' @export
 #' @title Constant Growth Paths with Technology Progress
 #' @aliases gemConstantGrowthPath_TechnologyProgress_3_3
-#' @description This is an example of an instantaneous equilibrium path converging to a constant growth path.
+#' @description This is an example of a market-clearing path converging to a constant growth path.
 #' In a constant growth path, the supply of each commodity grows at a constant rate.
 #' The balanced growth path is a special case of the constant growth path.
 #' @param ... arguments to be passed to the function sdm2.
@@ -40,7 +40,7 @@
 #'   names.commodity = c("prod1", "prod2", "lab"),
 #'   names.agent = c("firm1", "firm2", "consumer"),
 #'   numeraire = "lab",
-#'   z0 = c(0.01, 0.02, 1),
+#'   z0 = c(0.2, 0.2, 1),
 #'   ts = TRUE,
 #'   policy = list(
 #'     function(time, A, state) {
@@ -51,14 +51,14 @@
 #'     },
 #'     policyMarketClearingPrice
 #'   ),
-#'   numberOfPeriods = 50,
+#'   numberOfPeriods = 20,
 #'   maxIteration = 1
 #' )
 #'
 #' matplot(ge$ts.z, type = "l")
 #' matplot(log(ge$ts.z[, 1:2]), type = "l")
-#' matplot(tail(diff(log(ge$ts.z[, 1:2])),45), type = "l")
-#' matplot(tail(diff(log(ge$ts.p[, 1:2])),45), type = "l")
+#' matplot(growth_rate(ge$ts.z[, 1:2], log = TRUE), type = "o", pch = 20)
+#' matplot(growth_rate(ge$ts.p[, 1:2], log = TRUE), type = "o", pch = 20)
 #' }
 
 gemConstantGrowthPath_TechnologyProgress_3_3 <- function(...) sdm2(...)

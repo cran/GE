@@ -108,6 +108,5 @@
 #' ge$S
 #' ge$SV
 #' }
-#'
 
 gemOLGLand_4_3 <- function(...) sdm2(...)

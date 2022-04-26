@@ -32,18 +32,18 @@ That is, there is no explicit property of firms as the firms do not make pure pr
 ## In this exampe, each agent sells some labor to the previous generation
 ## and buys some labor from the next generation.
 
-# Here n can tend to infinity.
-n <- 4 # the number of periods and consumers (i.e. laborers).
+# Here np can tend to infinity.
+np <- 4 # the number of periods and consumers (i.e. laborers).
 lab.age1 <- 1 # labor endowment of age1
 lab.age2 <- 0 # labor endowment of age2
 
-S <- lab.age1 * diag(n) + lab.age2 * diag(n)[, c(2:n, 1)]
+S <- lab.age1 * diag(np) + lab.age2 * diag(np)[, c(2:np, 1)]
 
 # Suppose each consumer has a utility function log(c1) + log(c2).
 beta.consumer <- c(0.5, 0.5)
-index <- c(1:n, 1)
+index <- c(1:np, 1)
 dstl.consumer <- list()
-for (k in 1:n) {
+for (k in 1:np) {
   dstl.consumer[[k]] <- node_new(
     "util",
     type = "CD", alpha = 1,
@@ -54,9 +54,9 @@ for (k in 1:n) {
 
 ge <- sdm2(
   A = dstl.consumer,
-  B = matrix(0, n, n, TRUE),
+  B = matrix(0, np, np, TRUE),
   S0Exg = S,
-  names.commodity = paste0("lab", 1:n),
+  names.commodity = paste0("lab", 1:np),
   numeraire = "lab1"
 )
 
@@ -67,26 +67,26 @@ ge$S
 ## Introduce population growth into the above pure exchange economy.
 GRExg <- 0.03 # the population growth rate
 
-S <- S \%*\% diag((1 + GRExg)^(0:(n - 1)))
-S[1, n] <- S[1, n] * (1 + GRExg)^-n
+S <- S \%*\% diag((1 + GRExg)^(0:(np - 1)))
+S[1, np] <- S[1, np] * (1 + GRExg)^-np
 
-dstl.consumer[[n]] <- node_new(
+dstl.consumer[[np]] <- node_new(
   "util",
   type = "CD", alpha = 1,
   beta = beta.consumer,
-  paste0("lab", n), "cc1"
+  paste0("lab", np), "cc1"
 )
-node_set(dstl.consumer[[n]],
+node_set(dstl.consumer[[np]],
          "cc1",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "lab1"
 )
 
 ge <- sdm2(
   A = dstl.consumer,
-  B = matrix(0, n, n, TRUE),
+  B = matrix(0, np, np, TRUE),
   S0Exg = S,
-  names.commodity = paste0("lab", 1:n),
+  names.commodity = paste0("lab", 1:np),
   numeraire = "lab1"
 )
 
@@ -98,16 +98,16 @@ ge$S
 #### a time-circle pure exchange economy with three-period-lived consumers
 ## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
 ## See gemOLGPureExchange_2_2.
-n <- 5 # the number of periods and consumers (i.e. laborers).
+np <- 5 # the number of periods and consumers (i.e. laborers).
 lab.age1 <- 1 # labor endowment of age1
 lab.age2 <- 1
 lab.age3 <- 0
-S <- lab.age1 * diag(n) + lab.age2 * diag(n)[, c(2:n, 1)] + lab.age3 * diag(n)[, c(3:n, 1:2)]
+S <- lab.age1 * diag(np) + lab.age2 * diag(np)[, c(2:np, 1)] + lab.age3 * diag(np)[, c(3:np, 1:2)]
 
-index <- c(1:n, 1, 2)
+index <- c(1:np, 1, 2)
 dstl.consumer <- list()
 beta.consumer <- c(1 / 3, 1 / 3, 1 / 3)
-for (k in 1:n) {
+for (k in 1:np) {
   dstl.consumer[[k]] <- node_new(
     "util",
     type = "CD", alpha = 1,
@@ -118,9 +118,9 @@ for (k in 1:n) {
 
 ge <- sdm2(
   A = dstl.consumer,
-  B = matrix(0, n, n, TRUE),
+  B = matrix(0, np, np, TRUE),
   S0Exg = S,
-  names.commodity = paste0("lab", 1:n),
+  names.commodity = paste0("lab", 1:np),
   numeraire = "lab1"
 )
 
@@ -129,41 +129,41 @@ ge$D
 
 ## Introduce population growth into the above pure exchange economy.
 GRExg <- 0.03 # the population growth rate
-S <- S \%*\% diag((1 + GRExg)^(0:(n - 1)))
-S[1, n - 1] <- S[1, n - 1] * (1 + GRExg)^-n
-S[1:2, n] <- S[1:2, n] * (1 + GRExg)^-n
+S <- S \%*\% diag((1 + GRExg)^(0:(np - 1)))
+S[1, np - 1] <- S[1, np - 1] * (1 + GRExg)^-np
+S[1:2, np] <- S[1:2, np] * (1 + GRExg)^-np
 
-dstl.consumer[[n - 1]] <- node_new(
+dstl.consumer[[np - 1]] <- node_new(
   "util",
   type = "CD", alpha = 1,
   beta = beta.consumer,
-  paste0("lab", n - 1), paste0("lab", n), "cc1"
+  paste0("lab", np - 1), paste0("lab", np), "cc1"
 )
-node_set(dstl.consumer[[n - 1]], "cc1",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+node_set(dstl.consumer[[np - 1]], "cc1",
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "lab1"
 )
 
-dstl.consumer[[n]] <- node_new(
+dstl.consumer[[np]] <- node_new(
   "util",
   type = "CD", alpha = 1,
   beta = beta.consumer,
-  paste0("lab", n), "cc1", "cc2"
+  paste0("lab", np), "cc1", "cc2"
 )
-node_set(dstl.consumer[[n]], "cc1",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+node_set(dstl.consumer[[np]], "cc1",
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "lab1"
 )
-node_set(dstl.consumer[[n]], "cc2",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+node_set(dstl.consumer[[np]], "cc2",
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "lab2"
 )
 
 ge <- sdm2(
   A = dstl.consumer,
-  B = matrix(0, n, n, TRUE),
+  B = matrix(0, np, np, TRUE),
   S0Exg = S,
-  names.commodity = paste0("lab", 1:n),
+  names.commodity = paste0("lab", 1:np),
   numeraire = "lab1"
 )
 
@@ -180,9 +180,9 @@ lapply(dstl.consumer, function(dst) dst$beta <- beta.consumer)
 
 ge <- sdm2(
   A = dstl.consumer,
-  B = matrix(0, n, n, TRUE),
+  B = matrix(0, np, np, TRUE),
   S0Exg = S,
-  names.commodity = paste0("lab", 1:n),
+  names.commodity = paste0("lab", 1:np),
   numeraire = "lab1"
 )
 
@@ -193,18 +193,18 @@ ge$DV
 
 #### a time-circle model with production and two-period-lived consumers
 ## Suppose each consumer has a utility function log(c1) + log(c2).
-n <- 5 # the number of periods, consumers and firms.
-S <- matrix(NA, 2 * n, 2 * n)
+np <- 5 # the number of periods, consumers and firms.
+S <- matrix(NA, 2 * np, 2 * np)
 
-S.lab.consumer <- diag(1, n)
-S[(n + 1):(2 * n), (n + 1):(2 * n)] <- S.lab.consumer
+S.lab.consumer <- diag(1, np)
+S[(np + 1):(2 * np), (np + 1):(2 * np)] <- S.lab.consumer
 
-B <- matrix(0, 2 * n, 2 * n)
-B[1:n, 1:n] <- diag(n)[, c(2:n, 1)]
+B <- matrix(0, 2 * np, 2 * np)
+B[1:np, 1:np] <- diag(np)[, c(2:np, 1)]
 
 dstl.firm <- list()
 beta.firm <- c(1 / 3, 2 / 3)
-for (k in 1:n) {
+for (k in 1:np) {
   dstl.firm[[k]] <- node_new(
     "prod",
     type = "CD", alpha = 5,
@@ -213,10 +213,10 @@ for (k in 1:n) {
   )
 }
 
-index <- c(1:n, 1)
+index <- c(1:np, 1)
 beta.consumer <- c(1 / 2, 1 / 2)
 dstl.consumer <- list()
-for (k in 1:n) {
+for (k in 1:np) {
   dstl.consumer[[k]] <- node_new(
     "util",
     type = "CD", alpha = 1,
@@ -229,8 +229,8 @@ ge <- sdm2(
   A = c(dstl.firm, dstl.consumer),
   B = B,
   S0Exg = S,
-  names.commodity = c(paste0("prod", 1:n), paste0("lab", 1:n)),
-  names.agent = c(paste0("firm", 1:n), paste0("consumer", 1:n)),
+  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
+  names.agent = c(paste0("firm", 1:np), paste0("consumer", 1:np)),
   numeraire = "lab1"
 )
 
@@ -240,17 +240,17 @@ ge$D
 ## Introduce population growth into the above economy.
 GRExg <- 0.03 # the population growth rate
 
-S[(n + 1):(2 * n), (n + 1):(2 * n)] <- diag((1 + GRExg)^(0:(n - 1)), n)
-B[1,n] <- (1 + GRExg)^(-n)
+S[(np + 1):(2 * np), (np + 1):(2 * np)] <- diag((1 + GRExg)^(0:(np - 1)), np)
+B[1,np] <- (1 + GRExg)^(-np)
 
-dstl.consumer[[n]] <- node_new(
+dstl.consumer[[np]] <- node_new(
   "util",
   type = "CD", alpha = 1,
   beta = beta.consumer,
-  paste0("prod", n),"cc1"
+  paste0("prod", np),"cc1"
 )
-node_set(dstl.consumer[[n]], "cc1",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+node_set(dstl.consumer[[np]], "cc1",
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "prod1"
 )
 
@@ -258,8 +258,8 @@ ge <- sdm2(
   A = c(dstl.firm, dstl.consumer),
   B = B,
   S0Exg = S,
-  names.commodity = c(paste0("prod", 1:n), paste0("lab", 1:n)),
-  names.agent = c(paste0("firm", 1:n), paste0("consumer", 1:n)),
+  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
+  names.agent = c(paste0("firm", 1:np), paste0("consumer", 1:np)),
   numeraire = "lab1",
   policy = makePolicyMeanValue(30),
   maxIteration = 1,
@@ -268,8 +268,8 @@ ge <- sdm2(
 )
 
 ge$p
-growth_rate(ge$p[1:n]) + 1   # 1 / (1 + GRExg)
-growth_rate(ge$p[(n + 1):(2 * n)]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[1:np]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[(np + 1):(2 * np)]) + 1   # 1 / (1 + GRExg)
 ge$D
 ge$DV
 
@@ -277,23 +277,23 @@ ge$DV
 ## These consumers also can be regarded as infinite-lived carpe diem agents,
 ## who have endowments in each period, maximize the instantaneous utility and do not
 ## consider the future.
-n <- 5 # the number of periods, consumers and firms.
+np <- 5 # the number of periods, consumers and firms.
 GRExg <- 0.03 # the population growth rate
-discount.factor.last.output <- (1 + GRExg)^(-n)
-S <- matrix(NA, 2 * n, 2 * n)
+discount.factor.last.output <- (1 + GRExg)^(-np)
+S <- matrix(NA, 2 * np, 2 * np)
 
-S.lab.consumer <- diag((1 + GRExg)^(0:(n - 1)), n)
-S[(n + 1):(2 * n), (n + 1):(2 * n)] <- S.lab.consumer
+S.lab.consumer <- diag((1 + GRExg)^(0:(np - 1)), np)
+S[(np + 1):(2 * np), (np + 1):(2 * np)] <- S.lab.consumer
 
-B <- matrix(0, 2 * n, 2 * n)
-B[1:n, 1:n] <- diag(n)[, c(2:n, 1)]
-B[1, n] <- discount.factor.last.output
+B <- matrix(0, 2 * np, 2 * np)
+B[1:np, 1:np] <- diag(np)[, c(2:np, 1)]
+B[1, np] <- discount.factor.last.output
 
 beta.firm <- c(1 / 3, 2 / 3)
 beta.consumer <- c(1 / 2, 1 / 2)
 
 dstl.firm <- list()
-for (k in 1:n) {
+for (k in 1:np) {
   dstl.firm[[k]] <- node_new(
     "prod",
     type = "CD", alpha = 5,
@@ -303,7 +303,7 @@ for (k in 1:n) {
 }
 
 dstl.consumer <- list()
-for (k in 1:n) {
+for (k in 1:np) {
   dstl.consumer[[k]] <- node_new(
     "util",
     type = "CD", alpha = 1,
@@ -316,8 +316,8 @@ ge <- sdm2(
   A = c(dstl.firm, dstl.consumer),
   B = B,
   S0Exg = S,
-  names.commodity = c(paste0("prod", 1:n), paste0("lab", 1:n)),
-  names.agent = c(paste0("firm", 1:n), paste0("consumer", 1:n)),
+  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
+  names.agent = c(paste0("firm", 1:np), paste0("consumer", 1:np)),
   numeraire = "lab1",
   policy = makePolicyMeanValue(30),
   maxIteration = 1,
@@ -326,8 +326,8 @@ ge <- sdm2(
 )
 
 ge$p
-growth_rate(ge$p[1:n]) + 1   # 1 / (1 + GRExg)
-growth_rate(ge$p[(n + 1):(2 * n)]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[1:np]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[(np + 1):(2 * np)]) + 1   # 1 / (1 + GRExg)
 ge$D
 
 ## the reduced form of the above model
@@ -369,26 +369,26 @@ ge2$D
 
 #### a time-circle model with production and three-period-lived consumers
 ## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
-n <- 6 # the number of periods, consumers and firms.
+np <- 6 # the number of periods, consumers and firms.
 GRExg <- 0.03 # the population growth rate
-S <- matrix(NA, 2 * n, 2 * n)
+S <- matrix(NA, 2 * np, 2 * np)
 
-S.lab.consumer <- rbind(diag((1 + GRExg)^(0:(n - 1)), n), 0) +
-  rbind(0, diag((1 + GRExg)^(0:(n - 1)), n))
-S.lab.consumer <- S.lab.consumer[1:n, ]
-S.lab.consumer[1, n] <- (1 + GRExg)^-1
+S.lab.consumer <- rbind(diag((1 + GRExg)^(0:(np - 1)), np), 0) +
+  rbind(0, diag((1 + GRExg)^(0:(np - 1)), np))
+S.lab.consumer <- S.lab.consumer[1:np, ]
+S.lab.consumer[1, np] <- (1 + GRExg)^-1
 
-S[(n + 1):(2 * n), (n + 1):(2 * n)] <- S.lab.consumer
+S[(np + 1):(2 * np), (np + 1):(2 * np)] <- S.lab.consumer
 
-B <- matrix(0, 2 * n, 2 * n)
-B[1:n, 1:n] <- diag(n)[, c(2:n, 1)]
-B[1, n] <- (1 + GRExg)^(-n)
+B <- matrix(0, 2 * np, 2 * np)
+B[1:np, 1:np] <- diag(np)[, c(2:np, 1)]
+B[1, np] <- (1 + GRExg)^(-np)
 
 beta.firm <- c(2 / 5, 3 / 5)
 beta.consumer <- c(1 / 3, 1 / 3, 1 / 3)
 
 dstl.firm <- list()
-for (k in 1:n) {
+for (k in 1:np) {
   dstl.firm[[k]] <- node_new(
     "prod",
     type = "CD", alpha = 5,
@@ -398,7 +398,7 @@ for (k in 1:n) {
 }
 
 dstl.consumer <- list()
-for (k in 1:(n - 2)) {
+for (k in 1:(np - 2)) {
   dstl.consumer[[k]] <- node_new(
     "util",
     type = "CD", alpha = 1,
@@ -407,29 +407,29 @@ for (k in 1:(n - 2)) {
   )
 }
 
-dstl.consumer[[n - 1]] <- node_new(
+dstl.consumer[[np - 1]] <- node_new(
   "util",
   type = "CD", alpha = 1,
   beta = beta.consumer,
-  paste0("prod", n - 1), paste0("prod", n), "cc1"
+  paste0("prod", np - 1), paste0("prod", np), "cc1"
 )
-node_set(dstl.consumer[[n - 1]], "cc1",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+node_set(dstl.consumer[[np - 1]], "cc1",
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "prod1"
 )
 
-dstl.consumer[[n]] <- node_new(
+dstl.consumer[[np]] <- node_new(
   "util",
   type = "CD", alpha = 1,
   beta = beta.consumer,
-  paste0("prod", n), "cc1", "cc2"
+  paste0("prod", np), "cc1", "cc2"
 )
-node_set(dstl.consumer[[n]], "cc1",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+node_set(dstl.consumer[[np]], "cc1",
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "prod1"
 )
-node_set(dstl.consumer[[n]], "cc2",
-         type = "Leontief", a = (1 + GRExg)^(-n), # a discounting factor
+node_set(dstl.consumer[[np]], "cc2",
+         type = "Leontief", a = (1 + GRExg)^(-np), # a discounting factor
          "prod2"
 )
 
@@ -437,8 +437,8 @@ ge <- sdm2(
   A = c(dstl.firm, dstl.consumer),
   B = B,
   S0Exg = S,
-  names.commodity = c(paste0("prod", 1:n), paste0("lab", 1:n)),
-  names.agent = c(paste0("firm", 1:n), paste0("consumer", 1:n)),
+  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
+  names.agent = c(paste0("firm", 1:np), paste0("consumer", 1:np)),
   numeraire = "lab1",
   policy = makePolicyMeanValue(30),
   maxIteration = 1,
@@ -447,8 +447,8 @@ ge <- sdm2(
 )
 
 ge$p
-growth_rate(ge$p[1:n]) + 1   # 1 / (1 + GRExg)
-growth_rate(ge$p[(n + 1):(2 * n)]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[1:np]) + 1   # 1 / (1 + GRExg)
+growth_rate(ge$p[(np + 1):(2 * np)]) + 1   # 1 / (1 + GRExg)
 ge$D
 ge$DV
 }

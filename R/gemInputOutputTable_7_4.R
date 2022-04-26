@@ -286,7 +286,7 @@ gemInputOutputTable_7_4 <- function(IT,
   )
 
   # the dst of the hh sector
-  dst.hh <- node_new("hh",
+  dst.hh <- node_new("util",
     type = "SCES", es = es.hh,
     alpha = 1,
     beta = prop.table(IT[1:3, 4]),

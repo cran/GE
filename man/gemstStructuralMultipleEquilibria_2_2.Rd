@@ -37,7 +37,7 @@ policy.technology <- function(time, state, A) {
 }
 
 policy.tax <- function(time, state) {
-  if ((time >= 15) && state$last.z < 0.4) {
+  if ((time >= 15) && state$last.z[1] < 0.4) {
     state$S[2, 2] <- 0.8
     state$S[2, 1] <- 0.2
   } else {
@@ -57,7 +57,7 @@ f <- function(z0 = c(0.1, 1),
     A = list(dst.firm, dst.consumer),
     B = matrix(c(
       1, 0,
-      0, 1
+      0, 0
     ), 2, 2, TRUE),
     S0Exg = matrix(c(
       NA, NA,
@@ -74,7 +74,7 @@ f <- function(z0 = c(0.1, 1),
     ts = TRUE
   )
 
-  matplot(ge$ts.z, type = "b", pch = 20)
+  matplot(ge$ts.z, type = "o", pch = 20)
   ge
 }
 

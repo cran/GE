@@ -38,8 +38,8 @@
 #' )
 #'
 #' par(mfrow = c(1, 2))
-#' matplot(ge$ts.z, type = "b", pch = 20)
-#' matplot(ge$ts.p, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #' }
 #'
 makePolicyStickyPrice <- function(stickiness = 0.5, time.win = c(1, Inf), tolCond = 1e-6) {

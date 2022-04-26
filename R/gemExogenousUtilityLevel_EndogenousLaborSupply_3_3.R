@@ -1,6 +1,6 @@
 #' @export
 #' @title Some Examples with Exogenous Utility Level and Endogenous Labor Supply
-#' @aliases gemExogenousUtilityLevel
+#' @aliases gemExogenousUtilityLevel_EndogenousLaborSupply_3_3
 #' @description Some examples with exogenous utility level and endogenous labor supply.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
@@ -46,8 +46,7 @@
 #'         last.labor.supply <- state.history$S[3, 3, time - 1]
 #'
 #'         ratio <- state$last.z[3] / last.labor.supply / utility.level.laborer
-#'         state$S[3, 3] <- last.labor.supply * ratio # _adjust(ratio, 0.3)
-#'         last.labor.supply <<- state$S[3, 3]
+#'         state$S[3, 3] <- last.labor.supply * ratio
 #'       }
 #'       state
 #'     },
@@ -90,4 +89,4 @@
 #' ge$S
 #' }
 
-gemExogenousUtilityLevel <- function(...) sdm2(...)
+gemExogenousUtilityLevel_EndogenousLaborSupply_3_3 <- function(...) sdm2(...)

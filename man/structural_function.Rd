@@ -35,16 +35,16 @@ lines(x, sqrt(x), col = "red")
 
 ####
 f <- function(theta) {
-p <- c(1, 1)
-structural_function(
-  theta,
-  c(15, 20),
-  function(p) CD_A(alpha = 5, Beta = c(0.6, 0.4), p),
-  function(p) CD_A(alpha = 15, Beta = c(0.6, 0.4), p),
-  p
-)
+  p <- c(1, 1)
+  structural_function(
+    theta,
+    c(15, 20),
+    function(p) CD_A(alpha = 5, Beta = c(0.6, 0.4), p),
+    function(p) CD_A(alpha = 15, Beta = c(0.3, 0.7), p),
+    p
+  )
 }
 
-tmp <- sapply(1:25,f)
-matplot(t(tmp), type="l")
+tmp <- sapply(1:25, f)
+matplot(t(tmp), type = "l")
 }

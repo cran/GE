@@ -235,270 +235,358 @@ gemInputOutputTable_2_8_4 <- function(IT,
 
   # demand structure tree ---------------------------------------------------
   # production.CHN ----------------------------------------------------------
-  dst.production.CHN <- Node$new("production.CHN",
+  dst.production.CHN <- node_new(
+    "production.CHN",
     type = "FIN",
-    beta = prop.table(c(
-      (sum(IT[, "production.CHN"]) - IT["money.interest.CHN", "production.CHN"]),
-      IT["money.interest.CHN", "production.CHN"]
-    ))
+    beta = prop.table(c((sum(IT[, "production.CHN"]) - IT["money.interest.CHN", "production.CHN"]), IT["money.interest.CHN", "production.CHN"])),
+    "cc1.production.CHN",    "money.interest.CHN"
   )
 
-  dst.production.CHN$AddChild("cc1.production.CHN",
+  node_set(
+    dst.production.CHN,
+    "cc1.production.CHN",
     type = "Leontief",
-    a = prop.table(
-      c(
-        sum(IT[c("product.CHN", "imported.product.CHN"), "production.CHN"]),
-        sum(IT[c("labor.CHN", "capital.CHN", "tax.CHN", "dividend.CHN"), "production.CHN"])
-      )
-    )
-  )$
-    AddChild("cc1.1.production.CHN",
+    a = prop.table(c(sum(IT[
+      c("product.CHN", "imported.product.CHN"),
+      "production.CHN"
+    ]), sum(IT[c(
+      "labor.CHN", "capital.CHN",
+      "tax.CHN", "dividend.CHN"
+    ), "production.CHN"]))),
+    "cc1.1.production.CHN",
+    "cc1.2.production.CHN"
+  )
+
+  node_set(
+    dst.production.CHN,
+    "cc1.1.production.CHN",
     type = "SCES",
     es = es.DIProduct.production.CHN,
-    alpha = 1, # alpha.production.CHN,
-    beta = prop.table(IT[c("product.CHN", "imported.product.CHN"), "production.CHN"])
-  )$AddSibling("cc1.2.production.CHN",
-    type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("labor.CHN", "capital.CHN"), "production.CHN"]),
-      tax.CHN = IT["tax.CHN", "production.CHN"],
-      dividend.CHN = IT["dividend.CHN", "production.CHN"]
-    ))
-  )$
-    parent$
-    AddSibling("money.interest.CHN")
-
-  FindNode(dst.production.CHN, "cc1.1.production.CHN")$
-    AddChild("product.CHN")$AddSibling("imported.product.CHN")
-
-  FindNode(dst.production.CHN, "cc1.2.production.CHN")$
-    AddChild("cc1.2.1.production.CHN",
-    type = "SCES",
-    es = es.laborCapital.production.CHN,
-    alpha = 1, # alpha.laborCapital.production.CHN,
-    beta = prop.table(IT[c("labor.CHN", "capital.CHN"), "production.CHN"]),
-  )$
-    AddChild("labor.CHN")$AddSibling("capital.CHN")$
-    parent$
-    AddSibling("tax.CHN")$AddSibling("dividend.CHN")
-
-
-
-  # production.ROW ----------------------------------------------------------
-  dst.production.ROW <- Node$new("production.ROW",
-    type = "FIN",
-    beta = prop.table(c(
-      (sum(IT[, "production.ROW"]) - IT["money.interest.ROW", "production.ROW"]),
-      IT["money.interest.ROW", "production.ROW"]
-    ))
+    alpha = 1,
+    beta = prop.table(IT[
+      c("product.CHN", "imported.product.CHN"),
+      "production.CHN"
+    ]),
+    "product.CHN",
+    "imported.product.CHN"
   )
 
-  dst.production.ROW$AddChild("cc1.production.ROW",
+  node_set(
+    dst.production.CHN,
+    "cc1.2.production.CHN",
+    type = "FIN",
+    beta = prop.table(c(
+      sum(IT[c(
+        "labor.CHN",
+        "capital.CHN"
+      ), "production.CHN"]),
+      tax.CHN = IT[
+        "tax.CHN",
+        "production.CHN"
+      ],
+      dividend.CHN = IT[
+        "dividend.CHN",
+        "production.CHN"
+      ]
+    )),
+    "cc1.2.1.production.CHN",
+    "tax.CHN",
+    "dividend.CHN"
+  )
+
+  node_set(
+    dst.production.CHN,
+    "cc1.2.1.production.CHN",
+    type = "SCES",
+    es = es.laborCapital.production.CHN,
+    alpha = 1,
+    beta = prop.table(IT[
+      c("labor.CHN", "capital.CHN"),
+      "production.CHN"
+    ]),
+    "labor.CHN",
+    "capital.CHN"
+  )
+
+  # production.ROW ----------------------------------------------------------
+  dst.production.ROW <- node_new("production.ROW",
+    type = "FIN",
+    beta = prop.table(c((sum(IT[, "production.ROW"]) - IT[
+      "money.interest.ROW",
+      "production.ROW"
+    ]), IT["money.interest.ROW", "production.ROW"])),
+    "cc1.production.ROW", "money.interest.ROW"
+  )
+
+  node_set(dst.production.ROW, "cc1.production.ROW",
     type = "Leontief",
-    a = prop.table(
-      c(
-        sum(IT[c("product.ROW", "imported.product.ROW"), "production.ROW"]),
-        sum(IT[c("labor.ROW", "capital.ROW", "tax.ROW", "dividend.ROW"), "production.ROW"])
-      )
-    )
-  )$
-    AddChild("cc1.1.production.ROW",
+    a = prop.table(c(sum(IT[
+      c("product.ROW", "imported.product.ROW"),
+      "production.ROW"
+    ]), sum(IT[c(
+      "labor.ROW", "capital.ROW",
+      "tax.ROW", "dividend.ROW"
+    ), "production.ROW"]))),
+    "cc1.1.production.ROW", "cc1.2.production.ROW"
+  )
+
+  node_set(
+    dst.production.ROW,
+    "cc1.1.production.ROW",
     type = "SCES",
     es = es.DIProduct.production.ROW,
     alpha = 1,
-    beta = prop.table(IT[c("product.ROW", "imported.product.ROW"), "production.ROW"])
-  )$AddSibling("cc1.2.production.ROW",
+    beta = prop.table(IT[
+      c("product.ROW", "imported.product.ROW"),
+      "production.ROW"
+    ]),
+    "product.ROW", "imported.product.ROW"
+  )
+
+  node_set(
+    dst.production.ROW,
+    "cc1.2.production.ROW",
     type = "FIN",
     beta = prop.table(c(
-      sum(IT[c("labor.ROW", "capital.ROW"), "production.ROW"]),
-      tax.ROW = IT["tax.ROW", "production.ROW"],
-      dividend.ROW = IT["dividend.ROW", "production.ROW"]
-    ))
-  )$
-    parent$
-    AddSibling("money.interest.ROW")
+      sum(IT[c(
+        "labor.ROW",
+        "capital.ROW"
+      ), "production.ROW"]),
+      tax.ROW = IT[
+        "tax.ROW",
+        "production.ROW"
+      ], dividend.ROW = IT[
+        "dividend.ROW",
+        "production.ROW"
+      ]
+    )),
+    "cc1.2.1.production.ROW",
+    "tax.ROW",
+    "dividend.ROW"
+  )
 
-  FindNode(dst.production.ROW, "cc1.1.production.ROW")$
-    AddChild("product.ROW")$AddSibling("imported.product.ROW")
-
-  FindNode(dst.production.ROW, "cc1.2.production.ROW")$
-    AddChild("cc1.2.1.production.ROW",
+  node_set(
+    dst.production.ROW,
+    "cc1.2.1.production.ROW",
     type = "SCES",
     es = es.laborCapital.production.ROW,
     alpha = 1,
-    beta = prop.table(IT[c("labor.ROW", "capital.ROW"), "production.ROW"]),
-  )$
-    AddChild("labor.ROW")$AddSibling("capital.ROW")$
-    parent$
-    AddSibling("tax.ROW")$AddSibling("dividend.ROW")
-
+    beta = prop.table(IT[
+      c("labor.ROW", "capital.ROW"),
+      "production.ROW"
+    ]),
+    "labor.ROW",
+    "capital.ROW"
+  )
 
   # consumption.CHN ---------------------------------------------------------
-  dst.consumption.CHN <- Node$new("consumption.CHN",
+  dst.consumption.CHN <- node_new("consumption.CHN",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[, "consumption.CHN"]) - IT["money.interest.CHN", "consumption.CHN"],
-      IT["money.interest.CHN", "consumption.CHN"]
-    ))
+    beta = prop.table(c(sum(IT[, "consumption.CHN"]) - IT[
+      "money.interest.CHN",
+      "consumption.CHN"
+    ], IT["money.interest.CHN", "consumption.CHN"])),
+    "cc1.consumption.CHN", "money.interest.CHN"
   )
-  dst.consumption.CHN$AddChild("cc1.consumption.CHN",
+
+  node_set(dst.consumption.CHN, "cc1.consumption.CHN",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.CHN", "imported.product.CHN"), "consumption.CHN"]),
-      IT["bond.CHN", "consumption.CHN"]
-    ))
-  )$
-    AddChild("cc1.1.consumption.CHN",
+    beta = prop.table(c(sum(IT[
+      c("product.CHN", "imported.product.CHN"),
+      "consumption.CHN"
+    ]), IT["bond.CHN", "consumption.CHN"])),
+    "cc1.1.consumption.CHN", "bond.CHN"
+  )
+
+  node_set(
+    dst.consumption.CHN,
+    "cc1.1.consumption.CHN",
     type = "SCES",
     es = es.consumption.CHN,
     alpha = 1,
-    beta = prop.table(IT[c("product.CHN", "imported.product.CHN"), "consumption.CHN"])
-  )$AddChild("product.CHN")$AddSibling("imported.product.CHN")$
-    parent$
-    AddSibling("bond.CHN")$
-    parent$
-    AddSibling("money.interest.CHN")
-
+    beta = prop.table(IT[c(
+      "product.CHN",
+      "imported.product.CHN"
+    ), "consumption.CHN"]),
+    "product.CHN", "imported.product.CHN"
+  )
 
   # consumption.ROW ---------------------------------------------------------
-  dst.consumption.ROW <- Node$new("consumption.ROW",
+  dst.consumption.ROW <- node_new("consumption.ROW",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[, "consumption.ROW"]) - IT["money.interest.ROW", "consumption.ROW"],
-      IT["money.interest.ROW", "consumption.ROW"]
-    ))
+    beta = prop.table(c(sum(IT[, "consumption.ROW"]) - IT[
+      "money.interest.ROW",
+      "consumption.ROW"
+    ], IT["money.interest.ROW", "consumption.ROW"])),
+    "cc1.consumption.ROW", "money.interest.ROW"
   )
-  dst.consumption.ROW$AddChild("cc1.consumption.ROW",
+
+  node_set(dst.consumption.ROW, "cc1.consumption.ROW",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.ROW", "imported.product.ROW"), "consumption.ROW"]),
-      IT["bond.ROW", "consumption.ROW"]
-    ))
-  )$
-    AddChild("cc1.1.consumption.ROW",
+    beta = prop.table(c(sum(IT[
+      c("product.ROW", "imported.product.ROW"),
+      "consumption.ROW"
+    ]), IT["bond.ROW", "consumption.ROW"])),
+    "cc1.1.consumption.ROW", "bond.ROW"
+  )
+
+  node_set(
+    dst.consumption.ROW,
+    "cc1.1.consumption.ROW",
     type = "SCES",
     es = es.consumption.ROW,
     alpha = 1,
-    beta = prop.table(IT[c("product.ROW", "imported.product.ROW"), "consumption.ROW"])
-  )$AddChild("product.ROW")$AddSibling("imported.product.ROW")$
-    parent$
-    AddSibling("bond.ROW")$
-    parent$
-    AddSibling("money.interest.ROW")
-
-
-  # investment.CHN ----------------------------------------------------------
-  dst.investment.CHN <- Node$new("investment.CHN",
-    type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.CHN", "imported.product.CHN", "money.interest.CHN"), "investment.CHN"]),
-      sum(IT[c("bond.ROW", "money.interest.ROW"), "investment.CHN"])
-    ))
+    beta = prop.table(IT[c(
+      "product.ROW",
+      "imported.product.ROW"
+    ), "consumption.ROW"]),
+    "product.ROW", "imported.product.ROW"
   )
 
-  dst.investment.CHN$
-    AddChild("cc1.investment.CHN",
+  # investment.CHN ----------------------------------------------------------
+  dst.investment.CHN <- node_new("investment.CHN",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.CHN", "imported.product.CHN"), "investment.CHN"]),
-      IT["money.interest.CHN", "investment.CHN"]
-    ))
-  )$
-    AddChild("cc1.1.investment.CHN",
+    beta = prop.table(c(sum(IT[c(
+      "product.CHN", "imported.product.CHN",
+      "money.interest.CHN"
+    ), "investment.CHN"]), sum(IT[c(
+      "bond.ROW",
+      "money.interest.ROW"
+    ), "investment.CHN"]))),
+    "cc1.investment.CHN", "cc2"
+  )
+
+  node_set(dst.investment.CHN, "cc1.investment.CHN",
+    type = "FIN",
+    beta = prop.table(c(sum(IT[
+      c("product.CHN", "imported.product.CHN"),
+      "investment.CHN"
+    ]), IT["money.interest.CHN", "investment.CHN"])),
+    "cc1.1.investment.CHN", "money.interest.CHN"
+  )
+
+  node_set(
+    dst.investment.CHN,
+    "cc1.1.investment.CHN",
     type = "SCES",
     es = es.investment.CHN,
     alpha = 1,
-    beta = prop.table(IT[c("product.CHN", "imported.product.CHN"), "investment.CHN"])
-  )$
-    AddChild("product.CHN")$AddSibling("imported.product.CHN")$
-    parent$
-    AddSibling("money.interest.CHN")
-
-  dst.investment.CHN$AddChild("cc2",
-    type = "FIN",
-    beta = prop.table(c(
-      IT["bond.ROW", "investment.CHN"],
-      IT["money.interest.ROW", "investment.CHN"]
-    ))
-  )$
-    AddChild("bond.ROW")$AddSibling("money.interest.ROW")
-
-
-  # investment.ROW ----------------------------------------------------------
-  dst.investment.ROW <- Node$new("investment.ROW",
-    type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.ROW", "imported.product.ROW", "money.interest.ROW"), "investment.ROW"]),
-      sum(IT[c("bond.CHN", "money.interest.CHN"), "investment.ROW"])
-    ))
+    beta = prop.table(IT[c(
+      "product.CHN",
+      "imported.product.CHN"
+    ), "investment.CHN"]),
+    "product.CHN", "imported.product.CHN"
   )
 
-  dst.investment.ROW$
-    AddChild("cc1.investment.ROW",
+  node_set(dst.investment.CHN,
+    "cc2",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.ROW", "imported.product.ROW"), "investment.ROW"]),
-      IT["money.interest.ROW", "investment.ROW"]
-    ))
-  )$
-    AddChild("cc1.1.investment.ROW",
+    beta = prop.table(c(IT[
+      "bond.ROW",
+      "investment.CHN"
+    ], IT["money.interest.ROW", "investment.CHN"])),
+    "bond.ROW", "money.interest.ROW"
+  )
+
+  # investment.ROW ----------------------------------------------------------
+  dst.investment.ROW <- node_new("investment.ROW",
+    type = "FIN",
+    beta = prop.table(c(sum(IT[c(
+      "product.ROW", "imported.product.ROW",
+      "money.interest.ROW"
+    ), "investment.ROW"]), sum(IT[c(
+      "bond.CHN",
+      "money.interest.CHN"
+    ), "investment.ROW"]))),
+    "cc1.investment.ROW", "cc2"
+  )
+
+  node_set(dst.investment.ROW,
+    "cc1.investment.ROW",
+    type = "FIN",
+    beta = prop.table(c(sum(IT[
+      c("product.ROW", "imported.product.ROW"),
+      "investment.ROW"
+    ]), IT["money.interest.ROW", "investment.ROW"])),
+    "cc1.1.investment.ROW", "money.interest.ROW"
+  )
+
+  node_set(
+    dst.investment.ROW,
+    "cc1.1.investment.ROW",
     type = "SCES",
     es = es.investment.ROW,
     alpha = 1,
-    beta = prop.table(IT[c("product.ROW", "imported.product.ROW"), "investment.ROW"])
-  )$
-    AddChild("product.ROW")$AddSibling("imported.product.ROW")$
-    parent$
-    AddSibling("money.interest.ROW")
+    beta = prop.table(IT[c(
+      "product.ROW",
+      "imported.product.ROW"
+    ), "investment.ROW"]),
+    "product.ROW", "imported.product.ROW"
+  )
 
-  dst.investment.ROW$AddChild("cc2",
+  node_set(dst.investment.ROW,
+    "cc2",
     type = "FIN",
-    beta = prop.table(c(
-      IT["bond.CHN", "investment.ROW"],
-      IT["money.interest.CHN", "investment.ROW"]
-    ))
-  )$
-    AddChild("bond.CHN")$AddSibling("money.interest.CHN")
-
+    beta = prop.table(c(IT[
+      "bond.CHN",
+      "investment.ROW"
+    ], IT["money.interest.CHN", "investment.ROW"])),
+    "bond.CHN", "money.interest.CHN"
+  )
 
   # foreign.trade.CHN -------------------------------------------------------
-  dst.foreign.trade.CHN <- Node$new("foreign.trade.CHN",
+  dst.foreign.trade.CHN <-
+    node_new(
+      "foreign.trade.CHN",
+      type = "FIN",
+      beta = prop.table(c(sum(IT[
+        c("product.ROW", "tax.CHN"),
+        "foreign.trade.CHN"
+      ]), IT[
+        "money.interest.ROW",
+        "foreign.trade.CHN"
+      ])),
+      "cc1.foreign.trade.CHN",
+      "money.interest.ROW"
+    )
+
+  node_set(
+    dst.foreign.trade.CHN,
+    "cc1.foreign.trade.CHN",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.ROW", "tax.CHN"), "foreign.trade.CHN"]),
-      IT["money.interest.ROW", "foreign.trade.CHN"]
-    ))
+    beta = prop.table(c(IT[
+      "product.ROW",
+      "foreign.trade.CHN"
+    ], IT["tax.CHN", "foreign.trade.CHN"])),
+    "product.ROW",
+    "tax.CHN"
   )
-  dst.foreign.trade.CHN$AddChild("cc1.foreign.trade.CHN",
-    type = "FIN",
-    beta = prop.table(c(
-      IT["product.ROW", "foreign.trade.CHN"],
-      IT["tax.CHN", "foreign.trade.CHN"]
-    ))
-  )$
-    AddChild("product.ROW")$AddSibling("tax.CHN")$
-    parent$
-    AddSibling("money.interest.ROW")
 
 
   # foreign.trade.ROW -------------------------------------------------------
-  dst.foreign.trade.ROW <- Node$new("foreign.trade.ROW",
+  dst.foreign.trade.ROW <-
+    node_new("foreign.trade.ROW",
+      type = "FIN",
+      beta = prop.table(c(sum(IT[
+        c("product.CHN", "tax.ROW"),
+        "foreign.trade.ROW"
+      ]), IT[
+        "money.interest.CHN",
+        "foreign.trade.ROW"
+      ])),
+      "cc1.foreign.trade.ROW", "money.interest.CHN"
+    )
+
+  node_set(
+    dst.foreign.trade.ROW,
+    "cc1.foreign.trade.ROW",
     type = "FIN",
-    beta = prop.table(c(
-      sum(IT[c("product.CHN", "tax.ROW"), "foreign.trade.ROW"]),
-      IT["money.interest.CHN", "foreign.trade.ROW"]
-    ))
+    beta = prop.table(c(IT[
+      "product.CHN",
+      "foreign.trade.ROW"
+    ], IT["tax.ROW", "foreign.trade.ROW"])),
+    "product.CHN", "tax.ROW"
   )
-  dst.foreign.trade.ROW$AddChild("cc1.foreign.trade.ROW",
-    type = "FIN",
-    beta = prop.table(c(
-      IT["product.CHN", "foreign.trade.ROW"],
-      IT["tax.ROW", "foreign.trade.ROW"]
-    ))
-  )$
-    AddChild("product.CHN")$AddSibling("tax.ROW")$
-    parent$
-    AddSibling("money.interest.CHN")
 
   dstl <- list(
     dst.production.CHN,

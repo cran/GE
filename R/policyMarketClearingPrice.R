@@ -27,8 +27,8 @@
 #' )
 #'
 #' par(mfrow = c(1, 2))
-#' matplot(ge$ts.z, type = "b", pch = 20)
-#' matplot(ge$ts.p, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #'
 #' #### the same as above
 #' ge <- gemCanonicalDynamicMacroeconomic_3_2(
@@ -40,8 +40,8 @@
 #' )
 #'
 #' par(mfrow = c(1, 2))
-#' matplot(ge$ts.z, type = "b", pch = 20)
-#' matplot(ge$ts.p, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #'
 #' #### TFP shock in the economy above (see Torres, 2016, section 2.8).
 #' numberOfPeriods <- 200
@@ -58,8 +58,8 @@
 #'   alpha.shock[t] <- exp(0.95 * log(alpha.shock[t - 1]))
 #' }
 #'
-#' policyTechnologyChange <- function(time, dstl) {
-#'   dstl[[1]]$func <- function(p) {
+#' policyTechnologyChange <- function(time, A) {
+#'   A[[1]]$func <- function(p) {
 #'     result <- CD_A(
 #'       alpha.shock[time], rbind(beta1.firm, 1 - beta1.firm, 0),
 #'       c(p[1] * (return.rate + depreciation.rate), p[2:3])
@@ -88,9 +88,9 @@
 #' par(mfrow = c(2, 2))
 #' matplot(ge$ts.z, type = "l")
 #' x <- 100:140
-#' plot(x, ge$ts.z[x, 1] / ge$ts.z[x[1], 1], type = "b", pch = 20)
-#' plot(x, ge$ts.z[x, 2] / ge$ts.z[x[1], 2], type = "b", pch = 20)
-#' plot(x, c[x] / c[x[1]], type = "b", pch = 20)
+#' plot(x, ge$ts.z[x, 1] / ge$ts.z[x[1], 1], type = "o", pch = 20)
+#' plot(x, ge$ts.z[x, 2] / ge$ts.z[x[1], 2], type = "o", pch = 20)
+#' plot(x, c[x] / c[x[1]], type = "o", pch = 20)
 #'
 #' #### an iep of example 7.2 (a monetary economy) in Li (2019). See CGE::Example7.2.
 #' interest.rate <- 0.25
@@ -138,8 +138,8 @@
 #' )
 #'
 #' par(mfrow = c(1, 2))
-#' matplot(ge$ts.z, type = "b", pch = 20)
-#' matplot(ge$ts.p, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #' }
 
 policyMarketClearingPrice <- function(time, A, state) {

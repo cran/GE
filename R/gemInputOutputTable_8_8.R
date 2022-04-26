@@ -18,7 +18,7 @@
 #' @param es.FT the elasticity of substitution among exported products.
 #' @param es.VA.agri,es.VA.manu,es.VA.serv the elasticity of substitution between labor input and capital input
 #' of the agriculture sector, manufacturing sector and service sector.
-#' @param es.prodcctDI the elasticity of substitution between domestic product and imported product.
+#' @param es.prodDI the elasticity of substitution between domestic product and imported product.
 #' @param ... arguments to be transferred to the function sdm of the package CGE.
 #' @return A general equilibrium, which is a list with the following elements:
 #' \itemize{
@@ -148,7 +148,7 @@ gemInputOutputTable_8_8 <- function(IT,
                                     es.VA.manu = 0.5,
                                     es.VA.serv = 0.8,
 
-                                    es.prodcctDI = 0.5,
+                                    es.prodDI = 0.5,
                                     ...) {
   names.commodity <- c(
     "agriD", "manuD", "servD", "agriI", "manuI", "servI",
@@ -197,19 +197,19 @@ gemInputOutputTable_8_8 <- function(IT,
     type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
-    es = es.prodcctDI
+    es = es.prodDI
   )$
     AddSibling("cc.manu",
     type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
-    es = es.prodcctDI
+    es = es.prodDI
   )$
     AddSibling("cc.serv",
     type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
-    es = es.prodcctDI
+    es = es.prodDI
   )
   FindNode(dst.industry, "industry")$AddChild("cc2")$
     AddChild("cc2.1")$
@@ -323,19 +323,19 @@ gemInputOutputTable_8_8 <- function(IT,
     type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
-    es = es.prodcctDI
+    es = es.prodDI
   )$
     AddSibling("cc.manu",
     type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
-    es = es.prodcctDI
+    es = es.prodDI
   )$
     AddSibling("cc.serv",
     type = "SCES",
     alpha = 1,
     beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
-    es = es.prodcctDI
+    es = es.prodDI
   )
 
   dst.hh$AddChild("bond.ROW")

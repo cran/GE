@@ -34,15 +34,18 @@ addmargins(OT)
 
 #### the model
 dst.firm <- node_new(
-  "output",
+  "prod",
   type = "SCES",
+  es = 1,
   alpha = 1.25, # 100 / (40 + 40)
-  beta = prop.table(c(40, 40)), es = 1,
+  beta = prop.table(c(40, 40)),
   "prod", "lab"
 )
+
 dst.consumer <- node_new(
-  "output",
-  type = "SCES", es = 1, alpha = 1,
+  "util",
+  type = "SCES",
+  es = 1, alpha = 1,
   beta = prop.table(c(40, 60)),
   "prod", "lab"
 )
@@ -70,6 +73,26 @@ ge.benchmark$S
 
 addmargins(ge.benchmark$DV)
 addmargins(ge.benchmark$SV)
+
+## the same as above
+ge <- sdm2(
+  A = function(state) {
+    a.firm <- SCES_A(es = 1, alpha = 1.25, Beta = prop.table(c(40, 40)), p = state$p)
+    a.consumer <- SCES_A(es = 1, alpha = 1.25, Beta = prop.table(c(40, 60)), p = state$p)
+    cbind(a.firm, a.consumer)
+  },
+  B = matrix(c(
+    1, 0,
+    0, 0
+  ), 2, 2, TRUE),
+  S0Exg = matrix(c(
+    NA, NA,
+    NA, 100
+  ), 2, 2, TRUE),
+  names.commodity = c("prod", "lab"),
+  names.agent = c("firm", "consumer"),
+  numeraire = "lab"
+)
 
 ## technology progress
 dstl[[1]]$alpha <- 2.5

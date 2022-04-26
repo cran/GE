@@ -47,14 +47,14 @@
 #' )
 #'
 #' par(mfrow = c(1, 2))
-#' matplot(ge$ts.z, type = "b", pch = 20)
-#' matplot(ge$ts.p, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #' }
 #'
 makePolicyTechnologyChange <- function(adjumentment.ratio = 1.1,
                                        agent = 1,
                                        time.win = c(20, 20)) {
-  function(time, dstl, state) {
+  function(time, A, state) {
     if (is.character(agent)) {
       agent.index <- match(agent, state$names.agent)
     } else {
@@ -63,7 +63,7 @@ makePolicyTechnologyChange <- function(adjumentment.ratio = 1.1,
 
     if (time >= time.win[1] && time <= time.win[2]) {
       for (index.k in agent.index) {
-        dstl[[index.k]]$Do(function(node) {
+        A[[index.k]]$Do(function(node) {
           if (!is.null(node$alpha)) node$alpha <- node$alpha * adjumentment.ratio
           if (!is.null(node$a)) node$a <- node$a / adjumentment.ratio
         },

@@ -7,11 +7,14 @@
 #' Some rarely used parameters in the function sdm have been deleted.
 #' This function is the core of this package.
 #' @param A a demand structure tree list (i.e. dstl, see \code{\link{demand_coefficient}}), a demand coefficient n-by-m matrix (alias demand structure matrix)
-#' or a function A(state) which returns an n-by-m matrix. Wherein the argument state is a list consisting of t (the time), p (the current price vector),
-#' last.z (the output and utility vector at time t-1), w (the current wealth vector) and last.A (the demand coefficient matrix at time t-1).
-#' When the calculation process involves policy functions, dstl is strongly recommended.
-#' Some policy functions in this package only support dstl.
-#' @param B	a supply coefficient n-by-m matrix (alias supply structure matrix).
+#' or a function A(state) which returns an n-by-m matrix.
+#' n is the number of commodity types. m is the number of economic agents.
+#' The argument state is a list consisting of time (the current time), p (the current price vector),
+#' last.z (the output and utility vector of the previous period), w (the current wealth vector) and last.A (the demand coefficient matrix the previous period).
+#' @param B	an n-by-m matrix containing of the output coefficients (i.e. yield coefficients) of producers.
+#' Each producer produces one or more commodities.
+#' The output of each producer is equal to its activity level multiplied by the output coefficients.
+#' Columns corresponding to consumers are usually zeros.
 #' If the (i,j)-th element of S0Exg is not NA, the value of the (i,j)-th element of B will be useless and ignored.
 #' @param S0Exg an initial exogenous supply n-by-m matrix.
 #' If the (i,j)-th element of S0Exg is zero, it means there is no supply,
@@ -33,7 +36,8 @@
 #' and the number is assumed to be the price of the numeraire commodity,
 #' even though the price of the numeraire commodity usually is 1.
 #' @param tolCond the relative tolerance condition.
-#' @param maxIteration the maximum number of (outer) iteration. If the main purpose of running this function is to do simulation instead of calculating equilibrium, then maxIteration should be set to 1.
+#' @param maxIteration the maximum number of (outer) iterations.
+#' If the main purpose of running this function is to do simulation instead of calculating equilibrium, then maxIteration should be set to 1.
 #' @param numberOfPeriods the period number (i.e. the number of inner iterations) in each (outer) iteration, which should not be less than 20.
 #' @param depreciationCoef the depreciation coefficient (i.e. 1 minus the depreciation rate) of the unsold products.
 #' @param priceAdjustmentFunction the price adjustment function. The arguments are a price n-vector p and a sales rate n-vector q.
@@ -44,15 +48,14 @@
 #' @param policy a policy function or a policy function list. A policy function has the following optional parameters:
 #' \itemize{
 #' \item time - the current time.
-#' \item dstl - the demand structure tree list in the model, which can be adjusted in the policy function
-#' and it need not be returned.
 #' \item A - the same as the parameter A of sdm2.
+#' When A is a demand structure tree list, it needs not be returned after it is adjusted.
 #' \item state - the current state, which is a list.
 #' state$p is the current price vector with names.
 #' state$S is the current supply matrix.
-#' state$last.z is the last output and utility vector.
+#' state$last.z is the output and utility vector of the previous period.
 #' state$B is the current supply coefficient matrix.
-#' state$last.A is the demand coefficient matrix at time t-1.
+#' state$last.A is the demand coefficient matrix of the previous period.
 #' state$names.commodity contains the names of commodities.
 #' state$names.agent contains the names of agents.
 #' \item state.history - the state history, which is a list consisting of the time series of p, S, q, and z.
@@ -119,11 +122,11 @@
 #' ), 2, 2, TRUE)
 #'
 #' ## variable dst and technology progress
-#' policy.TP <- function(time, state, dstl) {
+#' policy.TP <- function(time, state, A) {
 #'   if (time >= 200) {
-#'     dstl[[1]]$a <- c(0.5, 0.8)
+#'     A[[1]]$a <- c(0.5, 0.8)
 #'   } else {
-#'     dstl[[1]]$a <- c(0.5, 1)
+#'     A[[1]]$a <- c(0.5, 1)
 #'   }
 #'   state
 #' }
@@ -163,11 +166,11 @@
 #' plot(ge.TP$ts.p[, 1] / ge.TP$ts.p[, 2], type = "l")
 #'
 #' ## variable dst and disequilibrium
-#' policy.DE <- function(time, dstl) {
+#' policy.DE <- function(time, A) {
 #'   if (time >= 200) {
-#'     dstl[[1]]$a[2] <- dstl[[1]]$a[2] * 0.999
+#'     A[[1]]$a[2] <- A[[1]]$a[2] * 0.999
 #'   } else {
-#'     dstl[[1]]$a[2] <- 1
+#'     A[[1]]$a[2] <- 1
 #'   }
 #' }
 #'
@@ -185,8 +188,8 @@
 #'
 #'
 #' ## structural equilibria and structural transition
-#' policy.SE <- function(time, state, dstl) {
-#'   dstl[[1]]$a[2] <- structural_function(state$last.z[1], c(105, 125), 1, 0.5)
+#' policy.SE <- function(time, state, A) {
+#'   A[[1]]$a[2] <- structural_function(state$last.z[1], c(105, 125), 1, 0.5)
 #' }
 #'
 #' ge.low.level <- sdm2(
@@ -213,8 +216,8 @@
 #' )
 #' matplot(ge.high.level$ts.z, type = "l")
 #'
-#' policy.ST <- function(time, state, dstl) {
-#'   dstl[[1]]$a[2] <- structural_function(state$last.z[1], c(105, 125), 1, 0.5)
+#' policy.ST <- function(time, state, A) {
+#'   A[[1]]$a[2] <- structural_function(state$last.z[1], c(105, 125), 1, 0.5)
 #'   if (time >= 200 && time <= 210) state$S[2, 2] <- 125 # Introduce foreign labor.
 #'   state
 #' }
@@ -248,16 +251,16 @@
 #'
 #' dstl <- list(dst.firm, dst.laborer, dst.money.lender)
 #'
-#' policy.interest.rate <- function(time, state, dstl, state.history) {
+#' policy.interest.rate <- function(time, state, A, state.history) {
 #'   upsilon <- NA
 #'   if (time >= 600) {
 #'     upsilon <- state.history$z[time - 1, 1] / mean(state.history$z[(time - 50):(time - 1), 1])
-#'     dstl[[1]]$rate[2] <- max(0.25 + 0.5 * log(upsilon), 0)
+#'     A[[1]]$rate[2] <- max(0.25 + 0.5 * log(upsilon), 0)
 #'   } else {
-#'     dstl[[1]]$rate[2] <- 0.25
+#'     A[[1]]$rate[2] <- 0.25
 #'   }
 #'
-#'   state$current.policy.data <- c(time, dstl[[1]]$rate[2], upsilon)
+#'   state$current.policy.data <- c(time, A[[1]]$rate[2], upsilon)
 #'   state
 #' }
 #'
@@ -397,7 +400,7 @@ sdm2 <- function(A,
             names.agent = names.agent
           )
         }
-        if (is.list(A) && ("dstl" %in% kth.policy.arg.names)) kth.policy.arg$dstl <- A
+
         if ("A" %in% kth.policy.arg.names) kth.policy.arg$A <- A
         if ("state.history" %in% kth.policy.arg.names) {
           kth.policy.arg$state.history <- list(
@@ -431,7 +434,7 @@ sdm2 <- function(A,
             p = p_tp1,
             last.z = z_t,
             w = t(p_tp1) %*% S_tp1,
-            t = time,
+            time = time,
             last.A = last.A
           ))
       },
@@ -624,7 +627,7 @@ sdm2 <- function(A,
           p = result$p,
           last.z = result$z,
           w = result$p %*% tmpS,
-          t = 1,
+          time = 1,
           last.A = last.A
         ))
     },

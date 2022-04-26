@@ -54,9 +54,9 @@
 #'
 #' dstl <- list(dst.consumer1, dst.consumer2)
 #'
-#' policy.quasilinear <- function(dstl, state) {
+#' policy.quasilinear <- function(A, state) {
 #'   wealth <- t(state$p) %*% state$S
-#'   dstl[[2]]$a <- demand_consumer2(state$p, wealth[2])
+#'   A[[2]]$a <- demand_consumer2(state$p, wealth[2])
 #' }
 #'
 #' ge.dstl <- gemQuasilinearPureExchange_2_2(

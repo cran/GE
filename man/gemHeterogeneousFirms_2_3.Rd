@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemHeterogeneousFirms_2_3.R
 \name{gemHeterogeneousFirms_2_3}
 \alias{gemHeterogeneousFirms_2_3}
-\title{Instantaneous Equilibrium Paths with Heterogeneous Firms}
+\title{Market Clearing Paths with Heterogeneous Firms}
 \usage{
 gemHeterogeneousFirms_2_3(...)
 }
@@ -10,7 +10,7 @@ gemHeterogeneousFirms_2_3(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-This is an example of instantaneous equilibrium paths with heterogeneous firms.
+This is an example of market-clearing paths with heterogeneous firms.
 }
 \examples{
 \donttest{
@@ -36,7 +36,7 @@ ge <- sdm2(
   A = list(dst.firm1, dst.firm2, dst.consumer),
   B = matrix(c(
     1, 1, 0,
-    0, 0, 1
+    0, 0, 0
   ), 2, 3, TRUE),
   S0Exg = matrix(c(
     NA, NA, NA,

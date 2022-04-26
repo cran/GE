@@ -114,7 +114,6 @@ ge$DV
 ge$S
 ge$SV
 }
-
 }
 \references{
 Rhee, Changyong (1991) Dynamic Inefficiency in an Economy with Land. Review of Economic Studies. 58(4), pp:791-797.

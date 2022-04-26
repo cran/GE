@@ -1,7 +1,7 @@
 #' @export
-#' @title Instantaneous Equilibrium Paths with Heterogeneous Firms
+#' @title Market Clearing Paths with Heterogeneous Firms
 #' @aliases gemHeterogeneousFirms_2_3
-#' @description This is an example of instantaneous equilibrium paths with heterogeneous firms.
+#' @description This is an example of market-clearing paths with heterogeneous firms.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
@@ -27,7 +27,7 @@
 #'   A = list(dst.firm1, dst.firm2, dst.consumer),
 #'   B = matrix(c(
 #'     1, 1, 0,
-#'     0, 0, 1
+#'     0, 0, 0
 #'   ), 2, 3, TRUE),
 #'   S0Exg = matrix(c(
 #'     NA, NA, NA,

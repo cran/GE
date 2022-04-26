@@ -84,15 +84,13 @@ ge <- gemTax_5_4(dstl, delta = 1)
 ## ad valorem output tax (see Table 4.1)
 output.tax.rate <- 0.1
 dst.taxed.firm1 <- node_new("taxed.output",
-  type = "FIN",
-  rate = c(1, output.tax.rate),
+  type = "FIN", rate = c(1, output.tax.rate),
   dst.firm1, "tax"
 )
 node_plot(dst.taxed.firm1)
 
 dst.taxed.firm2 <- node_new("taxed.output",
-  type = "FIN",
-  rate = c(1, output.tax.rate),
+  type = "FIN", rate = c(1, output.tax.rate),
   dst.firm2, "tax"
 )
 node_plot(dst.taxed.firm2)
@@ -177,18 +175,18 @@ ge.lab.tax <- gemTax_5_4(list(
 ge.lab.tax$z / ge$z - 1
 
 ## variable labor tax rate
-policy.var.tax.rate <- function(time, dstl, state) {
+policy.var.tax.rate <- function(time, A, state) {
   current.tax.rate <- NA
   if (time >= 200) {
     tax.amount <- (state$p / state$p[3])[5]
     adjustment.ratio <- ratio_adjust(tax.amount / 18.7132504, coef = 0.1)
-    last.tax.rate <- node_set(dstl[[1]], "taxed.lab")$rate[2]
+    last.tax.rate <- node_set(A[[1]], "taxed.lab")$rate[2]
     current.tax.rate <- last.tax.rate / adjustment.ratio
   } else {
     current.tax.rate <- 0.1
   }
-  node_set(dstl[[1]], "taxed.lab", rate = c(1, current.tax.rate))
-  node_set(dstl[[2]], "taxed.lab", rate = c(1, current.tax.rate))
+  node_set(A[[1]], "taxed.lab", rate = c(1, current.tax.rate))
+  node_set(A[[2]], "taxed.lab", rate = c(1, current.tax.rate))
 
   state$current.policy.data <- c(time, current.tax.rate)
   state

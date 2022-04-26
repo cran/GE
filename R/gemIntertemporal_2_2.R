@@ -1,0 +1,81 @@
+#' @export
+#' @title Some Examples of a 2-by-2 Intertemporal Equilibrium Model
+#' @aliases gemIntertemporal_2_2
+#' @description Some examples of a 2-by-2 intertemporal equilibrium model.
+#'
+#' In these examples, there is an np-period-lived consumer maximizing intertemporal utility,
+#' and there is a type of firm which produces from period 1 to np-1.
+#' There are two commodities, i.e. product and labor.
+#' Suppose the consumer has some product in the first period.
+#' That is, the product supply in the first period is an exogenous variable.
+#' @param ... arguments to be passed to the function sdm2.
+#' @examples
+#' \donttest{
+#' #### an example with a Cobb-Douglas intertemporal utility function
+#' np <- 5 # the number of periods, firms.
+#' y1 <- 150
+#' S <- matrix(NA, 2 * np - 1, np)
+#' S[(np + 1):(2 * np - 1), np] <- 100
+#' S[1, np] <- y1
+#'
+#' B <- matrix(0, 2 * np - 1, np)
+#' B[2:np, 1:(np - 1)] <- diag(np - 1)
+#'
+#' dstl.firm <- list()
+#' for (k in 1:(np - 1)) {
+#'   dstl.firm[[k]] <- node_new(
+#'     "prod",
+#'     type = "CD",
+#'     alpha = 2, beta = c(0.5, 0.5),
+#'     paste0("prod", k), paste0("lab", k)
+#'   )
+#' }
+#'
+#' dst.consumer.CD <- node_new(
+#'   "util",
+#'   type = "CD",
+#'   alpha = 1,  beta = prop.table(rep(1, np)),
+#'   paste0("prod", 1:np)
+#' )
+#'
+#' f <- function(dstl) {
+#'   sdm2(
+#'     A = dstl,
+#'     B = B,
+#'     S0Exg = S,
+#'     names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:(np - 1))),
+#'     names.agent = c(paste0("firm", 1:(np - 1)), "consumer"),
+#'     numeraire = "prod1",
+#'     ts = TRUE
+#'   )
+#' }
+#'
+#' ge <- f(c(dstl.firm, dst.consumer.CD))
+#'
+#' ge$p
+#' ge$z
+#' ge$D
+#' ge$S
+#' ge$DV
+#' ge$SV
+#'
+#' ## an example with a Leontief intertemporal utility function
+#' dst.consumer.Leontief <- node_new(
+#'   "util",
+#'   type = "Leontief",
+#'   a = rep(1, np),
+#'   paste0("prod", 1:np)
+#' )
+#'
+#' ge2 <- f(c(dstl.firm, dst.consumer.Leontief))
+#'
+#' ge2$p
+#' ge2$z
+#' ge2$D
+#' ge2$S
+#' ge2$DV
+#' ge2$SV
+#' }
+
+
+gemIntertemporal_2_2 <- function(...) sdm2(...)

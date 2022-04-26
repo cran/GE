@@ -124,7 +124,7 @@
 #'   function(x) AMSD(x, gamma = 0.1, prob)
 #' )
 #' }
-#'
+
 AMSD <- function(x, gamma = 1, wt = NULL, theta = 1) {
   if (is.null(wt)) wt <- rep(1, length(x))
   weighted.mean(x, wt) - 0.5 * gamma * sd.p(x, wt)^theta

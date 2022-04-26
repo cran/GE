@@ -31,11 +31,11 @@
 #' )
 #'
 #' par(mfrow = c(1, 2))
-#' matplot(ge$ts.z, type = "b", pch = 20)
-#' matplot(ge$ts.p, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #'
 #' #### technology change in a market-clearing path
-#' policyTechnologyChange <- function(time, dstl) {
+#' policyTechnologyChange <- function(time, A) {
 #'   alpha <- 1.2 # The original value is 1.
 #'   time.win <- c(50, 50)
 #'   discount.factor <- 0.97
@@ -44,7 +44,7 @@
 #'   return.rate <- 1 / discount.factor - 1
 #'
 #'   if (time >= time.win[1] && time <= time.win[2]) {
-#'     dstl[[1]]$func <- function(p) {
+#'     A[[1]]$func <- function(p) {
 #'       result <- CD_A(
 #'         alpha, rbind(beta1.firm, 1 - beta1.firm, 0),
 #'         c(p[1] * (return.rate + depreciation.rate), p[2:3])
@@ -65,8 +65,8 @@
 #' )
 #'
 #' par(mfrow = c(1, 2))
-#' matplot(ge$ts.z, type = "b", pch = 20)
-#' matplot(ge$ts.p, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #'
 #' #### an example on page 46 of Li Xiangyang (2018)
 #' ge <- gemCanonicalDynamicMacroeconomic_3_2(
@@ -105,8 +105,8 @@ gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
     "prod", "lab"
   )
 
-  policy.B <- function(time, state, dstl) {
-    a.firm.current <- demand_coefficient(dstl[[1]], state$p)
+  policy.B <- function(time, state, A) {
+    a.firm.current <- demand_coefficient(A[[1]], state$p)
     state$B[1, 1] <- 1 + a.firm.current[1] * (1 - depreciation.rate)
     state
   }

@@ -20,7 +20,7 @@ node_plot <- function(node, param = FALSE, ...) {
           "CD" = {
             the.name <- paste0(
               the.name, "\n", "alpha=", round(the.node$alpha, 4), "\n",
-              "beta=", paste0(round(the.node$beta, 4), collapse = ", ")
+              "beta=(", paste0(round(the.node$beta, 4), collapse = ", "), ")"
             )
           },
           "CES" = ,

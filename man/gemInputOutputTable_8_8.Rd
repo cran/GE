@@ -15,7 +15,7 @@ gemInputOutputTable_8_8(
   es.VA.agri = 0.25,
   es.VA.manu = 0.5,
   es.VA.serv = 0.8,
-  es.prodcctDI = 0.5,
+  es.prodDI = 0.5,
   ...
 )
 }
@@ -34,7 +34,7 @@ and the value-added input of the agriculture sector, manufacturing sector and se
 \item{es.VA.agri, es.VA.manu, es.VA.serv}{the elasticity of substitution between labor input and capital input
 of the agriculture sector, manufacturing sector and service sector.}
 
-\item{es.prodcctDI}{the elasticity of substitution between domestic product and imported product.}
+\item{es.prodDI}{the elasticity of substitution between domestic product and imported product.}
 
 \item{...}{arguments to be transferred to the function sdm of the package CGE.}
 }

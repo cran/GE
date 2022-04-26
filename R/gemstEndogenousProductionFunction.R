@@ -46,7 +46,7 @@
 #'   maxIteration = 1
 #' )
 #'
-#' matplot(ge$ts.z, type = "b", pch = 20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
 #' }
 
 gemstEndogenousProductionFunction <- function(...) sdm2(...)
