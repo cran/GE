@@ -40,6 +40,9 @@
 #' The value of that attribute is a function which calculates the demand coefficient for the child nodes.
 #' The argument of that function is a price vector.
 #' The length of that price vector is equal to the number of the child nodes.
+#' \item StickyLinear or SL. That is the sticky linear type. In this case, this node also has an attribute named beta that
+#' contains the coefficients of the linear utility or production function.
+#' In order to avoid too drastic changes in the demand structure, the adjustment process of the demand structure has a certain stickiness when prices change.
 #' }
 #'
 #' @examples
@@ -225,6 +228,16 @@ demand_coefficient <- function(node, p) {
       },
       "FUNC" = {
         the.input.coef <- node$func(the.input.p) # the.input.coef is the direct demand coefficient for children.
+      },
+      "SL" = ,
+      "StickyLinear" = {
+        if (is.null(node$last.a)) node$last.a <- node$beta
+        if (is.null(node$coef)) node$coef <- 0.2
+        vmu <- node$beta/the.input.p
+        ratio <- vmu/mean(vmu)
+        a <- node$last.a * ratio_adjust(ratio, node$coef)
+        a <- a/(sum(node$beta*a))
+        the.input.coef <- node$last.a <- a
       },
       stop("Li: wrong node$type.")
     )

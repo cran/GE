@@ -35,17 +35,17 @@ secy2.2 <- c(2, 1, 0, 2)
 
 secy3 <- c(1, 1, 1, 1)
 
-## the unit security payoff matrix of agent 1.
-USP1 <- cbind(secy1.1, secy2.1, secy3)
+## the unit (security) payoff matrix of agent 1.
+UP1 <- cbind(secy1.1, secy2.1, secy3)
 
-## the unit security payoff matrix of agent 2.
-USP2 <- cbind(secy1.2, secy2.2, secy3)
+## the unit (security) payoff matrix of agent 2.
+UP2 <- cbind(secy1.2, secy2.2, secy3)
 
-mp1 <- colMeans(USP1)
-Cov1 <- cov.wt(USP1, method = "ML")$cov
+mp1 <- colMeans(UP1)
+Cov1 <- cov.wt(UP1, method = "ML")$cov
 
-mp2 <- colMeans(USP2)
-Cov2 <- cov.wt(USP2, method = "ML")$cov
+mp2 <- colMeans(UP2)
+Cov2 <- cov.wt(UP2, method = "ML")$cov
 
 ## the utility function of agent 1.
 uf1 <- function(x) AMSDP(x, mp1, Cov1, gamma = 2)

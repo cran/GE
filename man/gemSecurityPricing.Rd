@@ -6,10 +6,9 @@
 \usage{
 gemSecurityPricing(
   S = diag(2),
-  USP = diag(nrow(S)),
+  UP = diag(nrow(S)),
   uf = NULL,
   muf = NULL,
-  wt = rep(1, nrow(S)),
   ratio_adjust_coef = 0.05,
   ...
 )
@@ -17,14 +16,11 @@ gemSecurityPricing(
 \arguments{
 \item{S}{a supply n-by-m matrix of securities.}
 
-\item{USP}{a unit security payoff k-by-n matrix.}
+\item{UP}{a unit (security) payoff k-by-n matrix.}
 
 \item{uf}{a utility function or a utility function list.}
 
-\item{muf}{a (Bernoulli) marginal utility function or a (Bernoulli) marginal utility function list.}
-
-\item{wt}{a weight (or probability) k-vector of event states (i.e. time and nature states).
-When the argument muf is NULL, wt will be ignored.}
+\item{muf}{a marginal utility function or a marginal utility function list.}
 
 \item{ratio_adjust_coef}{a scalar indicating the adjustment velocity of demand structure.}
 
@@ -46,7 +42,7 @@ gemSecurityPricing(
 )
 
 gemSecurityPricing(
-  USP = cbind(c(1, 0), c(0, 2)),
+  UP = cbind(c(1, 0), c(0, 2)),
   muf = function(x) 1 / x
 )
 
@@ -68,7 +64,7 @@ secy2 <- c(0, 1, 1, 1, 1)
 secy3 <- c(0, 5, 3, 8, 4) - 3 * secy2
 secy4 <- c(0, 3, 5, 4, 8) - 3 * secy2
 # unit security payoff matrix
-USP <- cbind(secy1, secy2, secy3, secy4)
+UP <- cbind(secy1, secy2, secy3, secy4)
 
 prob <- c(0.15, 0.25, 0.25, 0.35)
 wt <- prop.table(c(1, 0.96 * prob)) # weights
@@ -80,7 +76,7 @@ geSharpe1 <- gemSecurityPricing(
     10, 0,
     0, 10
   ), 4, 2, TRUE),
-  USP = USP,
+  UP = UP,
   uf = list(
     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5)
@@ -97,7 +93,7 @@ geSharpe2 <- gemSecurityPricing(
     10, 0, 20, 0,
     0, 10, 0, 20
   ), 4, 4, TRUE),
-  USP = USP,
+  UP = UP,
   uf = list(
     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5),
@@ -111,7 +107,7 @@ geSharpe2$p[3:4] + 3 * geSharpe2$p[2]
 geSharpe2$D
 
 ## an example of Sharpe (2008, chapter 3, case 3)
-geSharpe3 <- gemSecurityPricing(USP,
+geSharpe3 <- gemSecurityPricing(UP,
   uf = function(x) (x - x^2 / 400) \%*\% wt,
   S = matrix(c(
     49, 98,
@@ -131,9 +127,8 @@ geSharpe3b <- gemSecurityPricing(
     5, 10,
     5, 10
   ), 4, 2, TRUE),
-  USP = USP,
-  muf = function(x) (1 - x / 200),
-  wt = wt
+  UP = UP,
+  muf = function(x) (1 - x / 200) * wt
 )
 
 geSharpe3b$p
@@ -147,8 +142,8 @@ geSharpe4 <- gemSecurityPricing(
     5, 10,
     5, 10
   ), 4, 2, TRUE),
-  USP,
-  muf = function(x) abs((x - 20)^(-1)), wt = wt,
+  UP,
+  muf = function(x) abs((x - 20)^(-1)) * wt,
   maxIteration = 100,
   numberOfPeriods = 300,
   ts = TRUE
@@ -165,10 +160,9 @@ geWang <- gemSecurityPricing(
     0, 1
   ), 3, 2, TRUE),
   muf = list(
-    function(x) 1 / x,
-    function(x) 1 / sqrt(x)
-  ),
-  wt = c(0.5, 0.25, 0.25)
+    function(x) 1 / x * c(0.5, 0.25, 0.25),
+    function(x) 1 / sqrt(x) * c(0.5, 0.25, 0.25)
+  )
 )
 
 geWang$p # c(1, (1 + sqrt(17)) / 16)
@@ -179,7 +173,7 @@ geWang.b <- gemSecurityPricing(
     1, 0,
     0, 2,
     0, 1
-  ), 3, 2, TRUE), wt = c(0.5, 0.25, 0.25),
+  ), 3, 2, TRUE),
   uf = list(
     function(x) log(x) \%*\% c(0.5, 0.25, 0.25),
     function(x) 2 * sqrt(x) \%*\% c(0.5, 0.25, 0.25)
@@ -197,8 +191,8 @@ ge <- gemSecurityPricing(
     0, 2
   ), 3, 2, TRUE),
   uf = list(
-    function(x) CRRA(x, gamma = 1, p = wt)$u,
-    function(x) CRRA(x, gamma = 0.5, p = wt)$u
+    function(x) CRRA(x, gamma = 1, prob = wt)$u,
+    function(x) CRRA(x, gamma = 0.5, prob = wt)$u
   )
 )
 
@@ -206,7 +200,7 @@ ge$p # c(1, (1 + sqrt(5)) / 4, (1 + sqrt(17)) / 16)
 
 #### an example of incomplete market
 ge <- gemSecurityPricing(
-  USP = cbind(c(1, 1), c(2, 1)),
+  UP = cbind(c(1, 1), c(2, 1)),
   uf = list(
     function(x) sum(log(x)) / 2,
     function(x) sum(sqrt(x))
@@ -222,12 +216,11 @@ ge$p
 
 ## the same as above
 ge.b <- gemSecurityPricing(
-  USP = cbind(c(1, 1), c(2, 1)),
+  UP = cbind(c(1, 1), c(2, 1)),
   muf = list(
-    function(x) 1 / x,
-    function(x) 1 / sqrt(x)
+    function(x) 1 / x * c(0.5, 0.5),
+    function(x) 1 / sqrt(x) * c(0.5, 0.5)
   ),
-  wt = c(0.5, 0.5),
   ratio_adjust_coef = 0.1,
   priceAdjustmentVelocity = 0.05,
   policy = makePolicyMeanValue(span = 100),

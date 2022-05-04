@@ -10,12 +10,12 @@ gemInputOutputTable_8_8(
   es.agri = 0,
   es.manu = 0,
   es.serv = 0,
-  es.hh = 0,
+  es.CI = 0,
   es.FT = 0,
   es.VA.agri = 0.25,
   es.VA.manu = 0.5,
   es.VA.serv = 0.8,
-  es.prodDI = 0.5,
+  es.prodDM = 0.5,
   ...
 )
 }
@@ -27,14 +27,14 @@ gemInputOutputTable_8_8(
 \item{es.agri, es.manu, es.serv}{the elasticity of substitution between the intermediate input
 and the value-added input of the agriculture sector, manufacturing sector and service sector.}
 
-\item{es.hh}{the elasticity of substitution among products consumed by the household sector.}
+\item{es.CI}{the elasticity of substitution among products used by the CI sector.}
 
 \item{es.FT}{the elasticity of substitution among exported products.}
 
 \item{es.VA.agri, es.VA.manu, es.VA.serv}{the elasticity of substitution between labor input and capital input
 of the agriculture sector, manufacturing sector and service sector.}
 
-\item{es.prodDI}{the elasticity of substitution between domestic product and imported product.}
+\item{es.prodDM}{the elasticity of substitution between domestic product and imported product.}
 
 \item{...}{arguments to be transferred to the function sdm of the package CGE.}
 }
@@ -56,11 +56,11 @@ This is a general equilibrium model based on a 8x8 input-output table.
 \details{
 Given an 8x8 input-output table, this model calculates
 the corresponding general equilibrium.
-This input-output table contains 3 production sectors, 1 household, 1 foreign trade sector importing agriculture goods,
+This input-output table contains 3 production sectors, 1 consumption and (temporarily unproductive) investment sector (CI sector), 1 foreign trade sector importing agriculture goods,
 1 foreign trade sector importing manufacturing goods, 1 foreign trade sector importing service, 1 foreign trade sector importing bond.
 There are 8 kinds of commodities (or subjects) in the table, i.e. agriculture product,
 manufacturing product, service, labor, capital goods, tax, dividend and bond of ROW (i.e. the rest of the world).
-The household consumes products and supplies labor, capital, stock and tax receipt.
+The CI sector uses products and supplies labor, capital, stock and tax receipt.
 Generally speaking, the value of the elasticity of substitution in this model should be between 0 and 1.
 }
 \examples{
@@ -103,7 +103,7 @@ OT17 <- matrix(c(
 rownames(IT17) <- rownames(OT17) <-
   c("agri", "manu", "serv", "lab", "cap", "tax", "dividend", "bond.ROW")
 colnames(IT17) <- colnames(OT17) <- c(
-  "sector.agri", "sector.manu", "sector.serv", "sector.hh",
+  "sector.agri", "sector.manu", "sector.serv", "sector.CI",
   "sector.FT.agri", "sector.FT.manu", "sector.FT.serv", "sector.FT.bond.ROW"
 )
 
@@ -130,7 +130,7 @@ prop.table(geTP$value.added) - prop.table(ge$value.added)
 
 #### capital accumulation
 OT.CA <- OT17
-OT.CA["cap", "sector.hh"] <- OT.CA["cap", "sector.hh"] * 1.1
+OT.CA["cap", "sector.CI"] <- OT.CA["cap", "sector.CI"] * 1.1
 geCA <- gemInputOutputTable_8_8(
   IT = IT17,
   OT = OT.CA

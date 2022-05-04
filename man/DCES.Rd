@@ -62,15 +62,31 @@ x <- DCES_demand (
   p = p
 )
 
-DCES(es = es,
-     beta = beta,
-     xi = xi,
-     x = x)
+u <- DCES(es = es,
+          beta = beta,
+          xi = xi,
+          x = x)
 
 SCES(es = es,
      alpha = 1,
      beta = beta,
      x = x)
+
+DCES_compensated_demand(
+  es = es,
+  beta = beta,
+  xi = xi,
+  u = u,
+  p = p
+)
+
+DCES_compensated_demand(
+  es = es,
+  beta = beta,
+  xi = seq(10, 50, 10),
+  u = u,
+  p = p
+)
 }
 }
 \references{

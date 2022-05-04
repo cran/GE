@@ -37,15 +37,31 @@
 #'   p = p
 #' )
 #'
-#' DCES(es = es,
-#'      beta = beta,
-#'      xi = xi,
-#'      x = x)
+#' u <- DCES(es = es,
+#'           beta = beta,
+#'           xi = xi,
+#'           x = x)
 #'
 #' SCES(es = es,
 #'      alpha = 1,
 #'      beta = beta,
 #'      x = x)
+#'
+#' DCES_compensated_demand(
+#'   es = es,
+#'   beta = beta,
+#'   xi = xi,
+#'   u = u,
+#'   p = p
+#' )
+#'
+#' DCES_compensated_demand(
+#'   es = es,
+#'   beta = beta,
+#'   xi = seq(10, 50, 10),
+#'   u = u,
+#'   p = p
+#' )
 #' }
 
 DCES <- function(es, beta, xi, x) {
@@ -69,6 +85,6 @@ DCES_demand <- function(es, beta, xi, w, p) {
 #' Compute the displaced CES compensated demand (Fullerton, 1989).
 DCES_compensated_demand <- function(es, beta, xi, u, p) {
   if (!isTRUE(all.equal(sum(beta),1))) warning("The sum of beta should be 1.")
-  xi+u*CES_A(sigma=1-1/es, alpha = 1, Beta = beta, p=p)
+  xi+u*SCES_A(sigma=1-1/es, alpha = 1, Beta = beta, p=p)
 }
 

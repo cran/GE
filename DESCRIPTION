@@ -1,7 +1,7 @@
 Package: GE
 Type: Package
 Title: General Equilibrium Modeling
-Version: 0.2.9
+Version: 0.3.0
 Author: LI Wu <liwu@staff.shu.edu.cn>
 Maintainer: LI Wu <liwu@staff.shu.edu.cn>
 Depends: CGE, data.tree
@@ -10,7 +10,7 @@ Description: Some tools for developing general equilibrium models and some gener
 License: GPL-2 | GPL-3
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2022-04-23 02:49:52 UTC; Dell
+Packaged: 2022-05-04 10:43:29 UTC; Dell
 RoxygenNote: 7.1.2
 Repository: CRAN
-Date/Publication: 2022-04-26 23:40:05 UTC
+Date/Publication: 2022-05-04 12:20:11 UTC

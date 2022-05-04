@@ -14,7 +14,8 @@
 #' @param price NULL or a numeric n-vector consisting of prices of each column of y.
 #' @param delta a scalar.
 #' @param muf a marginal utility function or a list consisting of m marginal utility functions.
-#' @param wt a weight vector.
+#' A marginal utility function is the gradient of a utility function.
+#' When the components in the marginal utility vector are the same, a marginal utility function may calculate only one of the components.
 #' @return A n-by-m marginal utility matrix. Its (i,j)-th element corresponds to the i-th column of y and the j-th column of x.
 #' @references Sharpe, William F. (2008, ISBN: 9780691138503) Investors and Markets: Portfolio Choices, Asset Prices, and Investment Advice. Princeton University Press.
 #' @examples
@@ -29,9 +30,9 @@
 #' ####
 #' wt <- 1:2
 #' uf <- function(x) (x - x^2 / 400) %*% wt
-#' muf <- function(x) 1 - 1 / 200 * x
+#' muf <- function(x) (1 - 1 / 200 * x) * wt
 #' marginal_utility(1:2, cbind(1:2, 1:1), uf)
-#' marginal_utility(1:2, cbind(1:2, 1:1), muf = muf, wt = 1:2)
+#' marginal_utility(1:2, cbind(1:2, 1:1), muf = muf)
 #'
 #' ####
 #' marginal_utility(
@@ -44,7 +45,7 @@
 #' wt <- c(0.25, 0.75)
 #' marginal_utility(
 #'   1:2, cbind(1:2, 1:1),
-#'   function(x) CRRA(x, gamma = gamma, p = wt)$CE
+#'   function(x) CRRA(x, gamma = gamma, prob = wt)$CE
 #' )
 #' ## the same as above. CRRA and CES utility funcitons are essentially the same.
 #' es <- 1 / gamma
@@ -56,14 +57,14 @@
 #'
 #' prop.table(marginal_utility(
 #'   1:2, cbind(1:2, 1:1),
-#'   function(x) CRRA(x, gamma = gamma, p = wt)$CE
+#'   function(x) CRRA(x, gamma = gamma, prob = wt)$CE
 #' ))
 #' prop.table(marginal_utility(
 #'   1:2, cbind(1:2, 1:1),
-#'   function(x) CRRA(x, gamma = gamma, p = wt)$u
+#'   function(x) CRRA(x, gamma = gamma, prob = wt)$u
 #' ))
 marginal_utility <- function(x, y, uf, price = NULL, delta = 1e-10,
-                             muf = NULL, wt = rep(1, nrow(x))) {
+                             muf = NULL) {
   x <- as.matrix(x)
   y <- as.matrix(y)
 
@@ -80,13 +81,13 @@ marginal_utility <- function(x, y, uf, price = NULL, delta = 1e-10,
     if (is.function(muf)) {
       for (kc in 1:m) {
         for (kr in 1:n) {
-          result[kr, kc] <- sum(muf(x[, kc]) * y[, kr] * wt)
+          result[kr, kc] <- sum(muf(x[, kc]) * y[, kr])
         }
       }
     } else { # function list
       for (kc in 1:m) {
         for (kr in 1:n) {
-          result[kr, kc] <- sum(muf[[kc]](x[, kc]) * y[, kr] * wt)
+          result[kr, kc] <- sum(muf[[kc]](x[, kc]) * y[, kr])
         }
       }
     }

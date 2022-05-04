@@ -47,8 +47,8 @@ secy1 <- c(1, 0, 0, 0, 0)
 secy2 <- c(0, 1, 1, 1, 1)
 secy3 <- c(0, 5, 3, 8, 4) - 3 * secy2
 secy4 <- c(0, 3, 5, 4, 8) - 3 * secy2
-# unit security payoff matrix
-USP <- cbind(secy1, secy2, secy3, secy4)
+# unit (security) payoff matrix
+UP <- cbind(secy1, secy2, secy3, secy4)
 
 prob <- c(0.15, 0.25, 0.25, 0.35)
 wt <- prop.table(c(1, 0.96 * prob)) # weights
@@ -58,9 +58,9 @@ gamma.agt2 <- 2.5
 
 ge <- sdm2(
   A = function(state) {
-    Payoff <- USP \%*\% (state$last.A \%*\% dg(state$last.z))
+    Payoff <- UP \%*\% (state$last.A \%*\% dg(state$last.z))
 
-    VMU <- marginal_utility(Payoff, USP, list(
+    VMU <- marginal_utility(Payoff, UP, list(
       function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / gamma.agt1),
       function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / gamma.agt2)
     ), price = state$p)
@@ -91,16 +91,16 @@ secy2 <- c(0, 1, 0)
 secy3 <- c(0, 0, 1)
 prob <- c(0.5, 0.5)
 wt <- c(1, prob)
-USP <- cbind(secy1, secy2, secy3)
+UP <- cbind(secy1, secy2, secy3)
 
 gamma.agt1 <- 1
 gamma.agt2 <- 0.5
 
 ge <- sdm2(
   A = function(state) {
-    Payoff <- USP \%*\% (state$last.A \%*\% dg(state$last.z))
+    Payoff <- UP \%*\% (state$last.A \%*\% dg(state$last.z))
 
-    VMU <- marginal_utility(Payoff, USP, list(
+    VMU <- marginal_utility(Payoff, UP, list(
       # Here CRRA(...)$u, CRRA(...)$CE and CES functions are interexchangeable.
       function(x) CRRA(x, gamma = gamma.agt1, p = wt)$u,
       function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / gamma.agt2)

@@ -3,11 +3,9 @@
 #' @aliases gemSecurityPricing
 #' @description Compute the equilibrium of a security market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
 #' @param S a supply n-by-m matrix of securities.
-#' @param USP a unit security payoff k-by-n matrix.
+#' @param UP a unit (security) payoff k-by-n matrix.
 #' @param uf a utility function or a utility function list.
-#' @param muf a (Bernoulli) marginal utility function or a (Bernoulli) marginal utility function list.
-#' @param wt a weight (or probability) k-vector of event states (i.e. time and nature states).
-#' When the argument muf is NULL, wt will be ignored.
+#' @param muf a marginal utility function or a marginal utility function list.
 #' @param ratio_adjust_coef a scalar indicating the adjustment velocity of demand structure.
 #' @param ... arguments to be passed to the function sdm2.
 #' @return  A general equilibrium.
@@ -27,7 +25,7 @@
 #' )
 #'
 #' gemSecurityPricing(
-#'   USP = cbind(c(1, 0), c(0, 2)),
+#'   UP = cbind(c(1, 0), c(0, 2)),
 #'   muf = function(x) 1 / x
 #' )
 #'
@@ -49,7 +47,7 @@
 #' secy3 <- c(0, 5, 3, 8, 4) - 3 * secy2
 #' secy4 <- c(0, 3, 5, 4, 8) - 3 * secy2
 #' # unit security payoff matrix
-#' USP <- cbind(secy1, secy2, secy3, secy4)
+#' UP <- cbind(secy1, secy2, secy3, secy4)
 #'
 #' prob <- c(0.15, 0.25, 0.25, 0.35)
 #' wt <- prop.table(c(1, 0.96 * prob)) # weights
@@ -61,7 +59,7 @@
 #'     10, 0,
 #'     0, 10
 #'   ), 4, 2, TRUE),
-#'   USP = USP,
+#'   UP = UP,
 #'   uf = list(
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5)
@@ -78,7 +76,7 @@
 #'     10, 0, 20, 0,
 #'     0, 10, 0, 20
 #'   ), 4, 4, TRUE),
-#'   USP = USP,
+#'   UP = UP,
 #'   uf = list(
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5),
@@ -92,7 +90,7 @@
 #' geSharpe2$D
 #'
 #' ## an example of Sharpe (2008, chapter 3, case 3)
-#' geSharpe3 <- gemSecurityPricing(USP,
+#' geSharpe3 <- gemSecurityPricing(UP,
 #'   uf = function(x) (x - x^2 / 400) %*% wt,
 #'   S = matrix(c(
 #'     49, 98,
@@ -112,9 +110,8 @@
 #'     5, 10,
 #'     5, 10
 #'   ), 4, 2, TRUE),
-#'   USP = USP,
-#'   muf = function(x) (1 - x / 200),
-#'   wt = wt
+#'   UP = UP,
+#'   muf = function(x) (1 - x / 200) * wt
 #' )
 #'
 #' geSharpe3b$p
@@ -128,8 +125,8 @@
 #'     5, 10,
 #'     5, 10
 #'   ), 4, 2, TRUE),
-#'   USP,
-#'   muf = function(x) abs((x - 20)^(-1)), wt = wt,
+#'   UP,
+#'   muf = function(x) abs((x - 20)^(-1)) * wt,
 #'   maxIteration = 100,
 #'   numberOfPeriods = 300,
 #'   ts = TRUE
@@ -146,10 +143,9 @@
 #'     0, 1
 #'   ), 3, 2, TRUE),
 #'   muf = list(
-#'     function(x) 1 / x,
-#'     function(x) 1 / sqrt(x)
-#'   ),
-#'   wt = c(0.5, 0.25, 0.25)
+#'     function(x) 1 / x * c(0.5, 0.25, 0.25),
+#'     function(x) 1 / sqrt(x) * c(0.5, 0.25, 0.25)
+#'   )
 #' )
 #'
 #' geWang$p # c(1, (1 + sqrt(17)) / 16)
@@ -160,7 +156,7 @@
 #'     1, 0,
 #'     0, 2,
 #'     0, 1
-#'   ), 3, 2, TRUE), wt = c(0.5, 0.25, 0.25),
+#'   ), 3, 2, TRUE),
 #'   uf = list(
 #'     function(x) log(x) %*% c(0.5, 0.25, 0.25),
 #'     function(x) 2 * sqrt(x) %*% c(0.5, 0.25, 0.25)
@@ -178,8 +174,8 @@
 #'     0, 2
 #'   ), 3, 2, TRUE),
 #'   uf = list(
-#'     function(x) CRRA(x, gamma = 1, p = wt)$u,
-#'     function(x) CRRA(x, gamma = 0.5, p = wt)$u
+#'     function(x) CRRA(x, gamma = 1, prob = wt)$u,
+#'     function(x) CRRA(x, gamma = 0.5, prob = wt)$u
 #'   )
 #' )
 #'
@@ -187,7 +183,7 @@
 #'
 #' #### an example of incomplete market
 #' ge <- gemSecurityPricing(
-#'   USP = cbind(c(1, 1), c(2, 1)),
+#'   UP = cbind(c(1, 1), c(2, 1)),
 #'   uf = list(
 #'     function(x) sum(log(x)) / 2,
 #'     function(x) sum(sqrt(x))
@@ -203,12 +199,11 @@
 #'
 #' ## the same as above
 #' ge.b <- gemSecurityPricing(
-#'   USP = cbind(c(1, 1), c(2, 1)),
+#'   UP = cbind(c(1, 1), c(2, 1)),
 #'   muf = list(
-#'     function(x) 1 / x,
-#'     function(x) 1 / sqrt(x)
+#'     function(x) 1 / x * c(0.5, 0.5),
+#'     function(x) 1 / sqrt(x) * c(0.5, 0.5)
 #'   ),
-#'   wt = c(0.5, 0.5),
 #'   ratio_adjust_coef = 0.1,
 #'   priceAdjustmentVelocity = 0.05,
 #'   policy = makePolicyMeanValue(span = 100),
@@ -221,9 +216,9 @@
 #' matplot(ge.b$ts.p, type = "l")
 #' }
 #'
-gemSecurityPricing <- function(S = diag(2), USP = diag(nrow(S)),
+gemSecurityPricing <- function(S = diag(2), UP = diag(nrow(S)),
                                uf = NULL,
-                               muf = NULL, wt = rep(1, nrow(S)),
+                               muf = NULL,
                                ratio_adjust_coef = 0.05,
                                ...) {
   n <- nrow(S)
@@ -231,12 +226,12 @@ gemSecurityPricing <- function(S = diag(2), USP = diag(nrow(S)),
 
   ge <- sdm2(
     A = function(state) {
-      Payoff <- USP %*% (state$last.A %*% dg(state$last.z))
+      Payoff <- UP %*% (state$last.A %*% dg(state$last.z))
 
       if (is.null(muf)) {
-        VMU <- marginal_utility(Payoff, USP, uf, price = state$p)
+        VMU <- marginal_utility(Payoff, UP, uf, price = state$p)
       } else {
-        VMU <- marginal_utility(Payoff, USP, price = state$p, muf = muf, wt = wt)
+        VMU <- marginal_utility(Payoff, UP, price = state$p, muf = muf)
       }
 
       VMU <- pmax(VMU, 1e-10)
@@ -255,8 +250,8 @@ gemSecurityPricing <- function(S = diag(2), USP = diag(nrow(S)),
     ...
   )
 
-  ge$Payoff <- USP %*% ge$D
-  ge$marginal_utility <- marginal_utility(ge$Payoff, USP, uf = uf, price = ge$p, muf = muf, wt = wt)
+  ge$Payoff <- UP %*% ge$D
+  ge$marginal_utility <- marginal_utility(ge$Payoff, UP, uf = uf, price = ge$p, muf = muf)
 
   ge
 }

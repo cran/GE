@@ -21,7 +21,7 @@ That is, the product supply in the first period is an exogenous variable.
 \examples{
 \donttest{
 #### an example with a Cobb-Douglas intertemporal utility function
-np <- 5 # the number of periods, firms.
+np <- 5 # the number of periods.
 y1 <- 150
 S <- matrix(NA, 2 * np - 1, np)
 S[(np + 1):(2 * np - 1), np] <- 100

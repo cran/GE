@@ -4,15 +4,7 @@
 \alias{marginal_utility}
 \title{Marginal Utility}
 \usage{
-marginal_utility(
-  x,
-  y,
-  uf,
-  price = NULL,
-  delta = 1e-10,
-  muf = NULL,
-  wt = rep(1, nrow(x))
-)
+marginal_utility(x, y, uf, price = NULL, delta = 1e-10, muf = NULL)
 }
 \arguments{
 \item{x}{a numeric k-by-m matrix or a numeric vector (i.e. a k-by-1 matrix).}
@@ -25,9 +17,9 @@ marginal_utility(
 
 \item{delta}{a scalar.}
 
-\item{muf}{a marginal utility function or a list consisting of m marginal utility functions.}
-
-\item{wt}{a weight vector.}
+\item{muf}{a marginal utility function or a list consisting of m marginal utility functions.
+A marginal utility function is the gradient of a utility function.
+When the components in the marginal utility vector are the same, a marginal utility function may calculate only one of the components.}
 }
 \value{
 A n-by-m marginal utility matrix. Its (i,j)-th element corresponds to the i-th column of y and the j-th column of x.
@@ -53,9 +45,9 @@ marginal_utility(
 ####
 wt <- 1:2
 uf <- function(x) (x - x^2 / 400) \%*\% wt
-muf <- function(x) 1 - 1 / 200 * x
+muf <- function(x) (1 - 1 / 200 * x) * wt
 marginal_utility(1:2, cbind(1:2, 1:1), uf)
-marginal_utility(1:2, cbind(1:2, 1:1), muf = muf, wt = 1:2)
+marginal_utility(1:2, cbind(1:2, 1:1), muf = muf)
 
 ####
 marginal_utility(
@@ -68,7 +60,7 @@ gamma <- 0.8
 wt <- c(0.25, 0.75)
 marginal_utility(
   1:2, cbind(1:2, 1:1),
-  function(x) CRRA(x, gamma = gamma, p = wt)$CE
+  function(x) CRRA(x, gamma = gamma, prob = wt)$CE
 )
 ## the same as above. CRRA and CES utility funcitons are essentially the same.
 es <- 1 / gamma
@@ -80,11 +72,11 @@ marginal_utility(
 
 prop.table(marginal_utility(
   1:2, cbind(1:2, 1:1),
-  function(x) CRRA(x, gamma = gamma, p = wt)$CE
+  function(x) CRRA(x, gamma = gamma, prob = wt)$CE
 ))
 prop.table(marginal_utility(
   1:2, cbind(1:2, 1:1),
-  function(x) CRRA(x, gamma = gamma, p = wt)$u
+  function(x) CRRA(x, gamma = gamma, prob = wt)$u
 ))
 }
 \references{

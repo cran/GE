@@ -4,21 +4,21 @@
 #' @description This is a general equilibrium model based on a 8x8 input-output table.
 #' @details Given an 8x8 input-output table, this model calculates
 #' the corresponding general equilibrium.
-#' This input-output table contains 3 production sectors, 1 household, 1 foreign trade sector importing agriculture goods,
+#' This input-output table contains 3 production sectors, 1 consumption and (temporarily unproductive) investment sector (CI sector), 1 foreign trade sector importing agriculture goods,
 #' 1 foreign trade sector importing manufacturing goods, 1 foreign trade sector importing service, 1 foreign trade sector importing bond.
 #' There are 8 kinds of commodities (or subjects) in the table, i.e. agriculture product,
 #' manufacturing product, service, labor, capital goods, tax, dividend and bond of ROW (i.e. the rest of the world).
-#' The household consumes products and supplies labor, capital, stock and tax receipt.
+#' The CI sector uses products and supplies labor, capital, stock and tax receipt.
 #' Generally speaking, the value of the elasticity of substitution in this model should be between 0 and 1.
 #' @param IT the input part of the input-output table in the base period (unit: trillion yuan).
 #' @param OT the output part of the input-output table in the base period (unit: trillion yuan).
 #' @param es.agri,es.manu,es.serv the elasticity of substitution between the intermediate input
 #' and the value-added input of the agriculture sector, manufacturing sector and service sector.
-#' @param es.hh the elasticity of substitution among products consumed by the household sector.
+#' @param es.CI the elasticity of substitution among products used by the CI sector.
 #' @param es.FT the elasticity of substitution among exported products.
 #' @param es.VA.agri,es.VA.manu,es.VA.serv the elasticity of substitution between labor input and capital input
 #' of the agriculture sector, manufacturing sector and service sector.
-#' @param es.prodDI the elasticity of substitution between domestic product and imported product.
+#' @param es.prodDM the elasticity of substitution between domestic product and imported product.
 #' @param ... arguments to be transferred to the function sdm of the package CGE.
 #' @return A general equilibrium, which is a list with the following elements:
 #' \itemize{
@@ -71,7 +71,7 @@
 #' rownames(IT17) <- rownames(OT17) <-
 #'   c("agri", "manu", "serv", "lab", "cap", "tax", "dividend", "bond.ROW")
 #' colnames(IT17) <- colnames(OT17) <- c(
-#'   "sector.agri", "sector.manu", "sector.serv", "sector.hh",
+#'   "sector.agri", "sector.manu", "sector.serv", "sector.CI",
 #'   "sector.FT.agri", "sector.FT.manu", "sector.FT.serv", "sector.FT.bond.ROW"
 #' )
 #'
@@ -98,7 +98,7 @@
 #'
 #' #### capital accumulation
 #' OT.CA <- OT17
-#' OT.CA["cap", "sector.hh"] <- OT.CA["cap", "sector.hh"] * 1.1
+#' OT.CA["cap", "sector.CI"] <- OT.CA["cap", "sector.CI"] * 1.1
 #' geCA <- gemInputOutputTable_8_8(
 #'   IT = IT17,
 #'   OT = OT.CA
@@ -141,21 +141,22 @@ gemInputOutputTable_8_8 <- function(IT,
                                     es.agri = 0,
                                     es.manu = 0,
                                     es.serv = 0,
-                                    es.hh = 0,
+                                    es.CI = 0,
                                     es.FT = 0,
 
                                     es.VA.agri = 0.25,
                                     es.VA.manu = 0.5,
                                     es.VA.serv = 0.8,
 
-                                    es.prodDI = 0.5,
+                                    es.prodDM = 0.5,
                                     ...) {
+
   names.commodity <- c(
     "agriD", "manuD", "servD", "agriI", "manuI", "servI",
     "lab", "cap", "tax", "dividend", "bond.ROW"
   )
   names.agent <- c(
-    "sector.agri", "sector.manu", "sector.serv", "sector.hh",
+    "sector.agri", "sector.manu", "sector.serv", "sector.CI",
     "sector.FT.agri", "sector.FT.manu", "sector.FT.serv", "sector.FT.bond.ROW"
   )
 
@@ -166,7 +167,7 @@ gemInputOutputTable_8_8 <- function(IT,
   d.agri <- IT[, 1]
   d.manu <- IT[, 2]
   d.serv <- IT[, 3]
-  d.hh <- IT[, 4]
+  d.CI <- IT[, 4]
 
   tmp.tax <- IT["tax", ]
   supply.tax <- sum(tmp.tax[tmp.tax > 0])
@@ -174,12 +175,12 @@ gemInputOutputTable_8_8 <- function(IT,
 
   if (IT["tax", "sector.agri"] >= 0) {
     tax.rate.agri <- IT["tax", "sector.agri"] / sum(IT[c("lab", "cap"), "sector.agri"])
-    supply.tax.hh <- supply.tax
+    supply.tax.CI <- supply.tax
     supply.tax.agri <- NA
   } else {
     tax.rate.agri <- 0
     supply.tax.agri <- -IT["tax", "sector.agri"]
-    supply.tax.hh <- supply.tax - supply.tax.agri
+    supply.tax.CI <- supply.tax - supply.tax.agri
   }
 
   tax.rate.manu <- IT["tax", "sector.manu"] / sum(IT[c("lab", "cap"), "sector.manu"])
@@ -189,251 +190,202 @@ gemInputOutputTable_8_8 <- function(IT,
   dividend.rate.manu <- IT["dividend", "sector.manu"] / sum(IT[c("lab", "cap"), "sector.manu"])
   dividend.rate.serv <- IT["dividend", "sector.serv"] / sum(IT[c("lab", "cap"), "sector.serv"])
 
-
   # dst industry ------------------------------------------------------------
-  dst.industry <- Node$new("industry")
-  dst.industry$AddChild("cc1")$
-    AddChild("cc.agri",
-    type = "SCES",
-    alpha = 1,
-    beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
-    es = es.prodDI
-  )$
-    AddSibling("cc.manu",
-    type = "SCES",
-    alpha = 1,
-    beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
-    es = es.prodDI
-  )$
-    AddSibling("cc.serv",
-    type = "SCES",
-    alpha = 1,
-    beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
-    es = es.prodDI
-  )
-  FindNode(dst.industry, "industry")$AddChild("cc2")$
-    AddChild("cc2.1")$
-    AddChild("lab")$AddSibling("cap")
-  FindNode(dst.industry, "cc2")$AddChild("tax")$AddSibling("dividend")
+  dst.industry <- node_new("output",
+                           "cc1", "cc2")
+  node_set(dst.industry, "cc1",
+           "cc.agri",  "cc.manu","cc.serv")
 
-  FindNode(dst.industry, "cc.agri")$AddChild("agriD")$AddSibling("agriI")
-  FindNode(dst.industry, "cc.manu")$AddChild("manuD")$AddSibling("manuI")
-  FindNode(dst.industry, "cc.serv")$AddChild("servD")$AddSibling("servI")
+  node_set(dst.industry, "cc.agri",
+           type = "SCES",
+           alpha = 1,
+           beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
+           es = es.prodDM,
+           "agriD","agriI")
+
+  node_set(dst.industry, "cc.manu",
+           type = "SCES",
+           alpha = 1,
+           beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
+           es = es.prodDM,
+           "manuD","manuI")
+
+  node_set(dst.industry, "cc.serv",
+           type = "SCES",
+           alpha = 1,
+           beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
+           es = es.prodDM,
+           "servD","servI")
+
+  node_set(dst.industry, "cc2",
+           "cc2.1","tax","dividend")
+
+  node_set(dst.industry, "cc2.1",
+           "lab","cap")
 
   # dst.agri ----------------------------------------------------------------
   dst.agri <- Clone(dst.industry)
 
-  tmp <- FindNode(dst.agri, "industry")
-  tmp$type <- "SCES"
-  tmp$sigma <- 1 - 1 / es.agri
-  tmp$alpha <- OT["agri", "sector.agri"] / sum(d.agri)
-  tmp$beta <- prop.table(c(
+  dst.agri$type <- "SCES"
+  dst.agri$sigma <- 1 - 1 / es.agri
+  dst.agri$alpha <- OT["agri", "sector.agri"] / sum(d.agri)
+  dst.agri$beta <- prop.table(c(
     sum(d.agri[1:3]),
     sum(d.agri[4:7])
   ))
 
+  node_set(dst.agri, "cc1",
+           type = "Leontief",
+           a = prop.table(d.agri[1:3]))
 
-  tmp <- FindNode(dst.agri, "cc1")
-  tmp$type <- "Leontief"
-  tmp$a <- prop.table(d.agri[1:3])
-
-  tmp <- FindNode(dst.agri, "cc2")
-  tmp$type <- "FIN"
-  tmp$beta <- prop.table(c(sum(d.agri[4:5]), d.agri[6], d.agri[7]))
+  node_set(dst.agri, "cc2",
+           type = "FIN",
+           beta = prop.table(c(sum(d.agri[4:5]), d.agri[6], d.agri[7])))
 
 
-  tmp <- FindNode(dst.agri, "cc2.1")
-  tmp$type <- "SCES"
-  tmp$sigma <- 1 - 1 / es.VA.agri
-  tmp$alpha <- 1
-  tmp$beta <- prop.table(d.agri[4:5])
+  node_set(dst.agri, "cc2.1",
+           type = "SCES",
+           sigma = 1 - 1 / es.VA.agri,
+           alpha = 1,
+           beta = prop.table(d.agri[4:5]))
 
   # dst.manu ----------------------------------------------------------------
   dst.manu <- Clone(dst.industry)
 
-  tmp <- FindNode(dst.manu, "industry")
-  tmp$type <- "SCES"
-  tmp$sigma <- 1 - 1 / es.manu
-  tmp$alpha <- OT["manu", "sector.manu"] / sum(d.manu)
-  tmp$beta <- prop.table(c(
+  dst.manu$type <- "SCES"
+  dst.manu$sigma <- 1 - 1 / es.manu
+  dst.manu$alpha <- OT["manu", "sector.manu"] / sum(d.manu)
+  dst.manu$beta <- prop.table(c(
     sum(d.manu[1:3]),
     sum(d.manu[4:7])
   ))
 
+  node_set(dst.manu, "cc1",
+           type = "Leontief",
+           a = prop.table(d.manu[1:3]))
 
-  tmp <- FindNode(dst.manu, "cc1")
-  tmp$type <- "Leontief"
-  tmp$a <- prop.table(d.manu[1:3])
+  node_set(dst.manu, "cc2", type = "FIN",
+           rate = c(sum(d.manu[4:5]) / sum(d.manu[4:7]), tax.rate.manu, dividend.rate.manu))
 
-  tmp <- FindNode(dst.manu, "cc2")
-  tmp$type <- "FIN"
-  tmp$rate <- c(sum(d.manu[4:5]) / sum(d.manu[4:7]), tax.rate.manu, dividend.rate.manu)
-
-
-  tmp <- FindNode(dst.manu, "cc2.1")
-  tmp$type <- "SCES"
-  tmp$sigma <- 1 - 1 / es.VA.manu
-  tmp$alpha <- 1
-  tmp$beta <- prop.table(d.manu[4:5])
+  node_set(dst.manu, "cc2.1",
+           type = "SCES",
+           sigma = 1 - 1 / es.VA.manu,
+           alpha = 1,
+           beta = prop.table(d.manu[4:5]))
 
   # dst.serv ----------------------------------------------------------------
   dst.serv <- Clone(dst.industry)
 
-  tmp <- FindNode(dst.serv, "industry")
-  tmp$type <- "SCES"
-  tmp$sigma <- 1 - 1 / es.serv
-  tmp$alpha <- OT["serv", "sector.serv"] / sum(d.serv)
-  tmp$beta <- prop.table(c(
+  dst.serv$type <- "SCES"
+  dst.serv$sigma <- 1 - 1 / es.serv
+  dst.serv$alpha <- OT["serv", "sector.serv"] / sum(d.serv)
+  dst.serv$beta <- prop.table(c(
     sum(d.serv[1:3]),
     sum(d.serv[4:7])
   ))
 
+  node_set(dst.serv, "cc1",type = "Leontief",
+           a = prop.table(d.serv[1:3]))
 
-  tmp <- FindNode(dst.serv, "cc1")
-  tmp$type <- "Leontief"
-  tmp$a <- prop.table(d.serv[1:3])
+  node_set(dst.serv, "cc2", type = "FIN",
+           rate = c(sum(d.serv[4:5]) / sum(d.serv[4:7]), tax.rate.serv, dividend.rate.serv))
 
-  tmp <- FindNode(dst.serv, "cc2")
-  tmp$type <- "FIN"
-  tmp$rate <- c(sum(d.serv[4:5]) / sum(d.serv[4:7]), tax.rate.serv, dividend.rate.serv)
+  node_set(dst.serv, "cc2.1",type = "SCES",
+           sigma = 1 - 1 / es.VA.serv,
+           alpha = 1,
+           beta = prop.table(d.serv[4:5]))
 
+  # dst.CI ------------------------------------------------------------------
+  dst.CI <- node_new("util",
+                     type = "FIN",
+                     beta = prop.table(c(
+                       sum(IT[, "sector.CI"]) - IT["bond.ROW", "sector.CI"],
+                       IT["bond.ROW", "sector.CI"])),
+                     "cc1",  "bond.ROW")
 
-  tmp <- FindNode(dst.serv, "cc2.1")
-  tmp$type <- "SCES"
-  tmp$sigma <- 1 - 1 / es.VA.serv
-  tmp$alpha <- 1
-  tmp$beta <- prop.table(d.serv[4:5])
+  node_set(dst.CI,"cc1",
+           type = "SCES",
+           es = es.CI,
+           alpha = 1,
+           beta = prop.table(d.CI[1:3]),
+           "cc.agri","cc.manu","cc.serv")
 
+  node_set(dst.CI,"cc.agri",
+           type = "SCES",
+           alpha = 1,
+           beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
+           es = es.prodDM,
+           "agriD","agriI")
 
-  # dst.hh ------------------------------------------------------------------
-  dst.hh <- Node$new("hh",
-    type = "FIN",
-    beta = prop.table(c(
-      sum(IT[, "sector.hh"]) - IT["bond.ROW", "sector.hh"],
-      IT["bond.ROW", "sector.hh"]
-    ))
-  )
+  node_set(dst.CI,"cc.manu",
+           type = "SCES",
+           alpha = 1,
+           beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
+           es = es.prodDM,
+           "manuD","manuI")
 
-  dst.hh$AddChild("cc1",
-    type = "SCES",
-    es = es.hh,
-    alpha = 1,
-    beta = prop.table(d.hh[1:3])
-  )$AddChild("cc.agri",
-    type = "SCES",
-    alpha = 1,
-    beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
-    es = es.prodDI
-  )$
-    AddSibling("cc.manu",
-    type = "SCES",
-    alpha = 1,
-    beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
-    es = es.prodDI
-  )$
-    AddSibling("cc.serv",
-    type = "SCES",
-    alpha = 1,
-    beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
-    es = es.prodDI
-  )
-
-  dst.hh$AddChild("bond.ROW")
-
-  FindNode(dst.hh, "cc.agri")$AddChild("agriD")$AddSibling("agriI")
-  FindNode(dst.hh, "cc.manu")$AddChild("manuD")$AddSibling("manuI")
-  FindNode(dst.hh, "cc.serv")$AddChild("servD")$AddSibling("servI")
+  node_set(dst.CI,"cc.serv",
+           type = "SCES",
+           alpha = 1,
+           beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
+           es = es.prodDM,
+           "servD","servI")
 
 
   # dst.FT ------------------------------------------------------------------
-  dst.FT.agri <- Node$new("FT.agri",
-    type = "SCES",
-    es = es.FT,
-    alpha = sum(OT[, "sector.FT.agri"]) / sum(IT[, "sector.FT.agri"]),
-    beta = prop.table(IT[1:3, "sector.FT.agri"])
-  )
-  dst.FT.agri$AddChild("agriD")$AddSibling("manuD")$AddSibling("servD")
+  dst.FT.agri <- node_new("output",
+                          type = "SCES",
+                          es = es.FT,
+                          alpha = sum(OT[, "sector.FT.agri"]) / sum(IT[, "sector.FT.agri"]),
+                          beta = prop.table(IT[1:3, "sector.FT.agri"]),
+                          "agriD","manuD","servD")
 
-
-  dst.FT.manu <- Node$new("FT.manu",
-    type = "SCES",
-    es = es.FT,
-    alpha = sum(OT[, "sector.FT.manu"]) / sum(IT[, "sector.FT.manu"]),
-    beta = prop.table(IT[1:3, "sector.FT.manu"])
-  )
-  dst.FT.manu$AddChild("agriD")$AddSibling("manuD")$AddSibling("servD")
-
-
-  dst.FT.serv <- Node$new("FT.serv",
-    type = "SCES",
-    es = es.FT,
-    alpha = sum(OT[, "sector.FT.serv"]) / sum(IT[, "sector.FT.serv"]),
-    beta = prop.table(IT[1:3, "sector.FT.serv"])
-  )
-  dst.FT.serv$AddChild("agriD")$AddSibling("manuD")$AddSibling("servD")
-
-
-  dst.FT.bond.ROW <- Node$new("FT.bond.ROW",
-    type = "SCES",
-    es = es.FT,
-    alpha = sum(OT[, "sector.FT.bond.ROW"]) / sum(IT[, "sector.FT.bond.ROW"]),
-    beta = prop.table(IT[1:3, "sector.FT.bond.ROW"])
-  )
-  dst.FT.bond.ROW$AddChild("agriD")$AddSibling("manuD")$AddSibling("servD")
-
+  dst.FT.manu <- Clone(dst.FT.agri)
+  dst.FT.serv <- Clone(dst.FT.agri)
+  dst.bond <- Clone(dst.FT.agri)
 
   dstl <- list(
     dst.agri,
     dst.manu,
     dst.serv,
-    dst.hh,
+    dst.CI,
     dst.FT.agri,
     dst.FT.manu,
     dst.FT.serv,
-    dst.FT.bond.ROW
+    dst.bond
   )
-
-  ge <- sdm(
-    A = function(state) {
-      p <- c(state$p)
-      names(p) <- names.commodity
-
-      result <- sapply(dstl, demand_coefficient, p)
-      return(result)
-    },
-    B = {
-      tmp <- matrix(c(
-        1, 0, 0, 0, 0, 0, 0, 0,
-        0, 1, 0, 0, 0, 0, 0, 0,
-        0, 0, 1, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 1, 0, 0, 0,
-        0, 0, 0, 0, 0, 1, 0, 0,
-        0, 0, 0, 0, 0, 0, 1, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 1
-      ), 11, 8, TRUE)
-    },
+  ge <- sdm2(
+    A = dstl,
+    B = matrix(c(
+      1, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, 0, 0,
+      0, 0, 0, 0, 0, 0, 1, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1
+    ), 11, 8, TRUE),
     S0Exg = {
       tmp <- matrix(NA, 11, 8, TRUE)
       colnames(tmp) <- names.agent
       rownames(tmp) <- names.commodity
-      tmp["lab", "sector.hh"] <- sum(OT["lab", ])
-      tmp["cap", "sector.hh"] <- sum(OT["cap", ])
+      tmp["lab", "sector.CI"] <- sum(OT["lab", ])
+      tmp["cap", "sector.CI"] <- sum(OT["cap", ])
       tmp["tax", ] <- OT["tax", ]
-      tmp["dividend", "sector.hh"] <- sum(OT["dividend", ])
+      tmp["dividend", "sector.CI"] <- sum(OT["dividend", ])
+      #tmp["bond.ROW", "sector.FT.bond.ROW"] <- OT17["bond.ROW", "sector.FT.bond.ROW"]
       tmp
     },
-    tolCond = 1e-8,
-    ...
+    names.commodity = names.commodity,
+    names.agent = names.agent,
+    numeraire = "lab",
+    tolCond = 1e-8
   )
 
-  names(ge$p) <- names.commodity
-  ge$p <- ge$p / ge$p["lab"]
-
-  ge <- ge_tidy(ge, names.commodity, names.agent)
 
   ge$value.added <- colSums(ge$DV[
     c("lab", "cap", "tax", "dividend"),

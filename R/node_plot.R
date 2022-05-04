@@ -58,6 +58,13 @@ node_plot <- function(node, param = FALSE, ...) {
                 "beta=(", paste0(round(the.node$beta, 4), collapse = ", "), ")"
               )
             }
+          },
+          "StickyLinear" = ,
+          "SL" = {
+            the.name <- paste0(
+              the.name, "\n",
+              "beta=(", paste0(round(the.node$beta, 4), collapse = ", "), ")"
+            )
           }
         )
       }

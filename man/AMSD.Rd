@@ -54,7 +54,7 @@ marginal_utility(
 secy1 <- c(1, 0)
 secy2 <- c(0, 1)
 prob <- c(0.5, 0.5)
-USP <- cbind(secy1, secy2) # unit security payoff matrix
+UP <- cbind(secy1, secy2) # unit (security) payoff matrix
 
 fun <- function(gamma.agt1 = 1, gamma.agt2 = 1,
                 S0Exg = matrix(c(
@@ -63,9 +63,9 @@ fun <- function(gamma.agt1 = 1, gamma.agt2 = 1,
                 ), 2, 2, TRUE)) {
   sdm2(
     A = function(state) {
-      Payoff <- USP \%*\% (state$last.A \%*\% dg(state$last.z))
+      Payoff <- UP \%*\% (state$last.A \%*\% dg(state$last.z))
 
-      VMU <- marginal_utility(Payoff, USP, list(
+      VMU <- marginal_utility(Payoff, UP, list(
         function(x) AMV(x, gamma = gamma.agt1, prob),
         function(x) AMV(x, gamma = gamma.agt2, prob)
       ), state$p)
@@ -81,9 +81,9 @@ fun <- function(gamma.agt1 = 1, gamma.agt2 = 1,
 }
 
 fun()$p
-Payoff <- USP \%*\% c(0.5, 1)
+Payoff <- UP \%*\% c(0.5, 1)
 marginal_utility(
-  Payoff, USP,
+  Payoff, UP,
   function(x) AMV(x, gamma = 1, prob)
 )
 
@@ -100,14 +100,14 @@ fun(gamma.agt1 = 0.5, gamma.agt2 = 1)$p
 secy1 <- c(1, 0)
 secy2 <- c(0, 1)
 prob <- c(0.5, 0.5)
-USP <- cbind(secy1, secy2) # security structure matrix
+UP <- cbind(secy1, secy2) # security structure matrix
 
 ge <- sdm2(
   A = function(state) {
-    Payoff <- USP \%*\% (state$last.A \%*\% dg(state$last.z))
+    Payoff <- UP \%*\% (state$last.A \%*\% dg(state$last.z))
 
     VMU <- marginal_utility(
-      Payoff, USP,
+      Payoff, UP,
       function(x) AMSD(x, gamma = 0.1, prob), state$p
     )
     Ratio <- sweep(VMU, 2, colMeans(VMU), "/")
@@ -132,14 +132,14 @@ matplot(tail(ge$ts.q, 100), type = "l")
 
 ge$D
 ge$p
-Payoff <- USP \%*\% ge$D
+Payoff <- UP \%*\% ge$D
 marginal_utility(
-  Payoff, USP,
+  Payoff, UP,
   function(x) AMSD(x, gamma = 0.1, prob)
 )
 
 marginal_utility(
-  c(1,4), USP,
+  c(1,4), UP,
   function(x) AMSD(x, gamma = 0.1, prob)
 )
 }
