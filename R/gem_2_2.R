@@ -3,6 +3,7 @@
 #' @aliases gem_2_2
 #' @description Some simple 2-by-2 general equilibrium models with a firm and a laborer.
 #' @param ... arguments to be passed to the function sdm2.
+#' @references http://www.econ.ucla.edu/riley/MAE/Course/SolvingForTheWE.pdf
 #' @examples
 #' \donttest{
 #' ####
@@ -178,6 +179,31 @@
 #' ge2.SCES$z
 #' ge2.SCES$D
 #' ge2.SCES$S
+#'
+#' #### Example 1 in the ucla reference
+#' ge3.SCES <- sdm2(
+#'   A = function(state) {
+#'     a.firm <- c(0, 0.25)
+#'     a.consumer <- SCES_A(es = 0.5, alpha = 1, Beta = c(0.5, 0.5), p = state$p)
+#'     cbind(a.firm, a.consumer)
+#'   },
+#'   B = matrix(c(
+#'     1, 0,
+#'     0, 0
+#'   ), 2, 2, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA,
+#'     NA, 30
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "laborer"),
+#'   numeraire = "prod"
+#' )
+#'
+#' ge3.SCES$p
+#' ge3.SCES$z
+#' ge3.SCES$D
+#' ge3.SCES$S
 #' }
 
 gem_2_2 <- function(...) sdm2(...)

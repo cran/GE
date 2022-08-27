@@ -30,7 +30,7 @@ gemMoney_3_2(
 A general equilibrium (see \code{\link{sdm2}})
 }
 \description{
-A general equilibrium model with money.
+A general equilibrium model with money as a medium of exchange and a means of payment.
 }
 \details{
 A general equilibrium model with 3 commodities (i.e. product, labor,

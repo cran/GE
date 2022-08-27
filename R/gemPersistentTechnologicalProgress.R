@@ -4,6 +4,9 @@
 #' @description Some examples of market clearing paths with persistent technological progress.
 #' From the fifth period, technological progress occurs.
 #' @param ... arguments to be passed to the function sdm2.
+#' @seealso {
+#' \code{\link{gemCapitalAccumulation}}
+#' }
 #' @examples
 #' \donttest{
 #' #### a 2-by-2 example with labor-saving technological progress
@@ -124,6 +127,56 @@
 #' matplot(ge$ts.z, type = "o", pch = 20)
 #' matplot(growth_rate(ge$ts.z), type = "o", pch = 20)
 #' matplot(growth_rate(ge$ts.p), type = "o", pch = 20)
+#'
+#' #### a 3-by-3 example with labor-saving technological
+#' #### progress and capital accumulation
+#' dst.firm1 <- node_new(
+#'   "prod",
+#'   type = "CD",
+#'   alpha = 2, beta = c(0.5, 0.5),
+#'   "cap", "cc1"
+#' )
+#' node_set(dst.firm1, "cc1",
+#'          type="Leontief", a=1,
+#'          "lab")
+#'
+#' dst.consumer <- dst.firm2 <- node_new(
+#'   "util",
+#'   type = "Leontief",
+#'   a= 1,
+#'   "prod"
+#' )
+#'
+#' ge <- sdm2(
+#'   A = list(dst.firm1, dst.consumer, dst.firm2),
+#'   B = matrix(c(
+#'     1, 0, 0.5,
+#'     0, 0, 1,
+#'     0, 0, 0
+#'   ), 3, 3, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, NA, NA,
+#'     NA, 100,NA
+#'   ), 3, 3, TRUE),
+#'   names.commodity = c("prod", "cap", "lab"),
+#'   names.agent = c("firm1", "laborer","firm2"),
+#'   numeraire = "prod",
+#'   z0=c(400,200,400),
+#'   policy = list(
+#'     function(time, A) {
+#'       if (time >= 5) {
+#'         node_set(A[[1]],"cc1", a = (1 + 0.03)^-(time - 4))
+#'       }
+#'     },
+#'     policyMarketClearingPrice
+#'   ),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 30,
+#'   ts=TRUE
+#' )
+#'
+#' matplot(growth_rate(ge$ts.z), type="l")
 #' }
 
 gemPersistentTechnologicalProgress <- function(...) sdm2(...)

@@ -2,7 +2,7 @@
 #' @export
 #' @title A General Equilibrium Model with Money
 #' @aliases gemMoney_3_2
-#' @description A general equilibrium model with money.
+#' @description A general equilibrium model with money as a medium of exchange and a means of payment.
 #' @details A general equilibrium model with 3 commodities (i.e. product, labor,
 #' and money) and 2 agents (i.e. a firm and a household).
 #' To produce, the firm needs product, labor and money.

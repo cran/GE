@@ -108,7 +108,7 @@
 #' ge$A
 #' ge$D
 #'
-#' #### a 4-by-4 example with 100 laborers
+#' #### a 4-by-4 example with 100 homogeneous laborers
 #' dst.agri <- node_new(
 #'   "output",
 #'   type = "SCES",
@@ -147,10 +147,11 @@
 #'   names.commodity = c("agri", "manu", "serv", "lab"),
 #'   names.agent = c("agri", "manu", "serv", "consumer"),
 #'   numeraire = "lab",
+#'   z0 = c(1, 1, 1, 0),
 #'   ts = TRUE,
 #'   policy = list(
 #'     function(A, state) {
-#'       util <- state$last.z[4] / 100 #
+#'       util <- state$last.z[4] / 100
 #'       beta1 <- structural_function(util, c(1, 6), 0.6, 0.1)
 #'       beta3 <- structural_function(util, c(1, 6), 0.1, 0.5)
 #'       beta2 <- 1 - beta1 - beta3

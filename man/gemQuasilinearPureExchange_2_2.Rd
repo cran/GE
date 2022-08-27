@@ -39,7 +39,7 @@ demand_consumer2 <- function(p, w) {
   a <- 1.5
   d <- rbind(0, 0)
   w <- w / p[1]
-  p <- p / p[1] # normalize the wealth and prices
+  p <- p / p[1] # take commodity 1 as numeraire
   d[2] <- a / p[2]
   if (d[2] * p[2] > w) {
     d[2] <- w / p[2]
@@ -87,7 +87,7 @@ ge.dstl
 demand_consumer2 <- function(p, w) {
   d <- rbind(0, 0)
   w <- w / p[1]
-  p <- p / p[1] # normalize the wealth and prices
+  p <- p / p[1]
   d[2] <- (2 * p[2])^-2
   if (d[2] * p[2] > w) {
     d[2] <- w / p[2]

@@ -254,7 +254,7 @@ ge.low.level <- sdm2(
   ts = TRUE,
   maxIteration = 1,
   numberOfPeriods = 1000,
-  z0 = c(100, 100)
+  z0 = c(100, 0)
 )
 matplot(ge.low.level$ts.z, type = "l")
 
@@ -266,7 +266,7 @@ ge.high.level <- sdm2(
   ts = TRUE,
   maxIteration = 1,
   numberOfPeriods = 1000,
-  z0 = c(150, 100)
+  z0 = c(150, 0)
 )
 matplot(ge.high.level$ts.z, type = "l")
 
@@ -284,7 +284,7 @@ ge.ST <- sdm2(
   ts = TRUE,
   maxIteration = 1,
   numberOfPeriods = 1000,
-  z0 = c(100, 100)
+  z0 = c(100, 0)
 )
 matplot(ge.ST$ts.z, type = "l")
 
@@ -330,7 +330,7 @@ de <- sdm2(
   names.commodity = c("wheat", "labor", "money"),
   names.agent = c("firm", "laborer", "money.lender"),
   p0 = rbind(0.625, 0.375, 0.25),
-  z0 = rbind(95, 100, 100),
+  z0 = rbind(95, 0, 0),
   priceAdjustmentVelocity = 0.3,
   numberOfPeriods = 1000,
   maxIteration = 1,
@@ -344,7 +344,7 @@ ge.policy <- sdm2(
   names.commodity = c("wheat", "labor", "money"),
   names.agent = c("firm", "laborer", "money.lender"),
   p0 = rbind(0.625, 0.375, 0.25),
-  z0 = rbind(95, 100, 100),
+  z0 = rbind(95, 0, 0),
   priceAdjustmentVelocity = 0.3,
   numberOfPeriods = 1000,
   maxIteration = 1,

@@ -3,6 +3,7 @@
 #' @aliases gem_3_2
 #' @description Some simple 3-by-2 general equilibrium models with a firm and a consumer.
 #' @param ... arguments to be passed to the function sdm2.
+#' @references http://www.econ.ucla.edu/riley/MAE/Course/SolvingForTheWE.pdf
 #' @examples
 #' \donttest{
 #' ge.CD <- sdm2(
@@ -32,6 +33,36 @@
 #' ge.CD$z
 #' ge.CD$D
 #' ge.CD$S
+#'
+#' #### Example 2 in the ucla reference
+#' ## By introducing a new factor of production (called land here)
+#' ## a firm with diminishing returns to scale can be converted into
+#' ## a firm with constant returns to scale.
+#' ge2.CD <- sdm2(
+#'   A = function(state) {
+#'     a.firm <- CD_A(alpha = 6, Beta = c(0, 0.5, 0.5), state$p)
+#'     a.consumer <- CD_A(alpha = 1, Beta = c(0.2, 0.8, 0), state$p)
+#'     cbind(a.firm, a.consumer)
+#'   },
+#'   B = matrix(c(
+#'     1, 0,
+#'     0, 0,
+#'     0, 0
+#'   ), 3, 2, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA,
+#'     NA, 81,
+#'     NA, 1
+#'   ), 3, 2, TRUE),
+#'   names.commodity = c("prod", "lab", "land"),
+#'   names.agent = c("firm", "consumer"),
+#'   numeraire = "prod"
+#' )
+#'
+#' ge2.CD$p
+#' ge2.CD$z
+#' ge2.CD$D
+#' ge2.CD$S
 #'
 #' ####
 #' ge.SCES <- sdm2(

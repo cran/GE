@@ -10,7 +10,7 @@ gemMoney_3_3(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some 3-by-3 general equilibrium models with money.
+Some 3-by-3 general equilibrium models with money as a medium of exchange and a means of payment.
 }
 \examples{
 \donttest{

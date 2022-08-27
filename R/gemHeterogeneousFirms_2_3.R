@@ -31,12 +31,12 @@
 #'   ), 2, 3, TRUE),
 #'   S0Exg = matrix(c(
 #'     NA, NA, NA,
-#'     NA, NA, 1
+#'     NA, NA, 100
 #'   ), 2, 3, TRUE),
 #'   names.commodity = c("prod", "lab"),
 #'   names.agent = c("firm1", "firm2", "consumer"),
 #'   numeraire = "lab",
-#'   z0 = c(0.01, 0.01, 1),
+#'   z0 = c(1, 1, 1),
 #'   ts = TRUE,
 #'   policy = policyMarketClearingPrice,
 #'   numberOfPeriods = 200,

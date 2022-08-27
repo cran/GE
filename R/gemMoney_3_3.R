@@ -1,7 +1,7 @@
 #' @export
 #' @title Some 3-by-3 General Equilibrium Models with Money
 #' @aliases gemMoney_3_3
-#' @description Some 3-by-3 general equilibrium models with money.
+#' @description Some 3-by-3 general equilibrium models with money as a medium of exchange and a means of payment.
 #' @param ... arguments to be passed to the function sdm2.
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
 #' @examples

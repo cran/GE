@@ -4,6 +4,7 @@
 \alias{DCES}
 \alias{DCES_demand}
 \alias{DCES_compensated_demand}
+\alias{DCES_indirect}
 \title{Displaced CES Utility Function and Displaced CES Demand Function}
 \usage{
 DCES(es, beta, xi, x)
@@ -11,6 +12,8 @@ DCES(es, beta, xi, x)
 DCES_demand(es, beta, xi, w, p)
 
 DCES_compensated_demand(es, beta, xi, u, p)
+
+DCES_indirect(es, beta, xi, w, p)
 }
 \arguments{
 \item{es}{the elasticity of substitution.}
@@ -30,20 +33,22 @@ For example, xi[i] > 0 may mean that the household needs to consume at least a c
 \item{u}{a scalar indicating the utility level.}
 }
 \description{
-Compute the displaced CES utility function and the displaced CES demand function (Fullerton, 1989).
+The displaced CES utility function and the displaced CES demand function (Fullerton, 1989).
 }
 \section{Functions}{
 \itemize{
 \item \code{DCES}: Compute the displaced CES utility function (Fullerton, 1989),
-e.g. (beta_1 ^ (1 / es) * (x_1 - xi_1) ^ (1 - 1 / es) +
-beta_2 ^ (1 / es) * (x_2 - xi_2) ^ (1 - 1 / es)) ^ (es / (es - 1)
+e.g. (beta1 ^ (1 / es) * (x1 - xi1) ^ (1 - 1 / es) +
+beta2 ^ (1 / es) * (x2 - xi2) ^ (1 - 1 / es)) ^ (es / (es - 1)
 wherein beta1 + beta2 == 1.
 
 When es==1, the DCES utility function becomes the Stone-Geary utility function.
 
-\item \code{DCES_demand}: Compute the displaced CES demand (Fullerton, 1989).
+\item \code{DCES_demand}: The displaced CES demand function (Fullerton, 1989).
 
-\item \code{DCES_compensated_demand}: Compute the displaced CES compensated demand (Fullerton, 1989).
+\item \code{DCES_compensated_demand}: The displaced CES compensated demand function (Fullerton, 1989).
+
+\item \code{DCES_indirect}: The displaced CES indirect utility function (Fullerton, 1989).
 }}
 
 \examples{
@@ -87,6 +92,41 @@ DCES_compensated_demand(
   u = u,
   p = p
 )
+
+#### A 3-by-3 general equilibrium model
+#### with a DCES utility function.
+lab <- 1 # the amount of labor supplied by each laborer
+n.laborer <- 100 # the number of laborers
+ge <- sdm2(
+  A = function(state) {
+    a.firm.corn <- CD_A(alpha = 1, Beta = c(0, 0.5, 0.5), state$p)
+    a.firm.iron <- CD_A(alpha = 5, Beta = c(0, 0.5, 0.5), state$p)
+    a.laborer <- DCES_demand(
+      es = 0, beta = c(0, 1, 0), xi = c(0.1, 0, 0),
+      w = state$w[3] / n.laborer, p = state$p
+    )
+
+    cbind(a.firm.corn, a.firm.iron, a.laborer)
+  },
+  B = matrix(c(
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 0
+  ), 3, 3, TRUE),
+  S0Exg = matrix(c(
+    NA, NA, NA,
+    NA, NA, NA,
+    NA, NA, lab * n.laborer
+  ), 3, 3, TRUE),
+  names.commodity = c("corn", "iron", "lab"),
+  names.agent = c("firm.corn", "firm.iron", "laborer"),
+  numeraire = "lab",
+  priceAdjustmentVelocity = 0.1
+)
+
+ge$z
+ge$A
+ge$D
 }
 }
 \references{
