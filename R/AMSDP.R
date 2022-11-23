@@ -75,6 +75,23 @@
 #' ge$D
 #' marginal_utility(ge$D[, 1], diag(3), uf1) / ge$p
 #' marginal_utility(ge$D[, 2], diag(3), uf2) / ge$p
+#'
+#' ## the same as above
+#' ge <- gemAssetPricing(
+#'   S = matrix(c(
+#'     1, 5,
+#'     2, 5,
+#'     3, 5
+#'   ), 3, 2, TRUE),
+#'   uf = list(
+#'     uf1, uf2
+#'   ),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000,
+#'   ts = TRUE
+#' )
+#' matplot(ge$ts.p, type = "l")
+#' ge$p
 #' }
 
 AMSDP <- function(x, mp, Cov, gamma = 1, theta = 1) {

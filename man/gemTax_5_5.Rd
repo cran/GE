@@ -11,7 +11,7 @@ gemTax_5_5(...)
 }
 \description{
 A general equilibrium model with tax.
-The model contains 5 types of commodities (i.e. prod1, prod2, labor, capital and tax)
+The model contains 5 types of commodities (i.e. prod1, prod2, labor, capital and tax payment receipts)
 and 5 agents (i.e. firm1, firm2, laborer, capitalist and government).
 }
 \examples{

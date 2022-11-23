@@ -14,7 +14,7 @@ gemSecurityPricing(
 )
 }
 \arguments{
-\item{S}{a supply n-by-m matrix of securities.}
+\item{S}{an n-by-m supply matrix of securities.}
 
 \item{UP}{a unit (security) payoff k-by-n matrix.}
 
@@ -27,7 +27,7 @@ gemSecurityPricing(
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \value{
-A general equilibrium.
+A general equilibrium containing a value marginal utility matrix (VMU).
 }
 \description{
 Compute the equilibrium of a security market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).

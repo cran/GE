@@ -63,6 +63,32 @@
 #'   p = p
 #' )
 #'
+#' #### A 2-by-2 general equilibrium model
+#' #### with a DCES utility function.
+#' ge <- sdm2(
+#'   A = function(state) {
+#'     a.consumer <- DCES_demand(
+#'       es = 2, beta = c(0.2, 0.8), xi = c(1000, 500),
+#'       w = state$w[1], p = state$p
+#'     )
+#'     a.firm <- c(1.1, 0)
+#'     cbind(a.consumer, a.firm)
+#'   },
+#'   B = diag(c(0, 1)),
+#'   S0Exg = matrix(c(
+#'     3500, NA,
+#'     NA, NA
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("corn", "iron"),
+#'   names.agent = c("consumer", "firm"),
+#'   numeraire = "corn"
+#' )
+#'
+#' ge$p
+#' ge$z
+#' ge$A
+#' ge$D
+#'
 #' #### A 3-by-3 general equilibrium model
 #' #### with a DCES utility function.
 #' lab <- 1 # the amount of labor supplied by each laborer

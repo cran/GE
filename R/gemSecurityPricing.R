@@ -2,13 +2,13 @@
 #' @title Compute Security Market Equilibria for Some Simple Cases
 #' @aliases gemSecurityPricing
 #' @description Compute the equilibrium of a security market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
-#' @param S a supply n-by-m matrix of securities.
+#' @param S an n-by-m supply matrix of securities.
 #' @param UP a unit (security) payoff k-by-n matrix.
 #' @param uf a utility function or a utility function list.
 #' @param muf a marginal utility function or a marginal utility function list.
 #' @param ratio_adjust_coef a scalar indicating the adjustment velocity of demand structure.
 #' @param ... arguments to be passed to the function sdm2.
-#' @return  A general equilibrium.
+#' @return  A general equilibrium containing a value marginal utility matrix (VMU).
 #' @references Danthine, J. P., Donaldson, J. (2005, ISBN: 9780123693808) Intermediate Financial Theory. Elsevier Academic Press.
 #' @references Sharpe, William F. (2008, ISBN: 9780691138503) Investors and Markets: Portfolio Choices, Asset Prices, and Investment Advice. Princeton University Press.
 #' @references Wang Jiang (2006, ISBN: 9787300073477) Financial Economics. Beijing: China Renmin University Press. (In Chinese)
@@ -251,7 +251,7 @@ gemSecurityPricing <- function(S = diag(2), UP = diag(nrow(S)),
   )
 
   ge$Payoff <- UP %*% ge$D
-  ge$marginal_utility <- marginal_utility(ge$Payoff, UP, uf = uf, price = ge$p, muf = muf)
+  ge$VMU <- marginal_utility(ge$Payoff, UP, uf = uf, price = ge$p, muf = muf)
 
   ge
 }
