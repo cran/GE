@@ -6,7 +6,7 @@
 #' The difference is that this function uses portfolio utility functions,
 #' while the function gemSecurityPricing uses payoff utility functions.
 #' @param S an n-by-m supply matrix of assets.
-#' @param uf a portfolio utility function or a portfolio utility function list.
+#' @param uf a portfolio utility function or a list of m portfolio utility functions.
 #' @param numeraire	the name, index or price of the numeraire commodity. See \code{\link{sdm2}}.
 #' @param ratio_adjust_coef a scalar indicating the adjustment velocity of demand structure.
 #' @param ... arguments to be passed to the function sdm2.
@@ -17,59 +17,6 @@
 #' @seealso \code{\link{gemSecurityPricing}}.
 #' @examples
 #' \donttest{
-#' #### an example with AMSDP utility function.
-#' set.seed(1)
-#' n <- 5
-#' m <- 3
-#' Supply <- matrix(runif(n * m, 10, 100), n, m)
-#' # the risk aversion coefficient.
-#' gamma <- runif(m, 0.5, 2)
-#'
-#' # predicted mean payoff, which may be gross return rates, price indices or prices.
-#' Pmp <- matrix(runif(n * m, min = 0.8, max = 1.5), n, m)
-#' # predicted standard deviation of payoff
-#' Psd <- matrix(runif(n * m, min = 0.01, max = 0.2), n, m)
-#' Psd[n, ] <- 0
-#'
-#' # Suppose the predicted payoff correlation matrices of agents are the same.
-#' Cor <- cor(matrix(runif(n * n), n, n))
-#' Cor[, n] <- Cor[n, ] <- 0
-#' Cor[n, n] <- 1
-#'
-#' # the list of utility function.
-#' lst.uf <- list()
-#'
-#' make.uf <- function(mp, Cov, gamma) {
-#'   force(mp); force(Cov); force(gamma)
-#'   function(x) {
-#'     AMSDP(x, mp = mp, Cov = Cov, gamma = gamma, theta = 1)
-#'   }
-#' }
-#'
-#' for (k in 1:m) {
-#'   sigma <- Psd[, k]
-#'   if (is.matrix(Cor)) {
-#'     Cov <- dg(sigma) %*% Cor %*% dg(sigma)
-#'   } else {
-#'     Cov <- dg(sigma) %*% Cor[[k]] %*% dg(sigma)
-#'   }
-#'
-#'   lst.uf[[k]] <- make.uf(mp = Pmp[, k], Cov = Cov, gamma = gamma[k])
-#' }
-#'
-#' ge <- gemAssetPricing(
-#'   S = Supply, uf = lst.uf,
-#'   maxIteration = 1,
-#'   numberOfPeriods = 2000,
-#'   policy = makePolicyMeanValue(150),
-#'   ts = TRUE
-#' )
-#'
-#' matplot(ge$ts.p, type = "l")
-#' ge$p
-#' ge$D
-#' ge$VMU
-#'
 #' #### an example of Danthine and Donaldson (2005, section 8.3).
 #' ge <- gemAssetPricing(
 #'   S = matrix(c(
@@ -117,7 +64,6 @@
 #' ge$p[3:4] + 3 * ge$p[2]
 #'
 #' }
-
 
 gemAssetPricing <- function(S, uf,
                             numeraire = nrow(S),

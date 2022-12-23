@@ -1,7 +1,7 @@
-2280fe80b922959a9431595d93194649 *DESCRIPTION
+019342e086ef02d3046535fa01726b8d *DESCRIPTION
 64bd035df7f86fa6ac21c353422d3e61 *NAMESPACE
-cd04293fca60c47897c851108d6ecb80 *R/AMSD.R
-59222ab512e6e7751337b9a7f05d9c3c *R/AMSDP.R
+d788ccef6faec546c64bd1a226ca9be7 *R/AMSD.R
+c3c9fa62227703e75ca3c8e8c743f5dd *R/AMSDP.R
 8f90df80f57ddccd239c5afd1fe06de0 *R/CARA.R
 5aa11f05f0fd8536c2e3a3d4f3a35a32 *R/CES.R
 fc40c03b992bc791737a7a919dffb01c *R/CRRA.R
@@ -13,7 +13,7 @@ db28fa41cbcb78157011d4b8d45aa502 *R/apply_expand.grid.R
 a389c40455fd071673bd19a41a554b69 *R/demCreditPolicy.R
 da003b65f65fb92c9d092d5c49831154 *R/demand_coefficient.R
 c59183142cbca3720d6305b828c00840 *R/ge_tidy.R
-50f7c34b003c1a2063993c9ee041f49a *R/gemAssetPricing.R
+79405918ee63ed39738278adcdf0efa7 *R/gemAssetPricing.R
 6440bf59ce9659f38336bc262772848c *R/gemBalancedGrowthPath.R
 cbc6abf2fba81e632413ecd64ba3fc67 *R/gemCanonicalDynamicMacroeconomic_3_2.R
 1c314c59b735590dbaec8aaa6b3c6565 *R/gemCanonicalDynamicMacroeconomic_4_3.R
@@ -121,8 +121,8 @@ c9563fb7df2b08b1174db684bc47a21e *R/sdm2.R
 d600e5b54f114f852a9893fbe1af05ab *R/sdm_dstl.R
 efec6b82cb43e7a7ba82101e874478e9 *R/structural_function.R
 db30b459e2a837ea1e9ff78be34fb301 *R/var.p.R
-46f8f5350eee67f8237d3a0a7aa28986 *man/AMSD.Rd
-36a8999e1b7cd233e8433c1b2e43536e *man/AMSDP.Rd
+e59f84cb9d144a6efc466ab03e8f6be4 *man/AMSD.Rd
+34e7a8919c071238de55f06bbd12a9f5 *man/AMSDP.Rd
 4ae2f5ea31a518147846cd2139eb2b5b *man/CARA.Rd
 d74dda1c8ad8a1b1ac6b4d8281c1153d *man/CES.Rd
 55480f3a7f798512ba8c04c9a45a8b43 *man/CRRA.Rd
@@ -134,7 +134,7 @@ d74dda1c8ad8a1b1ac6b4d8281c1153d *man/CES.Rd
 a9d2074754a08c118be2bb8cf0d73cf3 *man/demCreditPolicy.Rd
 de6872a72a6a7331c40b6c4b47df6dc0 *man/demand_coefficient.Rd
 4028b938747a7b65e5a68aba7c74ce26 *man/ge_tidy.Rd
-6571b991bd581ba206ca318805234481 *man/gemAssetPricing.Rd
+e57f3ad792182a6ee6a00be6529439c6 *man/gemAssetPricing.Rd
 4b297356dfe087c4c5c5082c1e7bf145 *man/gemBalancedGrowthPath.Rd
 56ec1ebf97a33157a55aff8fadd9778c *man/gemCanonicalDynamicMacroeconomic_3_2.Rd
 2f3adaa1b63caab682e9211dbeaded45 *man/gemCanonicalDynamicMacroeconomic_4_3.Rd
