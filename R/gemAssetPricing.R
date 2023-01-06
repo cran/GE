@@ -7,7 +7,7 @@
 #' while the function gemSecurityPricing uses payoff utility functions.
 #' @param S an n-by-m supply matrix of assets.
 #' @param uf a portfolio utility function or a list of m portfolio utility functions.
-#' @param numeraire	the name, index or price of the numeraire commodity. See \code{\link{sdm2}}.
+#' @param numeraire	the index of the numeraire commodity.
 #' @param ratio_adjust_coef a scalar indicating the adjustment velocity of demand structure.
 #' @param ... arguments to be passed to the function sdm2.
 #' @return  A general equilibrium containing a value marginal utility matrix (VMU).
@@ -63,6 +63,171 @@
 #' ge$p
 #' ge$p[3:4] + 3 * ge$p[2]
 #'
+#' #### a 3-by-2 example of asset pricing with two heterogeneous agents who
+#' ## have different beliefs and predict different payoff vectors.
+#' ## the predicted payoff vectors of agent 1 on the two assets.
+#' asset1.1 <- c(1, 2, 2, 0)
+#' asset2.1 <- c(2, 2, 0, 2)
+#'
+#' ## the predicted payoff vectors of agent 2 on the two assets.
+#' asset1.2 <- c(1, 0, 2, 0)
+#' asset2.2 <- c(2, 1, 0, 2)
+#'
+#' asset3 <- c(1, 1, 1, 1)
+#'
+#' ## the unit (asset) payoff matrix of agent 1.
+#' UP1 <- cbind(asset1.1, asset2.1, asset3)
+#'
+#' ## the unit (asset) payoff matrix of agent 2.
+#' UP2 <- cbind(asset1.2, asset2.2, asset3)
+#'
+#' mp1 <- colMeans(UP1)
+#' Cov1 <- cov.wt(UP1, method = "ML")$cov
+#'
+#' mp2 <- colMeans(UP2)
+#' Cov2 <- cov.wt(UP2, method = "ML")$cov
+#'
+#' ge <- gemAssetPricing(
+#'   S = matrix(c(
+#'     1, 5,
+#'     2, 5,
+#'     3, 5
+#'   ), 3, 2, TRUE),
+#'   uf = list(
+#'     # the utility function of agent 1.
+#'     function(x) AMSDP(x, mp1, Cov1, gamma = 0.2, theta = 2),
+#'     function(x) AMSDP(x, mp2, Cov2) # the utility function of agent 2.
+#'   ),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 1000,
+#'   ts = TRUE
+#' )
+#' matplot(ge$ts.p, type = "l")
+#' ge$p
+#' ge$VMU
+#'
+#' #### another 3-by-2 example.
+#' asset1.1 <- c(0, 0, 1, 1, 2)
+#' asset2.1 <- c(1, 2, 1, 2, 0)
+#' asset3.1 <- c(1, 1, 1, 1, 1)
+#'
+#' asset1.2 <- c(0, 0, 1, 2)
+#' asset2.2 <- c(1, 2, 2, 1)
+#' asset3.2 <- c(1, 1, 1, 1)
+#'
+#' ## the unit asset payoff matrix of agent 1.
+#' UP1 <- cbind(asset1.1, asset2.1, asset3.1)
+#'
+#' ## the unit asset payoff matrix of agent 2.
+#' UP2 <- cbind(asset1.2, asset2.2, asset3.2)
+#'
+#' mp1 <- colMeans(UP1)
+#' Cov1 <- cov.wt(UP1, method = "ML")$cov
+#'
+#' mp2 <- colMeans(UP2)
+#' Cov2 <- cov.wt(UP2, method = "ML")$cov
+#'
+#' ge <- gemAssetPricing(
+#'   S = matrix(c(
+#'     1, 5,
+#'     2, 5,
+#'     3, 5
+#'   ), 3, 2, TRUE),
+#'   uf = list(
+#'     # the utility function of agent 1.
+#'     function(x) AMSDP(x, mp1, Cov1),
+#'     function(x) AMSDP(x, mp2, Cov2) # the utility function of agent 2.
+#'   ),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 3000,
+#'   ts = TRUE
+#' )
+#'
+#' ge$p
+#' ge$D
+#'
+#' #### a 5-by-3 example.
+#' set.seed(1)
+#' n <- 5 # the number of asset types
+#' m <- 3 # the number of agents
+#' Supply <- matrix(runif(n * m, 10, 100), n, m)
+#'
+#' # the risk aversion coefficients of agents.
+#' gamma <- runif(m, 0.25, 1)
+#'
+#' # predicted mean payoff, which may be gross return rates, price indices or prices.
+#' PMP <- matrix(runif(n * m, min = 0.8, max = 1.5), n, m)
+#'
+#' # predicted standard deviation of payoff
+#' PSD <- matrix(runif(n * m, min = 0.01, max = 0.2), n, m)
+#' PSD[n, ] <- 0
+#'
+#' # Suppose the predicted payoff correlation matrices of agents are the same.
+#' Cor <- cor(matrix(runif(2 * n^2), 2 * n, n))
+#' Cor[, n] <- Cor[n, ] <- 0
+#' Cor[n, n] <- 1
+#'
+#' # the list of utility functions.
+#' lst.uf <- list()
+#'
+#' make.uf <- function(mp, Cov, gamma) {
+#'   force(mp)
+#'   force(Cov)
+#'   force(gamma)
+#'   function(x) {
+#'     AMSDP(x, mp = mp, Cov = Cov, gamma = gamma, theta = 1)
+#'   }
+#' }
+#'
+#' for (k in 1:m) {
+#'   sigma <- PSD[, k]
+#'   if (is.matrix(Cor)) {
+#'     Cov <- dg(sigma) %*% Cor %*% dg(sigma)
+#'   } else {
+#'     Cov <- dg(sigma) %*% Cor[[k]] %*% dg(sigma)
+#'   }
+#'
+#'   lst.uf[[k]] <- make.uf(mp = PMP[, k], Cov = Cov, gamma = gamma[k])
+#' }
+#'
+#' ge <- gemAssetPricing(
+#'   S = Supply, uf = lst.uf,
+#'   maxIteration = 1,
+#'   numberOfPeriods = 2000,
+#'   priceAdjustmentVelocity = 0.05,
+#'   policy = makePolicyMeanValue(150),
+#'   ts = TRUE
+#' )
+#'
+#' matplot(ge$ts.p, type = "l")
+#' ge$p
+#' ge$D
+#' ge$VMU
+#'
+#' #### a 2-by-2 example with outside position.
+#' asset1 <- c(1, 0, 0)
+#' asset2 <- c(0, 1, 1)
+#'
+#' # unit (asset) payoff matrix
+#' UP <- cbind(asset1, asset2)
+#' wt <- c(0.5, 0.25, 0.25) # weights
+#'
+#' uf1 <- function(portfolio) prod((UP %*% portfolio + c(0, 0, 2))^wt)
+#' uf2 <- function(portfolio) prod((UP %*% portfolio)^wt)
+#'
+#' ge <- gemAssetPricing(
+#'   S = matrix(c(
+#'     1, 1,
+#'     0, 2
+#'   ), 2, 2, TRUE),
+#'   uf = list(uf1, uf2),
+#'   numeraire = 1
+#' )
+#'
+#' ge$p
+#' ge$z
+#' uf1(ge$D[,1])
+#' uf2(ge$D[,2])
 #' }
 
 gemAssetPricing <- function(S, uf,
@@ -84,7 +249,6 @@ gemAssetPricing <- function(S, uf,
       A <- state$last.A * ratio_adjust(Ratio, coef = ratio_adjust_coef, method = "linear")
 
       prop.table(A, 2)
-      A
     },
     B = matrix(0, n, m),
     S0Exg = S,

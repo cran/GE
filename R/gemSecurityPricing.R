@@ -1,12 +1,13 @@
 #' @export
 #' @title Compute Security Market Equilibria for Some Simple Cases
 #' @aliases gemSecurityPricing
-#' @description Compute the equilibrium of a security market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
+#' @description Compute the equilibrium of a security (i.e. asset) market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
 #' @param S an n-by-m supply matrix of securities.
 #' @param UP a unit (security) payoff k-by-n matrix.
 #' @param uf a utility function or a utility function list.
 #' @param muf a marginal utility function or a marginal utility function list.
 #' @param ratio_adjust_coef a scalar indicating the adjustment velocity of demand structure.
+#' @param numeraire	the index of the numeraire commodity.
 #' @param ... arguments to be passed to the function sdm2.
 #' @return  A general equilibrium containing a value marginal utility matrix (VMU).
 #' @references Danthine, J. P., Donaldson, J. (2005, ISBN: 9780123693808) Intermediate Financial Theory. Elsevier Academic Press.
@@ -135,6 +136,32 @@
 #' geSharpe4$p
 #' geSharpe4$p[3:4] + 3 * geSharpe4$p[2]
 #'
+#' ## an example of Sharpe (2008, chapter 6, case 14)
+#' prob1 <- c(0.15, 0.26, 0.31, 0.28)
+#' wt1 <- prop.table(c(1, 0.96 * prob1))
+#' prob2 <- c(0.08, 0.23, 0.28, 0.41)
+#' wt2 <- prop.table(c(1, 0.96 * prob2))
+#'
+#' uf1 <- function(x) CES(alpha = 1, beta = wt1, x = x, es = 1 / 1.5)
+#' uf2 <- function(x) CES(alpha = 1, beta = wt2, x = x, es = 1 / 2.5)
+#' geSharpe14 <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     49, 49,
+#'     30, 30,
+#'     10, 0,
+#'     0, 10
+#'   ), 4, 2, TRUE),
+#'   UP = UP,
+#'   uf = list(uf1,uf2)
+#' )
+#'
+#' geSharpe14$D
+#' geSharpe14$p
+#' geSharpe14$p[3:4] + 3 * geSharpe14$p[2]
+#' mu <- marginal_utility(geSharpe14$Payoff, diag(5),uf=list(uf1,uf2))
+#' mu[,1]/mu[1,1]
+#' mu[,2]/mu[1,2]
+#'
 #' #### an example of Wang (2006, example 10.1, P146)
 #' geWang <- gemSecurityPricing(
 #'   S = matrix(c(
@@ -214,12 +241,39 @@
 #'
 #' ge.b$p
 #' matplot(ge.b$ts.p, type = "l")
+#'
+#' #### an example with outside position.
+#' asset1 <- c(1, 0, 0)
+#' asset2 <- c(0, 1, 1)
+#'
+#' # unit (asset) payoff matrix
+#' UP <- cbind(asset1, asset2)
+#' wt <- c(0.5, 0.25, 0.25) # weights
+#'
+#' uf1 <- function(x) prod((x + c(0, 0, 2))^wt)
+#' uf2 <- function(x) prod(x^wt)
+#'
+#' ge <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     1, 1,
+#'     0, 2
+#'   ), 2, 2, TRUE),
+#'   UP = UP,
+#'   uf = list(uf1, uf2),
+#'   numeraire = 1
+#' )
+#'
+#' ge$p
+#' ge$z
+#' uf1(ge$Payoff[,1])
+#' uf2(ge$Payoff[,2])
 #' }
 #'
 gemSecurityPricing <- function(S = diag(2), UP = diag(nrow(S)),
                                uf = NULL,
                                muf = NULL,
                                ratio_adjust_coef = 0.05,
+                               numeraire = 1,
                                ...) {
   n <- nrow(S)
   m <- ncol(S)
@@ -246,7 +300,7 @@ gemSecurityPricing <- function(S = diag(2), UP = diag(nrow(S)),
     S0Exg = S,
     names.commodity = paste0("secy", 1:n),
     names.agent = paste0("agt", 1:m),
-    numeraire = "secy1",
+    numeraire = numeraire,
     ...
   )
 

@@ -1,4 +1,4 @@
-019342e086ef02d3046535fa01726b8d *DESCRIPTION
+4b782dbd3611eef51350936ab08d75f9 *DESCRIPTION
 64bd035df7f86fa6ac21c353422d3e61 *NAMESPACE
 d788ccef6faec546c64bd1a226ca9be7 *R/AMSD.R
 c3c9fa62227703e75ca3c8e8c743f5dd *R/AMSDP.R
@@ -13,7 +13,7 @@ db28fa41cbcb78157011d4b8d45aa502 *R/apply_expand.grid.R
 a389c40455fd071673bd19a41a554b69 *R/demCreditPolicy.R
 da003b65f65fb92c9d092d5c49831154 *R/demand_coefficient.R
 c59183142cbca3720d6305b828c00840 *R/ge_tidy.R
-79405918ee63ed39738278adcdf0efa7 *R/gemAssetPricing.R
+47da26358033f761288d1bdfd7612305 *R/gemAssetPricing.R
 6440bf59ce9659f38336bc262772848c *R/gemBalancedGrowthPath.R
 cbc6abf2fba81e632413ecd64ba3fc67 *R/gemCanonicalDynamicMacroeconomic_3_2.R
 1c314c59b735590dbaec8aaa6b3c6565 *R/gemCanonicalDynamicMacroeconomic_4_3.R
@@ -71,8 +71,8 @@ a82070f62408199ab0a3eeaa451f04ab *R/gemOpenEconomy_4_4.R
 9fb8b916a03689cbc8316f8bce5d24c0 *R/gemPersistentTechnologicalProgress.R
 712461f90cfa6b6f98e23da4e16f44df *R/gemQuasilinearPureExchange_2_2.R
 8edbe34c09bc37287d87cf7ac88f0875 *R/gemRobinson_3_2.R
-2461b4789dda5b7fe806858fa3f94b76 *R/gemSecurityPricing.R
-099f795fd4db87bb462c847f657966d9 *R/gemSecurityPricingExample.R
+df4e85709234176e6b2eaf88a231d123 *R/gemSecurityPricing.R
+ae7931042246da0a09e3481fe5d114d1 *R/gemSecurityPricingExample.R
 f8a553fcee385f9a2890adda98887f3c *R/gemTax_3_3.R
 5a0d6962db99dcf4648687c458d0a369 *R/gemTax_5_4.R
 b026c93ccc0c7ffb1e8f9ed700bc0221 *R/gemTax_5_5.R
@@ -134,7 +134,7 @@ d74dda1c8ad8a1b1ac6b4d8281c1153d *man/CES.Rd
 a9d2074754a08c118be2bb8cf0d73cf3 *man/demCreditPolicy.Rd
 de6872a72a6a7331c40b6c4b47df6dc0 *man/demand_coefficient.Rd
 4028b938747a7b65e5a68aba7c74ce26 *man/ge_tidy.Rd
-e57f3ad792182a6ee6a00be6529439c6 *man/gemAssetPricing.Rd
+fc46fec9d7a271c936918fb29bcc4a9a *man/gemAssetPricing.Rd
 4b297356dfe087c4c5c5082c1e7bf145 *man/gemBalancedGrowthPath.Rd
 56ec1ebf97a33157a55aff8fadd9778c *man/gemCanonicalDynamicMacroeconomic_3_2.Rd
 2f3adaa1b63caab682e9211dbeaded45 *man/gemCanonicalDynamicMacroeconomic_4_3.Rd
@@ -192,8 +192,8 @@ e228a3ad72019d4bbe326a32cbeb9e88 *man/gemOpenEconomy_4_4.Rd
 82e6ebd66cbdf273799d7b833e3ad664 *man/gemPersistentTechnologicalProgress.Rd
 a1737fde796180f1f8a2f4e87bd32537 *man/gemQuasilinearPureExchange_2_2.Rd
 2a88b86603b6404ebfb4f9f84a663e61 *man/gemRobinson_3_2.Rd
-0ab08263bd1fc0cbb7d054b15885ce4e *man/gemSecurityPricing.Rd
-e6e78d16458a7112f2391c15016cc850 *man/gemSecurityPricingExample.Rd
+b536ba7eb5ad7264d07219de5fa8ac87 *man/gemSecurityPricing.Rd
+af0c042ec5ad06e55d424e0c671eb53a *man/gemSecurityPricingExample.Rd
 b435d24aceb6fbbb327fd2f8e3f8b552 *man/gemTax_3_3.Rd
 2029157facaead814312b8dd934ea266 *man/gemTax_5_4.Rd
 a81f5616f1c6fd0be468526daaaee6e7 *man/gemTax_5_5.Rd

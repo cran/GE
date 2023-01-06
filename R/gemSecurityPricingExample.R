@@ -1,7 +1,7 @@
 #' @export
 #' @title Some Examples of Security Pricing
 #' @aliases gemSecurityPricingExample
-#' @description These examples illustrate how to find the equilibrium of a security market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
+#' @description These examples illustrate how to find the equilibrium of a security (i.e. asset) market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
 #' @param ... arguments to be passed to the function sdm2.
 #' @return  A general equilibrium.
 #' @references Danthine, J. P., Donaldson, J. (2005, ISBN: 9780123693808) Intermediate Financial Theory. Elsevier Academic Press.
@@ -146,6 +146,119 @@
 #' )
 #'
 #' ge$p
+#'
+#' #### an example with production.
+#' asset1 <- c(1, 0, 0, 0, 0, 0)
+#' asset2 <- c(0, 1, 0, 0, 0, 0)
+#' asset3 <- c(0, 0, 1, 3, 1, 2)
+#' asset4 <- c(0, 0, 4, 2, 6, 2)
+#' asset5 <- c(0, 0, 1, 0, 2, 0)
+#'
+#' # unit (asset) payoff matrix
+#' UP <- cbind(asset1, asset2, asset3, asset4, asset5)
+#'
+#' muf1 <- function(x) 1 / x
+#' muf2 <- function(x) 1 / x * c(0.4, 0.1, 0.2, 0.05, 0.2, 0.05)
+#'
+#' ge <- sdm2(
+#'   A = function(state) {
+#'     Payoff <- UP %*% (state$last.A[, 1:2] %*% dg(state$last.z[1:2]))
+#'
+#'     VMU <- marginal_utility(Payoff, UP, muf = list(muf1, muf2), price = state$p)
+#'     Ratio <- sweep(VMU, 2, colMeans(VMU), "/")
+#'
+#'     A <- state$last.A[, 1:2] * ratio_adjust(Ratio, coef = 0.15, method = "linear")
+#'     A <- prop.table(A, 2)
+#'
+#'     a.firm <- CD_A(alpha = 4, Beta = c(0.5, 0.5, 0, 0, 0), state$p)
+#'     A <- cbind(A, a.firm)
+#'   },
+#'   B = matrix(c(
+#'     0, 0, 0,
+#'     0, 0, 0,
+#'     0, 0, 0,
+#'     0, 0, 0,
+#'     0, 0, 1
+#'   ), 5, 3, TRUE),
+#'   S0Exg = matrix(c(
+#'     1, 1, NA,
+#'     1, 2, NA,
+#'     1, NA, NA,
+#'     NA, 1, NA,
+#'     NA, NA, NA
+#'   ), 5, 3, TRUE),
+#'   names.commodity = c("asset1", "asset2", "asset3", "asset4", "asset5"),
+#'   names.agent = c("consumer1", "consumer2", "firm"),
+#'   numeraire = "asset1"
+#' )
+#'
+#' ge$p
+#' ge$z
+#'
+#' #### an example with demand structure trees.
+#' asset1 <- c(1, 0, 0, 0, 0)
+#' asset2 <- c(0, 1, 3, 1, 2)
+#' asset3 <- c(0, 2, 1, 3, 1)
+#'
+#' # unit payoff matrix
+#' UP <- cbind(asset1, asset2, asset3)
+#'
+#' dst.consumer1 <- node_new("util",
+#'                           type = "CES", es = 0.5, alpha = 1, beta = c(0.5, 0.5),
+#'                           "x1", "u2"
+#' )
+#' node_set(dst.consumer1, "u2",
+#'          type = "CES", es = 0.8, alpha = 1, beta = c(0.6, 0.4),
+#'          "u2.1", "u2.2"
+#' )
+#' node_set(dst.consumer1, "u2.1",
+#'          type = "CES", es = 1, alpha = 1, beta = c(0.8, 0.2),
+#'          "x2", "x3"
+#' )
+#' node_set(dst.consumer1, "u2.2",
+#'          type = "CES", es = 1, alpha = 1, beta = c(0.8, 0.2),
+#'          "x4", "x5"
+#' )
+#'
+#' dst.consumer2 <- node_new("util",
+#'                           type = "CES", es = 0.5, alpha = 1, beta = c(0.5, 0.5),
+#'                           "x1", "u2"
+#' )
+#' node_set(dst.consumer2, "u2",
+#'          type = "CES", es = 0.8, alpha = 1, beta = c(0.6, 0.4),
+#'          "u2.1", "u2.2"
+#' )
+#' node_set(dst.consumer2, "u2.1",
+#'          type = "CES", es = 1, alpha = 1, beta = c(0.2, 0.8),
+#'          "x2", "x3"
+#' )
+#' node_set(dst.consumer2, "u2.2",
+#'          type = "CES", es = 1, alpha = 1, beta = c(0.2, 0.8),
+#'          "x4", "x5"
+#' )
+#'
+#' uf1 <- function(x) {
+#'   names(x) <- paste0("x", seq_along(x))
+#'   output(dst.consumer1, x)
+#' }
+#'
+#' uf2 <- function(x) {
+#'   names(x) <- paste0("x", seq_along(x))
+#'   output(dst.consumer2, x)
+#' }
+#'
+#' ge <- gemSecurityPricing(
+#'   S = matrix(c(
+#'     3, 3,
+#'     1, 0,
+#'     0, 2
+#'   ), 3, 2, TRUE),
+#'   UP = UP,
+#'   uf = list(uf1, uf2)
+#' )
+#'
+#' ge$p
+#' ge$z
 #' }
 
 gemSecurityPricingExample <- function(...) sdm2(...)
