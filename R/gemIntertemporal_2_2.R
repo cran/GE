@@ -1,7 +1,8 @@
 #' @export
 #' @title Some Examples of a 2-by-2 Intertemporal Equilibrium Model
 #' @aliases gemIntertemporal_2_2
-#' @description Some examples of a 2-by-2 intertemporal equilibrium model.
+#' @description Some examples of an intertemporal equilibrium model with two types of commodities and
+#' two types of agents.
 #'
 #' In these examples, there is an np-period-lived consumer maximizing intertemporal utility,
 #' and there is a type of firm which produces from period 1 to np-1.

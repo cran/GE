@@ -39,4 +39,13 @@ node_plot(dst, TRUE)
 p <- c(wheat = 1, iron = 3, labor = 2, capital = 4)
 x <-demand_coefficient(dst, p)
 output(dst, x)
+
+output(dst, c(wheat = 3, iron = 3, labor = 3, capital = 3))
+SCES(
+  es = 0, alpha = 1, beta = c(0.5, 0.5),
+  x = c(
+    min(3 / 0.6, 3 / 0.4),
+    SCES(es = 0.5, alpha = 1, beta = c(0.5, 0.5), x = c(3, 3))
+  )
+)
 }

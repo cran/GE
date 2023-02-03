@@ -75,7 +75,7 @@
 #'   "sector.FT.agri", "sector.FT.manu", "sector.FT.serv", "sector.FT.bond.ROW"
 #' )
 #'
-#'
+#' # initial equilibrium
 #' ge <- gemInputOutputTable_8_8(
 #'   IT = IT17,
 #'   OT = OT17

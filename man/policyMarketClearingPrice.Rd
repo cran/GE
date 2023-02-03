@@ -4,7 +4,7 @@
 \alias{policyMarketClearingPrice}
 \title{Market-Clearing-Price Policy Function}
 \usage{
-policyMarketClearingPrice(time, A, state)
+policyMarketClearingPrice(time, A, state, ...)
 }
 \arguments{
 \item{time}{the current time.}
@@ -12,6 +12,8 @@ policyMarketClearingPrice(time, A, state)
 \item{A}{a demand structure tree list (i.e. dstl, see demand_coefficient), a demand coefficient n-by-m matrix (alias demand structure matrix) or a function A(state) which returns an n-by-m matrix.}
 
 \item{state}{the current state.}
+
+\item{...}{optional arguments to be passed to the function sdm2.}
 }
 \value{
 A list consisting of p, S and B which specify the prices, supplies and supply coefficient matrix after adjustment.
@@ -20,7 +22,6 @@ A list consisting of p, S and B which specify the prices, supplies and supply co
 This policy is to make the market clear every period.
 In this case, the path of the economy is the market clearing path (alias instantaneous equilibrium path, temporary equilibrium path).
 Generally, this function is passed to the function sdm2 as an argument to compute the market clearing path.
-And in this case, the argument A of the function sdm2 must be a demand structure tree list.
 }
 \examples{
 \donttest{

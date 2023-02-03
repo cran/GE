@@ -4,10 +4,10 @@
 #' @description This policy is to make the market clear every period.
 #' In this case, the path of the economy is the market clearing path (alias instantaneous equilibrium path, temporary equilibrium path).
 #' Generally, this function is passed to the function sdm2 as an argument to compute the market clearing path.
-#' And in this case, the argument A of the function sdm2 must be a demand structure tree list.
 #' @param time the current time.
 #' @param A a demand structure tree list (i.e. dstl, see demand_coefficient), a demand coefficient n-by-m matrix (alias demand structure matrix) or a function A(state) which returns an n-by-m matrix.
 #' @param state the current state.
+#' @param ... optional arguments to be passed to the function sdm2.
 #' @return A list consisting of p, S and B which specify the prices, supplies and supply coefficient matrix after adjustment.
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
 #' @references Grandmont, J.M. (1977). Temporary General Equilibrium Theory. Econometrica 45, 535-572.
@@ -142,11 +142,12 @@
 #' matplot(ge$ts.p, type = "o", pch = 20)
 #' }
 
-policyMarketClearingPrice <- function(time, A, state) {
+policyMarketClearingPrice <- function(time, A, state, ...) {
   instantaneous.equilibrium <- sdm2(A,
                                     B = 0 * state$S, S0Exg = state$S,
                                     names.commodity = state$names.commodity,
-                                    names.agent = state$names.agent
+                                    names.agent = state$names.agent,
+                                    ...
   )
   state$p <- instantaneous.equilibrium$p
   state

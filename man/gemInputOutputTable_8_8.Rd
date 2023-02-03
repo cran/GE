@@ -107,7 +107,7 @@ colnames(IT17) <- colnames(OT17) <- c(
   "sector.FT.agri", "sector.FT.manu", "sector.FT.serv", "sector.FT.bond.ROW"
 )
 
-
+# initial equilibrium
 ge <- gemInputOutputTable_8_8(
   IT = IT17,
   OT = OT17

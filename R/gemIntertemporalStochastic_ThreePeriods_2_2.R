@@ -1,10 +1,10 @@
 #' @export
-#' @title An Intertemporal Model with Uncertainty
-#' @aliases gemIntertemporal_Stochastic_2_2
-#' @description An intertemporal model with uncertainty.
-#' In the model the consumer will live for three periods and has a von Neumann-Morgenstern expected utility function.
-#' There is one natural state in the first period,
-#' and two natural states in the second and third period.
+#' @title A Three-Period Intertemporal Stochastic Equilibrium Model with a Consumer and a Type of Firm
+#' @aliases gemIntertemporalStochastic_ThreePeriods_2_2
+#' @description An intertemporal stochastic equilibrium model of three periods with a consumer and a type of firm.
+#' The consumer will live for three periods and has a von Neumann-Morgenstern expected utility function.
+#' There is one natural state in the first period, two natural states in the second period and
+#' two natural states in the third period.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
@@ -74,4 +74,4 @@
 #' ge$SV
 #' }
 
-gemIntertemporal_Stochastic_2_2 <- function(...) sdm2(...)
+gemIntertemporalStochastic_ThreePeriods_2_2 <- function(...) sdm2(...)

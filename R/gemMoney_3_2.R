@@ -52,7 +52,7 @@
 #'   es = 0 # es is the elasticity of substitution.
 #' )
 #'
-#' node_plot(dst.SCES.firm)
+#' node_plot(dst.SCES.firm, TRUE)
 #'
 #' dstl.SCES <- list(dst.SCES.firm, dst.household)
 #'

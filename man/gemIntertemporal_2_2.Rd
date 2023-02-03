@@ -10,7 +10,8 @@ gemIntertemporal_2_2(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of a 2-by-2 intertemporal equilibrium model.
+Some examples of an intertemporal equilibrium model with two types of commodities and
+two types of agents.
 
 In these examples, there is an np-period-lived consumer maximizing intertemporal utility,
 and there is a type of firm which produces from period 1 to np-1.

@@ -10,7 +10,7 @@ demCreditPolicy(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-This is an example to illustrate that credit policies may lead to business cycles.
+These are some examples to illustrate that credit policies may lead to business cycles.
 When the firm's profit rate is high, the laborer lends labor or labor income to the firm; when the firm's profit rate is low, the firm repays the loan with products.
 }
 \examples{
@@ -51,7 +51,7 @@ f <- function(policy = NULL) {
 }
 
 ## no credit policy
-f()
+ge <- f()
 
 ## credit policy
 policy.credit <- function(time, state) {
@@ -63,15 +63,84 @@ policy.credit <- function(time, state) {
   } else if (profit.rate < -0.01) {
     state$S[1, 2] <- state$S[1, 1] * 0.5
     state$S[1, 1] <- state$S[1, 1] * 0.5
-  } else {
-    state$S[2, 2] <- 100
-    state$S[2, 1] <- 0
   }
 
   state
 }
 
-f(policy = policy.credit)
+de <- f(policy = policy.credit)
 
+#### an example with 3 firms.
+policy.credit <- function(time, state) {
+  if (time <= 10) {
+    return(state)
+  }
+  profit.rate <- state$p[1] / sum(state$last.A[, 1] * state$p) - 1
+
+  if (profit.rate > 0.01) {
+    state$S[3, 1] <- 30
+    # state$S[3, 1:3] <- 10
+    state$S[3, 4] <- 70
+  } else if (profit.rate < -0.01) {
+    state$S[1, 4] <- state$S[1, 1] * 0.3
+    state$S[1, 1] <- state$S[1, 1] * 0.7
+  }
+
+  state
+}
+
+f <- function(policy = NULL,
+              numberOfPeriods = 50) {
+  ge <- sdm2(
+    A = function(state) {
+      a.firm.prod <- CD_A(alpha = 1, Beta = c(0, 0.5, 0.5, 0), state$p)
+      a.firm.cap1 <- c(1, 0, 0.1, 0)
+      a.firm.cap2 <- c(0, 0, 0.1, 1)
+      a.consumer <- c(1, 0, 0, 0)
+      cbind(a.firm.prod, a.firm.cap1, a.firm.cap2, a.consumer)
+    },
+    B = matrix(c(
+      1, 0, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 0,
+      0, 1, 0, 0
+    ), 4, 4, TRUE),
+    S0Exg = {
+      tmp <- matrix(NA, 4, 4)
+      tmp[3, 4] <- 100
+      tmp
+    },
+    names.commodity = c("prod", "cap2", "lab", "cap1"),
+    names.agent = c("firm.prod", "firm.cap1", "firm.cap2", "consumer"),
+    numeraire = "lab",
+    maxIteration = 1,
+    numberOfPeriods = numberOfPeriods,
+    ts = TRUE,
+    p0 = c(4.191, 4.391, 1, 4.291),
+    # The equilibrium output of firm.prod is 45.64.
+    z0 = c(50, 21.78, 21.78, 23.86),
+    policy = policy
+  )
+
+  matplot(ge$ts.z, type = "o", pch = 20)
+  ge
+}
+
+## disequilibrium path
+de <- f(numberOfPeriods = 500)
+
+## market-clearing path converging to equilibrium
+ge <- f(
+  policy = policyMarketClearingPrice,
+  numberOfPeriods = 40
+)
+ge$p
+ge$z
+
+## market-clearing path with persisting fluctuations
+de <- f(policy = list(
+  policy.credit,
+  policyMarketClearingPrice
+))
 }
 }

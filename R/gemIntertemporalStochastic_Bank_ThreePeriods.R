@@ -1,6 +1,6 @@
 #' @export
 #' @title An Intertemporal Stochastic Model with a Consumer and Some Banks
-#' @aliases gemIntertemporalStochastic_Bank_3Periods
+#' @aliases gemIntertemporalStochastic_Bank_ThreePeriods
 #' @description An intertemporal stochastic model with a consumer and some banks.
 #' In the model the consumer will live for three periods.
 #' There is one natural state in the first period,
@@ -118,4 +118,4 @@
 #' round(ge2.3$S, 4)
 #' }
 
-gemIntertemporalStochastic_Bank_3Periods <- function(...) sdm2(...)
+gemIntertemporalStochastic_Bank_ThreePeriods <- function(...) sdm2(...)

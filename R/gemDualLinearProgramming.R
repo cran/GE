@@ -8,9 +8,9 @@
 #' The Dakota Furniture Company manufactures desks, tables, and chairs.
 #' The manufacture of each type of furniture requires lumber and two types of skilled labor: finishing and carpentry.
 #' The amount of each resource needed to make each type of furniture is as follows: \cr
-#'   desk: c(8, 4, 2)\cr
-#'   table: c(6, 2, 1.5)\cr
-#'   chair: c(1, 1.5, 0.5)\cr
+#'   desk: (8, 4, 2)\cr
+#'   table: (6, 2, 1.5)\cr
+#'   chair: (1, 1.5, 0.5)\cr
 #' Currently, 48 board feet of lumber, 20 finishing hours, and 8 carpentry hours are available.
 #' A desk sells for $60, a table for $30, and a chair for $20.
 #' Because the available resources have already been purchased, Dakota wants to maximize total revenue.
@@ -25,7 +25,7 @@
 #' @references Winston, Wayne L. (2003, ISBN: 9780534380588) Operations Research: Applications and Algorithms. Cengage Learning.
 #' @references http://web.mit.edu/15.053/www/AMP-Chapter-04.pdf
 #' @references https://web.stanford.edu/~ashishg/msande111/notes/chapter4.pdf
-#' @references https://www.me.utexas.edu/~jensen/ORMM/supplements/methods/lpmethod/S3_dual.pdf
+#' @references https://utw11041.utweb.utexas.edu/ORMM/supplements/methods/lpmethod/S3_dual.pdf
 #' @references Stapel, Elizabeth. Linear Programming: Introduction. Purplemath. Available from https://www.purplemath.com/modules/linprog.htm
 #' @examples
 #' \donttest{
@@ -49,7 +49,7 @@
 #' }
 #'
 #' ## Compute the equilibrium by the function CGE::sdm.
-#' ge <- gemDualLinearProgramming(A = A, B = B, S0Exg = S0Exg)
+#' ge <- CGE::sdm(A = A, B = B, S0Exg = S0Exg)
 #'
 #' ge$p / ge$p[1]
 #' ge$z
@@ -66,24 +66,6 @@
 #'
 #' ge$z
 #' ge$p
-#'
-#' ## Compute the general equilibrium above and
-#' ## the market-clearing path by the function sdm2.
-#' ## Warning: time consuming.
-#' ge2 <- sdm2(
-#'   A = A, B = B, S0Exg = S0Exg,
-#'   policy = makePolicyStickyPrice(stickiness = 0, tolCond = 1e-4),
-#'   maxIteration = 1,
-#'   numberOfPeriods = 60,
-#'   names.commodity = c("dollar", "lumber", "lab1", "lab2"),
-#'   names.agent = c("desk producer", "table producer", "chair producer", "consumer"),
-#'   numeraire = "dollar",
-#'   ts = TRUE
-#' )
-#'
-#' matplot(ge2$ts.p, type = "l")
-#' ge2$z
-#' ge2$p
 #'
 #' #### an example in the mit reference
 #' A <- matrix(c(
@@ -102,12 +84,12 @@
 #'   S0Exg
 #' }
 #'
-#' ge <- gemDualLinearProgramming(
+#' ge <- CGE::sdm(
 #'   A = A, B = B, S0Exg = S0Exg
 #' )
 #'
 #' ge$z
-#' ge$p
+#' ge$p / ge$p[1]
 #'
 #' #### an example in the stanford reference
 #' A <- matrix(c(
@@ -130,12 +112,12 @@
 #'   S0Exg
 #' }
 #'
-#' ge <- gemDualLinearProgramming(
+#' ge <- CGE::sdm(
 #'   A = A, B = B, S0Exg = S0Exg
 #' )
 #'
 #' ge$z
-#' ge$p
+#' ge$p / ge$p[1]
 #'
 #' #### an example in the utexas reference
 #' A <- matrix(c(
@@ -156,12 +138,12 @@
 #'   S0Exg
 #' }
 #'
-#' ge <- gemDualLinearProgramming(
+#' ge <- CGE::sdm(
 #'   A = A, B = B, S0Exg = S0Exg
 #' )
 #'
 #' ge$z
-#' ge$p
+#' ge$p / ge$p[1]
 #'
 #' #### the Giapetto example of Winston (2003, section 3.1)
 #' A <- matrix(c(
