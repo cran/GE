@@ -22,13 +22,13 @@ Government has tax payment receipts and the utility function is x1.
 \examples{
 \donttest{
 tax.rate <- 1
-iron.supply <- 100
 
 beta1 <- 0.05
 alpha1 <- 3 / beta1 + 60
 
+iron.endowment <- 100
 beta2 <- 0.05
-alpha2 <- iron.supply - 60 + (3 / beta2)
+alpha2 <- iron.endowment - 60 + (3 / beta2)
 
 demand_consumer1 <- function(p, w) {
   d <- rbind(0, 0)
@@ -82,7 +82,7 @@ ge <- sdm2(
   ), 4, 4, TRUE),
   S0Exg = matrix(c(
     1000, NA, NA, NA,
-    NA, iron.supply, NA, NA,
+    NA, iron.endowment, NA, NA,
     NA, NA, NA, NA,
     NA, NA, NA, 1
   ), 4, 4, TRUE),
@@ -104,7 +104,7 @@ ge.ph <- ge$p[3]
 plot(function(x) (alpha1 - x) * beta1, 0, alpha1,
      xlim = c(0, 100), ylim = c(0, 6), xlab = "iron", ylab = "price"
 )
-curve((alpha2 - iron.supply + x) * beta2, 0,
+curve((alpha2 - iron.endowment + x) * beta2, 0,
       alpha1,
       add = TRUE
 )

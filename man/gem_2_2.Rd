@@ -212,6 +212,31 @@ ge3.SCES$p
 ge3.SCES$z
 ge3.SCES$D
 ge3.SCES$S
+
+#### The laborer has some product.
+ge <- sdm2(
+  A = function(state) {
+    a.firm <- c(0, 1) # c(0, 2)
+    a.consumer <- SCES_A(es = 0.5, alpha = 1, Beta = c(0.5, 0.5), p = state$p)
+    cbind(a.firm, a.consumer)
+  },
+  B = matrix(c(
+    1, 0,
+    0, 0
+  ), 2, 2, TRUE),
+  S0Exg = matrix(c(
+    NA, 50, # 500
+    NA, 100
+  ), 2, 2, TRUE),
+  names.commodity = c("prod", "lab"),
+  names.agent = c("firm", "laborer"),
+  numeraire = "prod"
+)
+
+ge$p
+ge$z
+ge$D
+ge$S
 }
 }
 \references{

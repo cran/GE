@@ -1,7 +1,7 @@
 #' @export
 #' @title Some Simple 3-by-4 General Equilibrium Models
 #' @aliases gem_3_4
-#' @description Some simple 3-by-4 general equilibrium models with two firms and two consumer.
+#' @description Some simple 3-by-4 general equilibrium models with two firms and two consumers.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{

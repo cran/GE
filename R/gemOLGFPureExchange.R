@@ -36,12 +36,12 @@
 #' }
 #' @examples
 #' \donttest{
-#' #### an OLGF pure exchange economy with two-period-lived consumers
+#' #### an OLGF pure exchange economy with two-period-lived consumers.
 #' ## Suppose each consumer has one unit of labor in her first period
-#' ## and she has a constant saving rate (i.e. a log instantaneous utility
-#' ## function, a C-D type intertemporal utility function).
-#' saving.rate <- 0.5
-#' ratio.saving.consumption <- saving.rate / (1 - saving.rate)
+#' ## and she has a C-D intertemporal utility function
+#' ## (1 - beta) * log(c1) + beta * log(c2) and a constant saving rate beta.
+#' beta <- 0.5
+#' ratio.saving.consumption <- beta / (1 - beta)
 #'
 #' dst.age1 <- node_new(
 #'   "util",
@@ -67,7 +67,7 @@
 #'   ), 2, 2, TRUE),
 #'   names.commodity = c("lab", "secy"),
 #'   names.agent = c("age1", "age2"),
-#'   numeraire = "lab"
+#'   numeraire = "secy"
 #' )
 #'
 #' ge$p
@@ -75,7 +75,75 @@
 #' ge$DV
 #' ge$S
 #'
-#' #### the basic overlapping generations (inefficient) exchange model
+#' #### population growth and demographic dividend.
+#' ## Suppose each consumer has a SCES intertemporal utility function.
+#' pgr <- 0.03 # population growth rate
+#'
+#' beta2 <- 0.4  # share parameters of the SCES function
+#' beta1 <- 1 - beta2
+#'
+#' es <- 0.5 # the elasticity of substitution in the SCES function
+#'
+#' dst.age1 <- node_new(
+#'   "util",
+#'   type = "FIN",
+#'   rate = c(1, ratio.saving.consumption = 0.1),
+#'   "lab", "secy", # security, the financial instrument
+#'   p.lab.last = 1,
+#'   p.lab.ratio.predicted.last = 1,
+#'   ts.saving.rate = numeric(0)
+#' )
+#'
+#' dst.age2 <- node_new(
+#'   "util",
+#'   type = "Leontief", a = 1,
+#'   "lab"
+#' )
+#'
+#' ge <- sdm2(
+#'   A = list(
+#'     dst.age1, dst.age2
+#'   ),
+#'   B = matrix(0, 2, 2, TRUE),
+#'   S0Exg = matrix(c(
+#'     1, NA,
+#'     NA, 1
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("lab", "secy"),
+#'   names.agent = c("age1", "age2"),
+#'   numeraire = "secy",
+#'   policy = list(function(time, A, state) {
+#'     state$S[1, 1] <- (1 + pgr)^time
+#'     p.lab.current <- state$p[1] / state$p[2]
+#'
+#'     lambda <- 0.6
+#'     p.lab.ratio.predicted <- p.lab.current / A[[1]]$p.lab.last * lambda +
+#'       A[[1]]$p.lab.ratio.predicted.last * (1 - lambda)
+#'     A[[1]]$p.lab.last <- p.lab.current
+#'     A[[1]]$p.lab.ratio.predicted.last <- p.lab.ratio.predicted
+#'
+#'     ratio.saving.consumption <- beta2 / beta1 * (p.lab.ratio.predicted)^(1 - es)
+#'     A[[1]]$rate <- c(1, ratio.saving.consumption)
+#'     A[[1]]$ts.saving.rate <- c(A[[1]]$ts.saving.rate, ratio.saving.consumption /
+#'                                  (1 + ratio.saving.consumption))
+#'
+#'     state
+#'   }, policyMarketClearingPrice),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 50,
+#'   ts = TRUE
+#' )
+#'
+#' matplot(growth_rate(ge$ts.p), type = "o", pch = 20)
+#' matplot(growth_rate(ge$ts.z), type = "o", pch = 20)
+#' ge$p
+#' dst.age1$rate[2] # beta2 / beta1 * (1 + pgr)^(es - 1)
+#' dst.age1$p.lab.ratio.predicted.last
+#'
+#' plot(dst.age1$ts.saving.rate, type = "o", pch = 20)
+#' tail(dst.age1$ts.saving.rate,1) # beta2 / (beta2 + beta1 * (1 + pgr)^(1 - es))
+#'
+#' #### the basic overlapping generations (inefficient) exchange model.
 #' ## Here the lab2 is regarded as a financial instrument (saving instrument).
 #' ## See gemOLGPureExchange_2_2.
 #' dst.age1 <- node_new(
@@ -114,7 +182,7 @@
 #' ge$D
 #' ge$DV
 #'
-#' #### the basic financial overlapping generations exchange model (see Samuelson, 1958)
+#' #### the basic financial overlapping generations exchange model (see Samuelson, 1958).
 #' ## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
 #' GRExg <- 0.03 # the population growth rate
 #' rho <- 1 / (1 + GRExg)
@@ -167,7 +235,7 @@
 #' ge$S
 #' ge$D
 #'
-#' #### a pure exchange economy with three-period-lived consumers
+#' #### a pure exchange economy with three-period-lived consumers.
 #' ## Suppose each consumer has a Leontief-type utility function min(c1, c2, c3).
 #' GRExg <- 0.03 # the population growth rate
 #' R <- 1 + GRExg

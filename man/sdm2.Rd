@@ -83,9 +83,9 @@ The return value is a price n-vector. The default price adjustment method is p *
 
 \item{trace}{if TRUE, information is printed during the running of sdm.}
 
-\item{ts}{if TRUE, the time series of the last iteration are returned.}
+\item{ts}{if TRUE, the time series of the last outer iteration are returned.}
 
-\item{policy}{a policy function or a policy function list. A policy function has the following optional parameters:
+\item{policy}{a policy function or a list consisting of policy functions and/or policy function lists. A policy function has the following optional parameters:
 \itemize{
 \item time - the current time.
 \item A - the same as the parameter A of sdm2.
@@ -121,10 +121,10 @@ A list usually containing the following components:
 \item D - the demand matrix.
 \item DV - the demand value matrix.
 \item SV - the supply value matrix.
-\item ts.p	- the time series of prices in the last iteration.
-\item ts.z - the time series of exchange levels (i.e. activity levels, production levels or utility levels) in the last iteration.
-\item ts.S - the time series of supply matrix in the last iteration.
-\item ts.q - the time series of sales rates in the last iteration.
+\item ts.p	- the time series of prices in the last outer iteration.
+\item ts.z - the time series of exchange levels (i.e. activity levels, production levels or utility levels) in the last outer iteration.
+\item ts.S - the time series of supply matrix in the last outer iteration.
+\item ts.q - the time series of sales rates in the last outer iteration.
 \item policy.data - the policy data.
 }
 }

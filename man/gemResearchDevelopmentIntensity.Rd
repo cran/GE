@@ -10,7 +10,7 @@ gemResearchDevelopmentIntensity(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \value{
-A general equilibrium.
+A market-clearing path.
 }
 \description{
 Some examples of market-clearing paths illustrating R&D intensity.
@@ -23,6 +23,7 @@ Since the R&D center does not produce products, the R&D center is regarded as a 
 The utility level of the R&D center (that is, the R&D level) will affect the technological progress rate of the firm.
 In the model, the firm allocates part of its output to the R&D centers for sale according to a given R&D intensity,
 which is equivalent to allocating part of the firm's sales revenue to the R&D center.
+At first, the economy is set in steady-state equilibrium without R&D activity. R&D activities begin in the fifth period.
 }
 \examples{
 \donttest{
@@ -56,7 +57,7 @@ dst.laborer <- node_new(
 )
 
 # a function calculating the rate of technological progress according to the level of R&D.
-f.TGR <- function(RDLevel) RDEffectivenessCoefficient * RDLevel
+f.TPR <- function(RDLevel) RDEffectivenessCoefficient * RDLevel
 
 f <- function() {
   sdm2(
@@ -80,7 +81,7 @@ f <- function() {
           state$S[1, 1] <- state$S[1, 1] * (1 - RDIntensity)
           last.a <- node_set(A[[1]], "cc1")$a
           last.RDLevel <- state$last.z[2]
-          technology.progress.rate <- f.TGR(last.RDLevel)
+          technology.progress.rate <- f.TPR(last.RDLevel)
           node_set(A[[1]], "cc1", a = last.a / (1 + technology.progress.rate))
         }
 
@@ -109,7 +110,7 @@ ge$z
 set.seed(1)
 RDIntensity <- 0.3
 node_set(dst.firm, "cc1", a = 1)
-f.TGR <- function(RDLevel) max(0, rnorm(1, RDEffectivenessCoefficient * RDLevel,
+f.TPR <- function(RDLevel) max(0, rnorm(1, RDEffectivenessCoefficient * RDLevel,
   sqrt(RDEffectivenessCoefficient * RDLevel)))
 ge <- f()
 matplot((ge$ts.z), type = "o", pch = 20)
@@ -161,6 +162,57 @@ ge <- sdm2(
   ),
   maxIteration = 1,
   numberOfPeriods = 50,
+  ts = TRUE
+)
+
+matplot((ge$ts.z), type = "o", pch = 20)
+ge$z
+
+## Assume that the R&D center is owned by the government and
+## receives revenue through taxation on firms.
+## The technologies developed by the R&D center are public goods.
+node_set(dst.firm, "cc1", a = 1)
+RDIntensity <- 0.1
+RDEffectivenessCoefficient <- 0.002
+
+dst.firm2 <- Clone(dst.firm)
+
+ge <- sdm2(
+  A = list(dst.firm, dst.RDCenter, dst.laborer, dst.firm2),
+  B = matrix(c(
+    1, 0, 0, 1,
+    0, 0, 0, 0
+  ), 2, 4, TRUE),
+  S0Exg = matrix(c(
+    NA, NA, NA, NA,
+    NA, NA, 200, NA
+  ), 2, 4, TRUE),
+  names.commodity = c("prod", "lab"),
+  names.agent = c("firm1", "RDCenter", "laborer", "firm2"),
+  numeraire = "prod",
+  z0 = c(200, 0, 200, 200),
+  policy = list(
+    function(time, A, state) {
+      if (time >= 5) {
+        last.RDLevel <- state$last.z[2]
+        technology.progress.rate <- RDEffectivenessCoefficient * last.RDLevel
+
+        state$S[1, 2] <- (state$S[1, 1] + state$S[1, 4]) * RDIntensity
+        state$S[1, 1] <- state$S[1, 1] * (1 - RDIntensity)
+        state$S[1, 4] <- state$S[1, 4] * (1 - RDIntensity)
+        last.a1 <- node_set(A[[1]], "cc1")$a
+        node_set(A[[1]], "cc1", a = last.a1 / (1 + technology.progress.rate))
+
+        last.a2 <- node_set(A[[4]], "cc1")$a
+        node_set(A[[4]], "cc1", a = last.a2 / (1 + technology.progress.rate))
+      }
+
+      state
+    },
+    policyMarketClearingPrice
+  ),
+  maxIteration = 1,
+  numberOfPeriods = 30,
   ts = TRUE
 )
 

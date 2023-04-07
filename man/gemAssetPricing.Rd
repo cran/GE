@@ -169,7 +169,7 @@ gamma <- runif(m, 0.25, 1)
 # predicted mean payoff, which may be gross return rates, price indices or prices.
 PMP <- matrix(runif(n * m, min = 0.8, max = 1.5), n, m)
 
-# predicted standard deviation of payoff
+# predicted standard deviation of payoff.
 PSD <- matrix(runif(n * m, min = 0.01, max = 0.2), n, m)
 PSD[n, ] <- 0
 

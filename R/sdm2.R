@@ -44,8 +44,8 @@
 #' The return value is a price n-vector. The default price adjustment method is p * (1 - priceAdjustmentVelocity * (1 - q)).
 #' @param priceAdjustmentVelocity the price adjustment velocity.
 #' @param trace if TRUE, information is printed during the running of sdm.
-#' @param ts if TRUE, the time series of the last iteration are returned.
-#' @param policy a policy function or a policy function list. A policy function has the following optional parameters:
+#' @param ts if TRUE, the time series of the last outer iteration are returned.
+#' @param policy a policy function or a list consisting of policy functions and/or policy function lists. A policy function has the following optional parameters:
 #' \itemize{
 #' \item time - the current time.
 #' \item A - the same as the parameter A of sdm2.
@@ -83,10 +83,10 @@
 #' \item D - the demand matrix.
 #' \item DV - the demand value matrix.
 #' \item SV - the supply value matrix.
-#' \item ts.p	- the time series of prices in the last iteration.
-#' \item ts.z - the time series of exchange levels (i.e. activity levels, production levels or utility levels) in the last iteration.
-#' \item ts.S - the time series of supply matrix in the last iteration.
-#' \item ts.q - the time series of sales rates in the last iteration.
+#' \item ts.p	- the time series of prices in the last outer iteration.
+#' \item ts.z - the time series of exchange levels (i.e. activity levels, production levels or utility levels) in the last outer iteration.
+#' \item ts.S - the time series of supply matrix in the last outer iteration.
+#' \item ts.q - the time series of sales rates in the last outer iteration.
 #' \item policy.data - the policy data.
 #' }
 #' @note In the package CGE, the temporary equilibrium path (alias market clearing path, instantaneous equilibrium path) is computed by the function iep.
@@ -369,8 +369,7 @@ sdm2 <- function(A,
       tmpIndex <- tmpIndex[1]
       p_tp1 <- p_tp1 / p_tp1[tmpIndex] * pExg[tmpIndex]
       p_tp1[!is.na(pExg)] <- pExg[!is.na(pExg)]
-    }
-    else {
+    } else {
       p_tp1 <- prop.table(p_tp1)
     }
 
@@ -383,9 +382,6 @@ sdm2 <- function(A,
 
 
     if (!is.null(policy)) {
-      ## 20200527
-      if (is.function(policy)) policy <- list(policy)
-
       for (kth.policy in policy) {
         kth.policy.arg.names <- names(formals(kth.policy))
 
@@ -455,8 +451,7 @@ sdm2 <- function(A,
         z_tp1[z_tp1 < 0] <- 0
 
         warning("LI: negative_z, z_tp1<0")
-      }
-      else {
+      } else {
         message(z_tp1)
         stop("Li: negative_z")
       }
@@ -508,7 +503,10 @@ sdm2 <- function(A,
   q <- matrix(0, n, numberOfPeriods)
   z <- matrix(0, m, numberOfPeriods)
 
-  if (!is.null(policy)) policy.data <- data.frame()
+  if (!is.null(policy)) {
+    policy.data <- data.frame()
+    if (is.function(policy)) policy <- list(policy) else policy <- unlist(policy)
+  }
 
   if (all(is.na(S0Exg))) {
     S0 <- matrix(0, n, m)
@@ -576,8 +574,7 @@ sdm2 <- function(A,
         S0 <- S0 / (1 + GRExg)^numberOfPeriods
         SupplyExogenous <<- S0Exg
       }
-    }
-    else {
+    } else {
       S0 <- S0 / max(z0)
       z0 <- z0 / max(z0)
     }

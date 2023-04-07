@@ -10,7 +10,7 @@ gem_3_4(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some simple 3-by-4 general equilibrium models with two firms and two consumer.
+Some simple 3-by-4 general equilibrium models with two firms and two consumers.
 }
 \examples{
 \donttest{

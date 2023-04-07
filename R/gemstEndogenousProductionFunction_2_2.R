@@ -1,6 +1,6 @@
 #' @export
-#' @title An Endogenous Production Function
-#' @aliases gemstEndogenousProductionFunction
+#' @title A General Equilibrium Model with Endogenous Production Function
+#' @aliases gemstEndogenousProductionFunction_2_2
 #' @description This is an example of the market-clearing path with an endogenous production function.
 #' The parameter of the production function will change with the output level.
 #'
@@ -24,7 +24,7 @@
 #'   A = list(dst.firm, dst.consumer),
 #'   B = matrix(c(
 #'     1, 0,
-#'     0, 1
+#'     0, 0
 #'   ), 2, 2, TRUE),
 #'   S0Exg = matrix(c(
 #'     NA, NA,
@@ -49,4 +49,4 @@
 #' matplot(ge$ts.z, type = "o", pch = 20)
 #' }
 
-gemstEndogenousProductionFunction <- function(...) sdm2(...)
+gemstEndogenousProductionFunction_2_2 <- function(...) sdm2(...)
