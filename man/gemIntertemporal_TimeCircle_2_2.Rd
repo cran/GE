@@ -25,9 +25,9 @@ Suppose that the amount returned is zeta times the amount borrowed.
 \examples{
 \donttest{
 #### an example with a Cobb-Douglas intertemporal utility function
-np <- 5 # the number of periods, firms.
+np <- 5 # the number of internal periods, firms.
 
-zeta <- 1.25
+zeta <- 1.25 # the ratio of repayments to loans
 S <- matrix(NA, 2 * np, np + 1)
 S[(np + 1):(2 * np), np + 1] <- 100
 
@@ -108,7 +108,7 @@ ge3 <- sdm2(
 
 #### an example with a linear intertemporal utility function (e.g. beta1*x1+beta2*x2)
 ## The demand structure of the consumer will be adjusted sluggishly to accelerate convergence.
-np <- 5 # the number of periods, firms.
+np <- 5 # the number of internal periods, firms.
 rho <- 0.9 # subjective discount factor
 
 beta.consumer <- rep(rho ^ (0:(np - 1)))

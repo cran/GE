@@ -6,7 +6,7 @@
 #' @examples
 #' \donttest{
 #' #### an example with a Cobb-Douglas intertemporal utility function
-#' np <- 5 # the number of periods, firms.
+#' np <- 5 # the number of internal periods, firms.
 #'
 #' n <- 3 * np - 1
 #' m <- 2 * (np - 1) + 2

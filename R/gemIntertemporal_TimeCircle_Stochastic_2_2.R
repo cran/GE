@@ -8,7 +8,7 @@
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
-#' zeta <- 1.25
+#' zeta <- 1.25 # the ratio of repayments to loans
 #' dst.firm1 <- node_new(
 #'   "prod2",
 #'   type = "CD", alpha = 2,

@@ -35,25 +35,13 @@ See the reference for more details.
 }
 \examples{
 \donttest{
-demand_consumer2 <- function(p, w) {
-  a <- 1.5
-  d <- rbind(0, 0)
-  w <- w / p[1]
-  p <- p / p[1] # take commodity 1 as numeraire
-  d[2] <- a / p[2]
-  if (d[2] * p[2] > w) {
-    d[2] <- w / p[2]
-    d[1] <- 0
-  } else {
-    d[1] <- w - d[2] * p[2]
-  }
-
-  d
+demand_consumer2 <- function(w, p) {
+  QL_demand(w = w, p = p, alpha = 1.5, type = "log")
 }
 
 A <- function(state) {
   a1 <- CD_A(1, rbind(1 / 3, 2 / 3), state$p)
-  a2 <- demand_consumer2(state$p, state$w[2])
+  a2 <- demand_consumer2(state$w[2], state$p)
   cbind(a1, a2)
 }
 
@@ -74,7 +62,7 @@ dstl <- list(dst.consumer1, dst.consumer2)
 
 policy.quasilinear <- function(A, state) {
   wealth <- t(state$p) \%*\% state$S
-  A[[2]]$a <- demand_consumer2(state$p, wealth[2])
+  A[[2]]$a <- demand_consumer2(wealth[2], state$p)
 }
 
 ge.dstl <- gemQuasilinearPureExchange_2_2(
@@ -84,24 +72,13 @@ ge.dstl <- gemQuasilinearPureExchange_2_2(
 ge.dstl
 
 #### Another example. Now Ben has a utility function x_1 + sqrt(x_2).
-demand_consumer2 <- function(p, w) {
-  d <- rbind(0, 0)
-  w <- w / p[1]
-  p <- p / p[1]
-  d[2] <- (2 * p[2])^-2
-  if (d[2] * p[2] > w) {
-    d[2] <- w / p[2]
-    d[1] <- 0
-  } else {
-    d[1] <- w - d[2] * p[2]
-  }
-
-  d
+demand_consumer2 <- function(w, p) {
+  QL_demand(w = w, p = p, alpha = 1, beta = 0.5, type = "power")
 }
 
 A <- function(state) {
   a1 <- CD_A(1, rbind(1 / 3, 2 / 3), state$p)
-  a2 <- demand_consumer2(state$p, state$w[2])
+  a2 <- demand_consumer2(state$w[2], state$p)
   cbind(a1, a2)
 }
 
@@ -138,36 +115,56 @@ ge.4_4 <- sdm2(
 )
 ge.4_4
 
-#### an example with a LES (linear expenditure system) utility function
-demand_LES <- function(p, w,
-                       gamma = c(0.1, 0.2),
-                       beta = c(0.4, 0.6)) {
-  d <- c()
-  discretionary.income <- w - sum(p * gamma)
-  for (k in seq_along(gamma)) {
-    d[k] <- gamma[k] + beta[k] * discretionary.income / p[k]
+#### another example
+n.fish.demander <- 21
+wealth <- 20 # the wealth (or income) of each fish demander
+fish.supply <- 12
+aggregare.demand <- function(p) {
+  result <- 0
+  for (alpha in seq(5, 15, length.out = n.fish.demander)) {
+    result <- result + QL_demand(w = wealth, p = p, alpha = alpha, beta = 1, type = "min")
   }
-
-  d
+  result
 }
 
-A <- function(state) {
-  a1 <- CD_A(1, rbind(1 / 3, 2 / 3), state$p)
-  a2 <- demand_LES(state$p, state$w[2])
-  cbind(a1, a2)
-}
-
-sdm2(
-  A = A,
+ge <- sdm2(
+  A = function(state) {
+    a1 <- aggregare.demand(state$p / state$p[1])
+    a2 <- c(1, 0)
+    cbind(a1, a2)
+  },
   B = matrix(0, 2, 2),
   S0Exg = matrix(c(
-    3, 4,
-    7, 0
+    n.fish.demander * wealth, 0,
+    0, fish.supply
   ), 2, 2, TRUE),
-  names.commodity = c("fish", "banana"),
-  names.agent = c("Annie", "Ben"),
-  numeraire = "banana"
+  names.commodity = c("gold", "fish"),
+  names.agent = c("fish.demander", "fish.supplier"),
+  numeraire = "gold",
+  p0 = c(1, 1) # p0 = c(1, 9.25)
 )
+
+ge$p
+ge$z
+ge$D
+ge$S
+
+aggregare.demand.fish <- c()
+p2.set <- seq(0, 16, 0.01)
+for (p2 in p2.set) {
+  aggregare.demand.fish <- c(
+    aggregare.demand.fish,
+    aggregare.demand(c(1, p2))[2]
+  )
+}
+
+plot(aggregare.demand.fish,
+     p2.set,
+     xlab = "demand for fish", ylab = "price of fish", pch = 20
+)
+abline(v = fish.supply)
+grid()
+points(ge$D[2, 1], ge$p[2], pch = 8, col = "red")
 }
 }
 \references{

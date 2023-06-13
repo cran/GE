@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemIntertemporal_Dividend.R
 \name{gemIntertemporal_Dividend}
 \alias{gemIntertemporal_Dividend}
-\title{The Same Steady-state Equilibrium: Four Models Illustrating Dividend}
+\title{The Identical Steady-state Equilibrium: Four Models Illustrating Dividend}
 \usage{
 gemIntertemporal_Dividend(...)
 }
@@ -21,10 +21,10 @@ These models are as follows:
 \examples{
 \donttest{
 #### (1) a real timeline model with head-tail adjustment.
-eis <- 0.8 # the elasticity of intertemporal substitution.
-rho.beta <- 0.8 # the subjective discount factor.
-gr <- 0.03 # the growth rate.
-np <- 5 # the number of periods.
+eis <- 0.8 # the elasticity of intertemporal substitution
+rho.beta <- 0.8 # the subjective discount factor
+gr <- 0.03 # the growth rate
+np <- 5 # the number of internal periods
 S0Exg <- matrix(NA, 2 * np - 1, np)
 S0Exg[(np + 1):(2 * np - 1), np] <- 100 * (1 + gr)^(0:(np - 2))
 S0Exg[1, np] <- 140 # the product supply in the first period, which will be adjusted.
@@ -169,7 +169,7 @@ np <- 5
 gr <- 0.03
 yield <- 0.2593
 
-zeta <- (1 + gr)^np
+zeta <- (1 + gr)^np # the ratio of repayments to loans
 S <- matrix(NA, 2 * np + 1, np + 1)
 S[(np + 1):(2 * np + 1), np + 1] <- c(100 * (1 + gr)^(0:(np - 1)), 100)
 

@@ -1,7 +1,7 @@
 #' @export
-#' @title A General Equilibrium Model based on a 2x2 (Unbalanced) Input-Output Table
+#' @title A General Equilibrium Model based on a 2×2 (Unbalanced) Input-Output Table
 #' @aliases gemInputOutputTable_2_2
-#' @description A general equilibrium model based on a 2x2 (unbalanced) input-output table (unit: yuan).
+#' @description A general equilibrium model based on a 2×2 (unbalanced) input-output table (unit: yuan).
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{

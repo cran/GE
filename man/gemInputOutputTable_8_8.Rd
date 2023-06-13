@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_8_8.R
 \name{gemInputOutputTable_8_8}
 \alias{gemInputOutputTable_8_8}
-\title{A General Equilibrium Model based on an 8x8 Input-Output Table}
+\title{A General Equilibrium Model based on an 8×8 Input-Output Table}
 \usage{
 gemInputOutputTable_8_8(
   IT,
@@ -51,10 +51,10 @@ A general equilibrium, which is a list with the following elements:
 }
 }
 \description{
-This is a general equilibrium model based on a 8x8 input-output table.
+This is a general equilibrium model based on a 8×8 input-output table.
 }
 \details{
-Given an 8x8 input-output table, this model calculates
+Given an 8×8 input-output table, this model calculates
 the corresponding general equilibrium.
 This input-output table contains 3 production sectors, 1 consumption and (temporarily unproductive) investment sector (CI sector), 1 foreign trade sector importing agriculture goods,
 1 foreign trade sector importing manufacturing goods, 1 foreign trade sector importing service, 1 foreign trade sector importing bond.

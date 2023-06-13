@@ -18,19 +18,26 @@ DCES_indirect(es, beta, xi, w, p)
 \arguments{
 \item{es}{the elasticity of substitution.}
 
-\item{beta}{a n-vector consisting of the marginal expenditure share coefficients.}
+\item{beta}{an n-vector consisting of the marginal expenditure share coefficients.}
 
-\item{xi}{a n-vector. Each element of xi parameterizes whether
+\item{xi}{an n-vector. Each element of xi parameterizes whether
 the particular good is a necessity for the household (Acemoglu, 2009, page 152).
 For example, xi[i] > 0 may mean that the household needs to consume at least a certain amount of good i to survive.}
 
-\item{x}{a n-vector consisting of the inputs.}
+\item{x}{an n-vector consisting of the inputs.}
 
 \item{w}{a scalar indicating the income.}
 
-\item{p}{a n-vector indicating the prices.}
+\item{p}{an n-vector indicating the prices.}
 
 \item{u}{a scalar indicating the utility level.}
+}
+\value{
+The return values of these functions are as follows: \cr
+DCES: A scalar indicating the utility level. \cr
+DCES_demand: An n-vector indicating the demands. \cr
+DCES_compensated_demand: An n-vector indicating the compensated demands. \cr
+DCES_indirect: A scalar indicating the utility level.
 }
 \description{
 The displaced CES utility function and the displaced CES demand function (Fullerton, 1989).
@@ -59,7 +66,7 @@ xi <- 0
 w <- 500
 p <- 2:6
 
-x <- DCES_demand (
+x <- DCES_demand(
   es = es,
   beta = beta,
   xi = xi,
@@ -67,15 +74,27 @@ x <- DCES_demand (
   p = p
 )
 
-u <- DCES(es = es,
-          beta = beta,
-          xi = xi,
-          x = x)
+DCES_demand(
+  es = es,
+  beta = prop.table(0:4),
+  xi = 5:1,
+  w = w,
+  p = p
+)
 
-SCES(es = es,
-     alpha = 1,
-     beta = beta,
-     x = x)
+u <- DCES(
+  es = es,
+  beta = beta,
+  xi = xi,
+  x = x
+)
+
+SCES(
+  es = es,
+  alpha = 1,
+  beta = beta,
+  x = x
+)
 
 DCES_compensated_demand(
   es = es,
@@ -119,6 +138,26 @@ ge$z
 ge$A
 ge$D
 
+#### a 2-by-2 pure exchange economy
+sdm2(
+  A = function(state) {
+    a1 <- CD_A(1, rbind(1 / 3, 2 / 3), state$p)
+    a2 <- DCES_demand(
+      es = 1, beta = c(0.4, 0.6), xi = c(0.1, 0.2),
+      w = state$w[2], p = state$p
+    )
+    cbind(a1, a2)
+  },
+  B = matrix(0, 2, 2),
+  S0Exg = matrix(c(
+    3, 4,
+    7, 0
+  ), 2, 2, TRUE),
+  names.commodity = c("fish", "banana"),
+  names.agent = c("Annie", "Ben"),
+  numeraire = "banana"
+)
+
 #### A 3-by-3 general equilibrium model
 #### with a DCES utility function.
 lab <- 1 # the amount of labor supplied by each laborer
@@ -154,6 +193,7 @@ ge$z
 ge$A
 ge$D
 }
+
 }
 \references{
 Acemoglu, D. (2009, ISBN: 9780691132921) Introduction to Modern Economic Growth. Princeton University Press.

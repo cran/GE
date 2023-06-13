@@ -16,7 +16,7 @@
 #' @param muf a marginal utility function or a list consisting of m marginal utility functions.
 #' A marginal utility function is the gradient of a utility function.
 #' When the components in the marginal utility vector are the same, a marginal utility function may calculate only one of the components.
-#' @return A n-by-m marginal utility matrix. Its (i,j)-th element corresponds to the i-th column of y and the j-th column of x.
+#' @return An n-by-m marginal utility matrix. Its (i,j)-th element corresponds to the i-th column of y and the j-th column of x.
 #' @references Sharpe, William F. (2008, ISBN: 9780691138503) Investors and Markets: Portfolio Choices, Asset Prices, and Investment Advice. Princeton University Press.
 #' @examples
 #' marginal_utility(1:2, cbind(1:2, 1:1), AMV)

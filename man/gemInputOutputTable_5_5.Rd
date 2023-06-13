@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_5_5.R
 \name{gemInputOutputTable_5_5}
 \alias{gemInputOutputTable_5_5}
-\title{General Equilibrium Models based on a 5x5 Input-Output Table (see Zhang Xin, 2017, Table 3.2.1)}
+\title{General Equilibrium Models based on a 5×5 Input-Output Table (see Zhang Xin, 2017, Table 3.2.1)}
 \usage{
 gemInputOutputTable_5_5(...)
 }
@@ -10,7 +10,7 @@ gemInputOutputTable_5_5(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some general equilibrium models based on a 5x5 input-output table (see Zhang Xin, 2017, Table 3.2.1).
+Some general equilibrium models based on a 5×5 input-output table (see Zhang Xin, 2017, Table 3.2.1).
 }
 \examples{
 \donttest{

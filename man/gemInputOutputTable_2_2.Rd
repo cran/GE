@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_2_2.R
 \name{gemInputOutputTable_2_2}
 \alias{gemInputOutputTable_2_2}
-\title{A General Equilibrium Model based on a 2x2 (Unbalanced) Input-Output Table}
+\title{A General Equilibrium Model based on a 2×2 (Unbalanced) Input-Output Table}
 \usage{
 gemInputOutputTable_2_2(...)
 }
@@ -10,7 +10,7 @@ gemInputOutputTable_2_2(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-A general equilibrium model based on a 2x2 (unbalanced) input-output table (unit: yuan).
+A general equilibrium model based on a 2×2 (unbalanced) input-output table (unit: yuan).
 }
 \examples{
 \donttest{

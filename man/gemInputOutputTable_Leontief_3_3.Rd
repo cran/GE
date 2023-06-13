@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_Leontief_3_3.R
 \name{gemInputOutputTable_Leontief_3_3}
 \alias{gemInputOutputTable_Leontief_3_3}
-\title{A Leontief-type General Equilibrium Model based on a 3x3 Input-Output Table}
+\title{A Leontief-type General Equilibrium Model based on a 3×3 Input-Output Table}
 \usage{
 gemInputOutputTable_Leontief_3_3(
   input = matrix(c(200, 300, 100, 150, 320, 530, 250, 380, 0), 3, 3, TRUE),
@@ -25,7 +25,7 @@ A general equilibrium, which is a list with the following elements:
 }
 }
 \description{
-Given a 3x3 input-output table (e.g., see Zhang Xin, 2017, Table 2.2.2), this model can be
+Given a 3×3 input-output table (e.g., see Zhang Xin, 2017, Table 2.2.2), this model can be
 used to calculate the corresponding equilibrium.
 This input-output table contains two firms and one household.
 The household consumes products and supplies labor.

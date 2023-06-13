@@ -31,7 +31,7 @@
 #' ## and buys some labor from the next generation.
 #'
 #' # Here np can tend to infinity.
-#' np <- 4 # the number of periods and consumers (i.e. laborers).
+#' np <- 4 # the number of internal periods and consumers (i.e. laborers).
 #' lab.age1 <- 1 # labor endowment of age1
 #' lab.age2 <- 0 # labor endowment of age2
 #'
@@ -96,7 +96,7 @@
 #' #### a time-circle pure exchange economy with three-period-lived consumers
 #' ## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
 #' ## See gemOLGPureExchange_2_2.
-#' np <- 5 # the number of periods and consumers (i.e. laborers).
+#' np <- 5 # the number of internal periods and consumers (i.e. laborers).
 #' lab.age1 <- 1 # labor endowment of age1
 #' lab.age2 <- 1
 #' lab.age3 <- 0
@@ -191,7 +191,7 @@
 #'
 #' #### a time-circle model with production and two-period-lived consumers
 #' ## Suppose each consumer has a utility function log(c1) + log(c2).
-#' np <- 5 # the number of periods, consumers and firms.
+#' np <- 5 # the number of internal periods, consumers and firms.
 #' S <- matrix(NA, 2 * np, 2 * np)
 #'
 #' S.lab.consumer <- diag(1, np)
@@ -275,7 +275,7 @@
 #' ## These consumers also can be regarded as infinite-lived carpe diem agents,
 #' ## who have endowments in each period, maximize the instantaneous utility and do not
 #' ## consider the future.
-#' np <- 5 # the number of periods, consumers and firms.
+#' np <- 5 # the number of internal periods, consumers and firms.
 #' GRExg <- 0.03 # the population growth rate
 #' discount.factor.last.output <- (1 + GRExg)^(-np)
 #' S <- matrix(NA, 2 * np, 2 * np)
@@ -367,7 +367,7 @@
 #'
 #' #### a time-circle model with production and three-period-lived consumers
 #' ## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
-#' np <- 6 # the number of periods, consumers and firms.
+#' np <- 6 # the number of internal periods, consumers and firms
 #' GRExg <- 0.03 # the population growth rate
 #' S <- matrix(NA, 2 * np, 2 * np)
 #'

@@ -33,7 +33,7 @@
 #' ge$D
 #' ge$S
 #'
-#' #### a n-by-n general equilibrium model with Cobb-Douglas functions.
+#' #### an n-by-n general equilibrium model with Cobb-Douglas functions.
 #' f <- function(n, policy = NULL, z0 = rep(100 * n, n), numberOfPeriods = 30,
 #'               Beta = matrix(1 / n, n, n), n.firm = n - 1) {
 #'   ge <- sdm2(

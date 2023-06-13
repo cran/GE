@@ -20,7 +20,7 @@ CES(sigma = 1 - 1/es, alpha, beta, x, theta = NULL, es = NA)
 \item{es}{the elasticity of substitution. If es is not NA, the value of sigma will be ignored.}
 }
 \value{
-The output or utility level.
+A scalar indicating the output or utility level.
 }
 \description{
 CES function, e.g. alpha * (beta1 * (x1 / theta1)^sigma + beta2 * (x2 / theta2)^sigma)^(1 / sigma).

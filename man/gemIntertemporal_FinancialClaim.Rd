@@ -91,8 +91,8 @@ ge$DV
 #### a pure exchange model with money.
 np <- 3 # the number of (internal) periods.
 gr.lab <- 0.03 # the growth rate of endowments (i.e. labor supply)
-eis <- 0.8
-rho.beta <- 0.8
+eis <- 0.8 # the elasticity of intertemporal substitution
+rho.beta <- 0.8 # the subjective discount factor
 interest.rate <- 0.2593 # (1 + gr.lab)^(1 / eis - 1) / rho.beta - 1
 
 dst.laborer <- node_new(

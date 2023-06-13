@@ -9,7 +9,7 @@
 #' @examples
 #' \donttest{
 #' #### an example with a consumer with a nested intertemporal utility function
-#' np <- 5 # the number of periods, firms.
+#' np <- 5 # the number of internal periods, firms.
 #'
 #' ## exogenous supply matrix
 #' n <- 3 * np - 1
@@ -85,7 +85,7 @@
 #' ge$SV
 #'
 #' #### an example with a consumer with a non-nested intertemporal utility function
-#' np <- 3 # the number of periods, firms.
+#' np <- 3 # the number of internal periods, firms.
 #'
 #' ## There are np types of corn, np-1 types of iron and np-1 types of labor.
 #' ## There are np-1 corn firms, np-2 iron firms and one consumer.

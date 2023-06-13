@@ -11,14 +11,19 @@
 #'
 #' When es==1, the DCES utility function becomes the Stone-Geary utility function.
 #' @param es the elasticity of substitution.
-#' @param beta a n-vector consisting of the marginal expenditure share coefficients.
-#' @param xi a n-vector. Each element of xi parameterizes whether
+#' @param beta an n-vector consisting of the marginal expenditure share coefficients.
+#' @param xi an n-vector. Each element of xi parameterizes whether
 #' the particular good is a necessity for the household (Acemoglu, 2009, page 152).
 #' For example, xi[i] > 0 may mean that the household needs to consume at least a certain amount of good i to survive.
-#' @param x a n-vector consisting of the inputs.
+#' @param x an n-vector consisting of the inputs.
 #' @param w a scalar indicating the income.
-#' @param p a n-vector indicating the prices.
+#' @param p an n-vector indicating the prices.
 #' @param u a scalar indicating the utility level.
+#' @return The return values of these functions are as follows: \cr
+#' DCES: A scalar indicating the utility level. \cr
+#' DCES_demand: An n-vector indicating the demands. \cr
+#' DCES_compensated_demand: An n-vector indicating the compensated demands. \cr
+#' DCES_indirect: A scalar indicating the utility level.
 #' @references Acemoglu, D. (2009, ISBN: 9780691132921) Introduction to Modern Economic Growth. Princeton University Press.
 #' @references Fullerton, D. (1989) Notes on Displaced CES Functional Forms. Available at: https://works.bepress.com/don_fullerton/39/
 #' @examples
@@ -29,7 +34,7 @@
 #' w <- 500
 #' p <- 2:6
 #'
-#' x <- DCES_demand (
+#' x <- DCES_demand(
 #'   es = es,
 #'   beta = beta,
 #'   xi = xi,
@@ -37,15 +42,27 @@
 #'   p = p
 #' )
 #'
-#' u <- DCES(es = es,
-#'           beta = beta,
-#'           xi = xi,
-#'           x = x)
+#' DCES_demand(
+#'   es = es,
+#'   beta = prop.table(0:4),
+#'   xi = 5:1,
+#'   w = w,
+#'   p = p
+#' )
 #'
-#' SCES(es = es,
-#'      alpha = 1,
-#'      beta = beta,
-#'      x = x)
+#' u <- DCES(
+#'   es = es,
+#'   beta = beta,
+#'   xi = xi,
+#'   x = x
+#' )
+#'
+#' SCES(
+#'   es = es,
+#'   alpha = 1,
+#'   beta = beta,
+#'   x = x
+#' )
 #'
 #' DCES_compensated_demand(
 #'   es = es,
@@ -89,6 +106,26 @@
 #' ge$A
 #' ge$D
 #'
+#' #### a 2-by-2 pure exchange economy
+#' sdm2(
+#'   A = function(state) {
+#'     a1 <- CD_A(1, rbind(1 / 3, 2 / 3), state$p)
+#'     a2 <- DCES_demand(
+#'       es = 1, beta = c(0.4, 0.6), xi = c(0.1, 0.2),
+#'       w = state$w[2], p = state$p
+#'     )
+#'     cbind(a1, a2)
+#'   },
+#'   B = matrix(0, 2, 2),
+#'   S0Exg = matrix(c(
+#'     3, 4,
+#'     7, 0
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("fish", "banana"),
+#'   names.agent = c("Annie", "Ben"),
+#'   numeraire = "banana"
+#' )
+#'
 #' #### A 3-by-3 general equilibrium model
 #' #### with a DCES utility function.
 #' lab <- 1 # the amount of labor supplied by each laborer
@@ -124,9 +161,17 @@
 #' ge$A
 #' ge$D
 #' }
-
+#'
 DCES <- function(es, beta, xi, x) {
-  if (!isTRUE(all.equal(sum(beta), 1))) warning("The sum of beta should be 1.")
+  if (!isTRUE(all.equal(sum(beta), 1))) warning("Li: The sum of beta should be 1.")
+
+  if (any(beta == 0)) {
+    warning("Li: The beta vector contains zero.")
+    nonzero.TF <- beta > 0
+    if (length(xi) == length(beta)) xi <- xi[nonzero.TF]
+    beta <- beta[nonzero.TF]
+    x <- x[nonzero.TF]
+  }
 
   if (any((x - xi) < 0)) {
     warning("Li: Some element of x is too small.")
@@ -144,7 +189,7 @@ DCES <- function(es, beta, xi, x) {
 #' @describeIn DCES
 #' The displaced CES demand function (Fullerton, 1989).
 DCES_demand <- function(es, beta, xi, w, p) {
-  if (!isTRUE(all.equal(sum(beta), 1))) warning("The sum of beta should be 1.")
+  if (!isTRUE(all.equal(sum(beta), 1))) warning("Li: The sum of beta should be 1.")
 
   ID <- w - sum(p * xi)
   if (ID < 0) {
@@ -159,7 +204,7 @@ DCES_demand <- function(es, beta, xi, w, p) {
 #' @describeIn DCES
 #' The displaced CES compensated demand function (Fullerton, 1989).
 DCES_compensated_demand <- function(es, beta, xi, u, p) {
-  if (!isTRUE(all.equal(sum(beta), 1))) warning("The sum of beta should be 1.")
+  if (!isTRUE(all.equal(sum(beta), 1))) warning("Li: The sum of beta should be 1.")
   xi + u * SCES_A(sigma = 1 - 1 / es, alpha = 1, Beta = beta, p = p)
 }
 
@@ -167,7 +212,7 @@ DCES_compensated_demand <- function(es, beta, xi, u, p) {
 #' @describeIn DCES
 #' The displaced CES indirect utility function (Fullerton, 1989).
 DCES_indirect <- function(es, beta, xi, w, p) {
-  if (!isTRUE(all.equal(sum(beta), 1))) warning("The sum of beta should be 1.")
+  if (!isTRUE(all.equal(sum(beta), 1))) warning("Li: The sum of beta should be 1.")
 
   ID <- w - sum(p * xi)
   if (ID < 0) {

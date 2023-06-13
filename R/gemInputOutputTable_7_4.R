@@ -1,11 +1,11 @@
 #' @export
-#' @title A General Equilibrium Model based on a 7x4 (Standard) Input-Output Table
+#' @title A General Equilibrium Model based on a 7×4 (Standard) Input-Output Table
 #' @aliases gemInputOutputTable_7_4
-#' @description This is a general equilibrium model based on a 7x4 standard input-output table.
+#' @description This is a general equilibrium model based on a 7×4 standard input-output table.
 #' There is no negative number in this standard input-output table,
-#' and both the input and output parts are 7x4 matrices.
+#' and both the input and output parts are 7×4 matrices.
 #' The standard input-output table consists of input and output parts with the same dimensions.
-#' @details Given a 7x4 input-output table, this model calculates
+#' @details Given a 7×4 input-output table, this model calculates
 #' the corresponding general equilibrium.
 #' This input-output table contains 3 production sectors and 1 household.
 #' The household consumes products and supplies labor, capital, stock and tax receipt.

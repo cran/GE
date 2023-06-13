@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemIntertemporal_Money_Dividend_Example7.5.1.R
 \name{gemIntertemporal_Money_Dividend_Example7.5.1}
 \alias{gemIntertemporal_Money_Dividend_Example7.5.1}
-\title{Three Equivalent Models with Money and Dividend}
+\title{The Identical Steady-state Equilibrium: Three Models with Money and Dividend}
 \usage{
 gemIntertemporal_Money_Dividend_Example7.5.1(...)
 }
@@ -10,12 +10,12 @@ gemIntertemporal_Money_Dividend_Example7.5.1(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Three equivalent models with money and dividend as follows:
+Three steady-state-identical models with money and dividend as follows:
 (1) a sequential model (Li, 2019, example 7.5);
 (2) a time-circle model;
 (3) a timeline model with head-tail adjustment.
 
-Stocks, fiat currencies, bonds, and taxes, etc. can be collectively referred to as claims.
+Stocks, fiat currencies, bonds, and taxes, etc. can be collectively referred to as (financial) claims.
 Sometimes we do not need to differentiate between these financial instruments when modeling.
 Furthermore, sometimes we do not need to consider which period these financial instruments belong to.
 }
@@ -77,11 +77,11 @@ ge.seq$ts.z[,1]
 growth_rate(ge.seq$ts.z[,1])
 
 #### (2) a time-circle model.
-np <- 5 # the number of periods.
+np <- 5 # the number of (internal) periods.
 gr <- 0.1 # the growth rate.
 dividend.rate <- 0.25
 ir <- 0.25
-zeta <- (1 + gr)^np
+zeta <- (1 + gr)^np # the ratio of repayments to loans
 
 S <- matrix(NA, 2 * np+1, np + 1) # the exogenous supply matrix.
 S[(np + 1):(2 * np), np + 1] <- 100 * (1 + gr)^(0:(np - 1)) # labor supply.

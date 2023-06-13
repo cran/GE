@@ -21,42 +21,22 @@
 #' beta2 <- 0.05
 #' alpha2 <- iron.endowment - 60 + (3 / beta2)
 #'
-#' demand_consumer1 <- function(p, w) {
-#'   d <- rbind(0, 0)
-#'   w <- w / p[1]
-#'   p <- p / p[1] # take corn as numeraire
-#'   d[2] <- max(alpha1 - p[2] / beta1, 0)
-#'   if (d[2] * p[2] > w) {
-#'     d[2] <- w / p[2]
-#'     d[1] <- 0
-#'   } else {
-#'     d[1] <- w - d[2] * p[2]
-#'   }
-#'
-#'   d
-#' }
-#'
-#' demand_consumer2 <- function(p, w) {
-#'   d <- rbind(0, 0)
-#'   w <- w / p[1]
-#'   p <- p / p[1]
-#'   d[2] <- max(alpha2 - p[2] / beta2, 0)
-#'   if (d[2] * p[2] > w) {
-#'     d[2] <- w / p[2]
-#'     d[1] <- 0
-#'   } else {
-#'     d[1] <- w - d[2] * p[2]
-#'   }
-#'
-#'   d
-#' }
-#'
 #' ge <- sdm2(
 #'   A = function(state) {
-#'     a1 <- demand_consumer1(c(state$p[1], state$p[3]), state$w[1])
+#'     a1 <- QL_demand(
+#'       w = state$w[1],
+#'       p = c(state$p[1], state$p[3]),
+#'       alpha = alpha1, beta = beta1,
+#'       type = "quadratic2"
+#'     )
 #'     a1 <- c(a1[1], 0, a1[2], 0)
 #'
-#'     a2 <- demand_consumer2(state$p[1:2], state$w[2])
+#'     a2 <- QL_demand(
+#'       w = state$w[2],
+#'       p = state$p[1:2],
+#'       alpha = alpha2, beta = beta2,
+#'       type = "quadratic2"
+#'     )
 #'     a2 <- c(a2, 0, 0)
 #'
 #'     a.firm <- c(0, 1, 0, tax.rate * state$p[2] / state$p[4])
@@ -93,11 +73,11 @@
 #' ge.pl <- ge$p[2]
 #' ge.ph <- ge$p[3]
 #' plot(function(x) (alpha1 - x) * beta1, 0, alpha1,
-#'      xlim = c(0, 100), ylim = c(0, 6), xlab = "iron", ylab = "price"
+#'   xlim = c(0, 100), ylim = c(0, 6), xlab = "iron", ylab = "price"
 #' )
 #' curve((alpha2 - iron.endowment + x) * beta2, 0,
-#'       alpha1,
-#'       add = TRUE
+#'   alpha1,
+#'   add = TRUE
 #' )
 #' grid()
 #' points(ge.x, ge.ph, col = "red", pch = 20) # pch=8
@@ -105,8 +85,10 @@
 #'
 #' polygon(c(0, ge.x, ge.x, 0), c(ge.ph, ge.ph, ge.pl, ge.pl))
 #' segments(0, 3, x1 = 60, y1 = 3, col = "red")
-#' text(c(0, ge.x, ge.x, 0) + 3, c(ge.ph + 0.3, ge.ph + 0.3,
-#'   ge.pl - 0.3, ge.pl - 0.3), c("A", "B", "C", "D"))
+#' text(c(0, ge.x, ge.x, 0) + 3, c(
+#'   ge.ph + 0.3, ge.ph + 0.3,
+#'   ge.pl - 0.3, ge.pl - 0.3
+#' ), c("A", "B", "C", "D"))
 #' text(c(3, ge.x + 3, 60), 3.3, c("E", "F", "G"))
 #'
 #' u.consumer1 <- function(x) x[1] + beta1 * (alpha1 * x[2] - 0.5 * x[2]^2)

@@ -7,12 +7,12 @@
 #' Finally, the DCES demand vector (namely the modified DCES demand vector) and the utility level
 #' (namely the modified DCES utility) are computed under the modified beta, the modified es, the given income and prices.
 #' @param es the elasticity of substitution.
-#' @param beta a n-vector consisting of the marginal expenditure share coefficients (Fullerton, 1989).
-#' @param xi a n-vector. Each element of xi parameterizes whether
+#' @param beta an n-vector consisting of the marginal expenditure share coefficients (Fullerton, 1989).
+#' @param xi an n-vector. Each element of xi parameterizes whether
 #' the particular good is a necessity for the household (Acemoglu, 2009, page 152).
 #' For example, xi[i] > 0 may mean that the household needs to consume at least a certain amount of good i to survive.
 #' @param w a scalar indicating the income.
-#' @param p a n-vector indicating the prices.
+#' @param p an n-vector indicating the prices.
 #' @param betaMod a function with the unmodified utility level u.unmod as the argument.
 #' @param esMod a function with the unmodified utility level u.unmod as the argument.
 #' @param detail If detail==FALSE, the modified demand vector is returned.

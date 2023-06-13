@@ -22,7 +22,7 @@ The consumer has a SCES intertemporal utility function and attempts to maximize 
 \examples{
 \donttest{
 #### an example with a 5-period-lived consumer
-np <- 5 # the number of periods
+np <- 5 # the number of internal periods
 
 interest.rate <- 0.1
 S <- matrix(NA, np, np)

@@ -22,7 +22,7 @@ A marginal utility function is the gradient of a utility function.
 When the components in the marginal utility vector are the same, a marginal utility function may calculate only one of the components.}
 }
 \value{
-A n-by-m marginal utility matrix. Its (i,j)-th element corresponds to the i-th column of y and the j-th column of x.
+An n-by-m marginal utility matrix. Its (i,j)-th element corresponds to the i-th column of y and the j-th column of x.
 }
 \description{
 If the argument price is null, this function computes the (delta) marginal utility.

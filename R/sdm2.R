@@ -365,8 +365,7 @@ sdm2 <- function(A,
     }
 
     if (any(!is.na(pExg))) {
-      tmpIndex <- which(!is.na(pExg))
-      tmpIndex <- tmpIndex[1]
+      tmpIndex <- which(!is.na(pExg))[1]
       p_tp1 <- p_tp1 / p_tp1[tmpIndex] * pExg[tmpIndex]
       p_tp1[!is.na(pExg)] <- pExg[!is.na(pExg)]
     } else {

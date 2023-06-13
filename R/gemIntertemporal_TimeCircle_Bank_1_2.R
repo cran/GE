@@ -12,10 +12,10 @@
 #' @examples
 #' \donttest{
 #' #### an example with a 5-period-lived consumer (see Zhang, 2008, section 1.3)
-#' np <- 5 # the number of periods
+#' np <- 5 # the number of internal periods
 #'
 #' interest.rate <- 0.1
-#' zeta <- (1+interest.rate)^np
+#' zeta <- (1+interest.rate)^np # the ratio of repayments to loans
 #' S <- matrix(NA, np, np + 1)
 #' S[1:np, np + 1] <- 100/(1:np)
 #'

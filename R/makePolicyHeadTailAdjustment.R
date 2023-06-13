@@ -9,6 +9,10 @@
 #' @param gr the growth rate.
 #' @param np the number of (internal) periods.
 #' @return A policy, which is often used as an argument of the function sdm2.
+#' @seealso {
+#' \code{\link{gemIntertemporal_Dividend}};
+#' \code{\link{gemIntertemporal_Money_Dividend_Example7.5.1}}
+#' }
 
 makePolicyHeadTailAdjustment <- function(type = c("both", "tail", "head"), gr = 0, np) {
   policyHeadAdjustment <- function(A, state) {
@@ -35,13 +39,16 @@ makePolicyHeadTailAdjustment <- function(type = c("both", "tail", "head"), gr = 
     tmp.node$beta <- prop.table(c(tmp.node$beta[1:(tmp.n - 1)], tail.beta))
   }
 
-  if ("both" %in% type) {
-    return(list(policyHeadAdjustment, policyTailAdjustment))
-  }
-
-  if (type == "tail") {
-    return(policyTailAdjustment)
-  }
-
-  return(policyHeadAdjustment)
+  switch(type[1],
+    "both" = {
+      return(list(policyHeadAdjustment, policyTailAdjustment))
+    },
+    "tail" = {
+      return(policyTailAdjustment)
+    },
+    "head" = {
+      return(policyHeadAdjustment)
+    },
+    stop("Wrong type.")
+  )
 }

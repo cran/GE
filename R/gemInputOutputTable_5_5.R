@@ -1,7 +1,7 @@
 #' @export
-#' @title General Equilibrium Models based on a 5x5 Input-Output Table (see Zhang Xin, 2017, Table 3.2.1)
+#' @title General Equilibrium Models based on a 5×5 Input-Output Table (see Zhang Xin, 2017, Table 3.2.1)
 #' @aliases gemInputOutputTable_5_5
-#' @description Some general equilibrium models based on a 5x5 input-output table (see Zhang Xin, 2017, Table 3.2.1).
+#' @description Some general equilibrium models based on a 5×5 input-output table (see Zhang Xin, 2017, Table 3.2.1).
 #' @param ... arguments to be passed to the function sdm2.
 #' @references Zhang Xin (2017, ISBN: 9787543227637) Principles of Computable General Equilibrium Modeling and Programming (Second Edition). Shanghai: Gezhi Press. (In Chinese)
 #' @examples

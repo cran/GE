@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemInputOutputTable_easy_5_4.R
 \name{gemInputOutputTable_easy_5_4}
 \alias{gemInputOutputTable_easy_5_4}
-\title{An Easy General Equilibrium Model based on a 5x4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1)}
+\title{An Easy General Equilibrium Model based on a 5×4 Input-Output Table (see Zhang Xin, 2017, Table 8.6.1)}
 \usage{
 gemInputOutputTable_easy_5_4(
   IT = cbind(sector.agri = c(agri = 260, manu = 345, serv = 400, lab = 200, cap = 160),
@@ -43,10 +43,10 @@ A general equilibrium, which is a list with the following elements:
 }
 }
 \description{
-This is a general equilibrium model based on a 5x4 input-output table (see Zhang Xin, 2017, Table 8.6.1).
+This is a general equilibrium model based on a 5×4 input-output table (see Zhang Xin, 2017, Table 8.6.1).
 }
 \details{
-Given a 5x4 input-output table (e.g., see Zhang Xin, 2017, Table 8.6.1), this model calculates
+Given a 5×4 input-output table (e.g., see Zhang Xin, 2017, Table 8.6.1), this model calculates
 the corresponding general equilibrium.
 This input-output table contains 3 production sectors and one household.
 The household consumes products and supplies labor and capital.

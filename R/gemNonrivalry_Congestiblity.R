@@ -1,0 +1,165 @@
+#' @export
+#' @title Some Examples Illustrating Congestible Non-rival Goods (or Services)
+#' @aliases gemNonrivalry_Congestiblity
+#' @description Some examples illustrating congestible non-rival goods (or services).
+#' @param ... arguments to be passed to the function sdm2.
+#' @seealso {
+#' \code{\link{gemNonrivalry_Uncongestiblity}}
+#' }
+#' @examples
+#' \donttest{
+#' ## The firm supplies non-rival services.
+#' dst.firm <- node_new(
+#'   "non-rival services",
+#'   type = "Leontief", a = 1,
+#'   "labor"
+#' )
+#'
+#' dst.consumer1 <- node_new(
+#'   "util",
+#'   type = "SCES", es = 1, # es = 0
+#'   alpha = 1, beta = c(0.75, 0.25),
+#'   "serv1", "labor"
+#' )
+#'
+#' dst.consumer2 <- node_new(
+#'   "util",
+#'   type = "SCES", es = 1, # es = 0
+#'   alpha = 1, beta = c(0.5, 0.5),
+#'   "serv2", "labor"
+#' )
+#'
+#' dst.consumer3 <- node_new(
+#'   "util",
+#'   type = "SCES", es = 1,
+#'   alpha = 1, beta = c(0.1, 0.9),
+#'   "serv3", "labor"
+#' )
+#'
+#' efficient.coef <- 0.6 # 0.8, 0.7
+#'
+#' ge <- sdm2(
+#'   A = list(
+#'     dst.firm, dst.firm, dst.firm, dst.firm,
+#'     dst.consumer1, dst.consumer2, dst.consumer3
+#'   ),
+#'   B = matrix(c(
+#'     1, 1, 0, efficient.coef, 0, 0, 0,
+#'     1, 0, 1, efficient.coef, 0, 0, 0,
+#'     0, 1, 1, efficient.coef, 0, 0, 0,
+#'     0, 0, 0, 0, 0, 0, 0
+#'   ), 4, 7, TRUE),
+#'   S0Exg = {
+#'     tmp <- matrix(NA, 4, 7)
+#'     tmp[4, 5:7] <- 100
+#'     tmp
+#'   },
+#'   names.commodity = c(paste0("serv", 1:3), "labor"),
+#'   names.agent = c(paste0("firm", 1:4), paste0("consumer", 1:3)),
+#'   numeraire = "labor"
+#' )
+#'
+#' ge$p
+#' round(ge$z, 5)
+#' round(ge$D, 5)
+#' round(ge$S, 5)
+#'
+#' ##
+#' efficient.coef <- 0.2
+#'
+#' ge <- sdm2(
+#'   A = list(
+#'     dst.firm, dst.firm, dst.firm,
+#'     dst.consumer1, dst.consumer2, dst.consumer3
+#'   ),
+#'   B = matrix(c(
+#'     1, efficient.coef, 0, 0, 0, 0,
+#'     1, efficient.coef, 0, 0, 0, 0,
+#'     0, efficient.coef, 0.5, 0, 0, 0,
+#'     0, 0, 0, 0, 0, 0
+#'   ), 4, 6, TRUE),
+#'   S0Exg = {
+#'     tmp <- matrix(NA, 4, 6)
+#'     tmp[4, 4:6] <- 100
+#'     tmp
+#'   },
+#'   names.commodity = c(paste0("serv", 1:3), "labor"),
+#'   names.agent = c(paste0("firm", 1:3), paste0("consumer", 1:3)),
+#'   numeraire = "labor"
+#' )
+#'
+#' ge$p
+#' round(ge$z, 5)
+#' round(ge$D, 5)
+#' round(ge$S, 5)
+#'
+#' ## congested land services.
+#' efficient.coef <- 0.6 # 0.8, 0.7
+#'
+#' dst.firm <- node_new(
+#'   "non-rival services",
+#'   type = "Leontief", a = 1,
+#'   "land"
+#' )
+#'
+#' ge <- sdm2(
+#'   A = list(
+#'     dst.firm, dst.firm, dst.firm, dst.firm,
+#'     dst.consumer1, dst.consumer2, dst.consumer3
+#'   ),
+#'   B = matrix(c(
+#'     1, 1, 0, efficient.coef, 0, 0, 0,
+#'     1, 0, 1, efficient.coef, 0, 0, 0,
+#'     0, 1, 1, efficient.coef, 0, 0, 0,
+#'     0, 0, 0, 0, 0, 0, 0,
+#'     0, 0, 0, 0, 0, 0, 0
+#'   ), 5, 7, TRUE),
+#'   S0Exg = {
+#'     tmp <- matrix(NA, 5, 7)
+#'     tmp[4, 5:7] <- 55
+#'     tmp[5, 5:7] <- 45
+#'     tmp
+#'   },
+#'   names.commodity = c(paste0("serv", 1:3), "labor", "land"),
+#'   names.agent = c(paste0("firm", 1:4), paste0("consumer", 1:3)),
+#'   numeraire = "labor"
+#' )
+#'
+#' ge$p
+#' round(ge$z, 5)
+#' round(ge$D, 5)
+#' round(ge$S, 5)
+#'
+#' ##
+#' efficient.coef <- 0.2
+#'
+#' ge <- sdm2(
+#'   A = list(
+#'     dst.firm, dst.firm, dst.firm,
+#'     dst.consumer1, dst.consumer2, dst.consumer3
+#'   ),
+#'   B = matrix(c(
+#'     1, efficient.coef, 0, 0, 0, 0,
+#'     1, efficient.coef, 0, 0, 0, 0,
+#'     0, efficient.coef, 0.5, 0, 0, 0,
+#'     0, 0, 0, 0, 0, 0,
+#'     0, 0, 0, 0, 0, 0
+#'   ), 5, 6, TRUE),
+#'   S0Exg = {
+#'     tmp <- matrix(NA, 5, 6)
+#'     tmp[4, 4:6] <- 55
+#'     tmp[5, 4:6] <- 45
+#'     tmp
+#'   },
+#'   names.commodity = c(paste0("serv", 1:3), "labor", "land"),
+#'   names.agent = c(paste0("firm", 1:3), paste0("consumer", 1:3)),
+#'   numeraire = "labor"
+#' )
+#'
+#' ge$p
+#' round(ge$z, 5)
+#' round(ge$D, 5)
+#' round(ge$S, 5)
+#' }
+
+gemNonrivalry_Congestiblity <- function(...) sdm2(...)

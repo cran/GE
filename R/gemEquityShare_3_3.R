@@ -39,6 +39,69 @@
 #' ge$p #The third component is the dividend per unit of share.
 #' ge$DV
 #' ge$SV
+#'
+#' ## Set the growth rate to 0.03.
+#' ge <- sdm2(
+#'   A = list(dst.firm, dst.laborer, dst.shareholder),
+#'   B = diag(c(1, 0, 0)),
+#'   S0Exg = {
+#'     S0Exg <- matrix(NA, 3, 3)
+#'     S0Exg[2, 2] <- S0Exg[3, 3] <- 100
+#'     S0Exg
+#'   },
+#'   names.commodity = c("prod", "lab", "equity.share"),
+#'   names.agent = c("firm", "laborer", "shareholder"),
+#'   numeraire = "prod",
+#'   GRExg = 0.03
+#' )
+#'
+#' ge$z
+#' ge$p
+#'
+#' #### An equivalent intertemporal model.
+#' gr <- 0.03
+#' rho.beta <- 0.8
+#' np <- 5 # the number of internal periods
+#' y1 <- 100
+#' S0Exg <- matrix(NA, 2 * np - 1, np)
+#' S0Exg[(np + 1):(2 * np - 1), np] <- 100 * (1 + gr)^(0:(np - 2))
+#' S0Exg[1, np] <- y1
+#'
+#' B <- matrix(0, 2 * np - 1, np)
+#' B[2:np, 1:(np - 1)] <- diag(np - 1)
+#'
+#' dstl.firm <- list()
+#' for (k in 1:(np - 1)) {
+#'   dstl.firm[[k]] <- node_new(
+#'     "prod",
+#'     type = "CD",
+#'     alpha = 2, beta = c(0.5, 0.5),
+#'     paste0("prod", k), paste0("lab", k)
+#'   )
+#' }
+#'
+#' dst.consumer <- node_new(
+#'   "util",
+#'   type = "CES", es = 1,
+#'   alpha = 1,  beta = prop.table(rho.beta^(1:np)),
+#'   paste0("prod", 1:np)
+#' )
+#'
+#' ge <- sdm2(
+#'   A = c(dstl.firm, dst.consumer),
+#'   B = B,
+#'   S0Exg = S0Exg,
+#'   names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:(np - 1))),
+#'   names.agent = c(paste0("firm", 1:(np - 1)), "consumer"),
+#'   numeraire = "prod1",
+#'   policy = makePolicyHeadTailAdjustment(gr = gr, np = np)
+#' )
+#'
+#' ge$z
+#' growth_rate(ge$z[1:4])
+#' ge$p[6:9] / ge$p[1:4]
+#' addmargins(ge$D, 2)
+#' addmargins(ge$S, 2)
 #' }
 
 gemEquityShare_3_3 <- function(...) sdm2(...)

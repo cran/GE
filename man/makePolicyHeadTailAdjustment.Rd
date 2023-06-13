@@ -22,3 +22,9 @@ A timeline model is an intertemporal non-sequential model that includes producti
 Head adjustment refers to the adjustment of the initial product supply to a steady-state value.
 Similarly, tail adjustment refers to the adjustment of the share coefficient of the last period of the consumer in the timeline model in order to let the model run in a steady-state equilibrium path.
 }
+\seealso{
+{
+\code{\link{gemIntertemporal_Dividend}};
+\code{\link{gemIntertemporal_Money_Dividend_Example7.5.1}}
+}
+}

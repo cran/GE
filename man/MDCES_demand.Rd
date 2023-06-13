@@ -9,15 +9,15 @@ MDCES_demand(es, beta, xi, w, p, betaMod = NULL, esMod = NULL, detail = FALSE)
 \arguments{
 \item{es}{the elasticity of substitution.}
 
-\item{beta}{a n-vector consisting of the marginal expenditure share coefficients (Fullerton, 1989).}
+\item{beta}{an n-vector consisting of the marginal expenditure share coefficients (Fullerton, 1989).}
 
-\item{xi}{a n-vector. Each element of xi parameterizes whether
+\item{xi}{an n-vector. Each element of xi parameterizes whether
 the particular good is a necessity for the household (Acemoglu, 2009, page 152).
 For example, xi[i] > 0 may mean that the household needs to consume at least a certain amount of good i to survive.}
 
 \item{w}{a scalar indicating the income.}
 
-\item{p}{a n-vector indicating the prices.}
+\item{p}{an n-vector indicating the prices.}
 
 \item{betaMod}{a function with the unmodified utility level u.unmod as the argument.}
 

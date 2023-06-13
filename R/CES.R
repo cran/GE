@@ -10,7 +10,7 @@
 #' @param x a vector consisting of the inputs.
 #' @param theta a vector consisting of the theta coefficients.
 #' @param es the elasticity of substitution. If es is not NA, the value of sigma will be ignored.
-#' @return The output or utility level.
+#' @return A scalar indicating the output or utility level.
 #' @examples
 #' \donttest{
 #' CES(1, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))
