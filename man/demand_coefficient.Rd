@@ -4,12 +4,14 @@
 \alias{demand_coefficient}
 \title{Compute Demand Coefficients of an Agent with a Demand Structural Tree}
 \usage{
-demand_coefficient(node, p)
+demand_coefficient(node, p, trace = FALSE)
 }
 \arguments{
 \item{node}{a demand structural tree.}
 
 \item{p}{a price vector with names of commodities.}
+
+\item{trace}{FALSE (default) or TRUE. If TRUE, calculation intermediate results will be recorded in nodes.}
 }
 \value{
 A vector consisting of demand coefficients.
@@ -36,8 +38,10 @@ alpha and es are scalars. beta is a vector. These parameters are parameters of a
 \item CES. In this case, this node also has parameters alpha, beta, theta (optional) and es (or sigma = 1 - 1 / es) (see CGE::CES_A).
 \item Leontief. In this case, this node also has the parameter a,
 which is a vector and is the parameter of a Leontief function.
-\item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta.
-These parameters are parameters of a Cobb-Douglas function.
+\item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta,
+which are parameters of a Cobb-Douglas function.
+\item CESAK. In this case, this node also has parameters es, alpha, betaK and alphaK,
+which are parameters of the CESAK function (see \code{\link{CESAK_dc}}). Moreover, the first child node should represent capital goods.
 \item FIN. That is the financial type.
 In this case, this node also has the parameter rate or beta.
 If the parameter beta is not NULL, then the parameter rate will be ignored.

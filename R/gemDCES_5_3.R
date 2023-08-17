@@ -7,36 +7,40 @@
 #' @references Zhang Jinshui (2008, ISBN: 9787040224818) Mathematical Economics. Beijing: Higher Education Press. (In Chinese)
 #' @examples
 #' \donttest{
-#' ge <-  sdm2(
+#' ge <- sdm2(
 #'   A = function(state) {
 #'     a.firm1 <- CD_A(alpha = 1, Beta = c(0, 0, 0.5, 0.5, 0), state$p)
 #'     a.firm2 <- CD_A(alpha = 2, Beta = c(0, 0, 0.5, 0, 0.5), state$p)
-#'     a.consumer <- DCES_demand (
+#'     a.consumer <- DCES_demand(
 #'       es = 1,
 #'       beta = c(1 / 3, 1 / 3, 1 / 3, 0, 0),
 #'       xi = c(0, 0, 0.4, 0, 0),
-#'       w = state$w[3] / 10 ^ 4,
+#'       w = state$w[3] / 10^4,
 #'       p = state$p
 #'     )
 #'     cbind(a.firm1, a.firm2, a.consumer)
 #'   },
-#'   B = matrix(c(1, 0, 0,
-#'                0, 1, 0,
-#'                0, 0, 0,
-#'                0, 0, 0,
-#'                0, 0, 0), 5, 3, TRUE),
-#'   S0Exg = {
-#'     tmp <- matrix(NA, 5, 3)
-#'     tmp[3, 3] <- 10000
-#'     tmp[4:5, 3] <- 1
-#'     tmp
-#'   },
+#'   B = matrix(c(
+#'     1, 0, 0,
+#'     0, 1, 0,
+#'     0, 0, 0,
+#'     0, 0, 0,
+#'     0, 0, 0
+#'   ), 5, 3, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, NA, NA,
+#'     NA, NA, 10000,
+#'     NA, NA, 1,
+#'     NA, NA, 1
+#'   ), 5, 3, TRUE),
 #'   names.commodity = c("prod1", "prod2", "lab", "land1", "land2"),
 #'   names.agent = c("firm1", "firm2", "consumer"),
 #'   numeraire = "lab"
 #' )
 #'
 #' ge$p
+#' ge$z
 #' }
 
 gemDCES_5_3 <- function(...) sdm2(...)

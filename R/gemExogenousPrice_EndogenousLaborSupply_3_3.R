@@ -4,6 +4,7 @@
 #' @description This is an example of price regulation and endogenous labor supply.
 #' See CGE::Example9.5.
 #' @param ... arguments to be passed to the function sdm2.
+#' @seealso \code{\link{gemExogenousPrice}}
 #' @examples
 #' \donttest{
 #' ## the exogenous labor price with product as numeraire.

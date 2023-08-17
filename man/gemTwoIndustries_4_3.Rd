@@ -15,27 +15,31 @@ A 4-by-3 economy with two industries.
 \examples{
 \donttest{
 dst.manu <- node_new("output",
-                     type = "SCES", es = 1, alpha = 1,
-                     beta = c(0.2, 0.8),
-                     "lab", "cap"
+  type = "SCES", es = 1,
+  alpha = 1, beta = c(0.2, 0.8),
+  "lab", "cap"
 )
 
 dst.serv <- node_new("output",
-                     type = "SCES", es = 1, alpha = 1,
-                     beta = c(0.8, 0.2),
-                     "lab", "cap"
+  type = "SCES", es = 1,
+  alpha = 1, beta = c(0.8, 0.2),
+  "lab", "cap"
 )
 
 dst.consumer <- node_new("util",
-                         type = "SCES", es = 1, alpha = 1,
-                         beta = c(0.5, 0.5),
-                         "manu", "serv"
+  type = "SCES", es = 1,
+  alpha = 1, beta = c(0.5, 0.5),
+  "manu", "serv"
 )
 
 dstl <- list(dst.manu, dst.serv, dst.consumer)
 
-S0Exg <- matrix(NA, 4, 3)
-S0Exg[3:4, 3] <- c(100, 100)
+S0Exg <- matrix(c(
+  NA, NA, NA,
+  NA, NA, NA,
+  NA, NA, 100,
+  NA, NA, 100
+), 4, 3, TRUE)
 
 f <- function(dstl, S0Exg) {
   sdm2(
@@ -89,9 +93,10 @@ ge$p
 
 ## exogenous wage rate
 S0Exg4 <- S0Exg
-S0Exg4[3, 3] <- 1000 # labor supply
+S0Exg4[3, 3] <- 300 # labor supply
 
-ge <- sdm2(
+# Compute the price-control stationary state.
+pcss <- sdm2(
   A = dstl2,
   B = matrix(c(
     1, 0, 0,
@@ -108,10 +113,10 @@ ge <- sdm2(
   ts = TRUE
 )
 
-matplot(ge$ts.z, type = "l")
-matplot(ge$ts.q, type = "l")
-tail(ge$ts.q)
-ge$p
+matplot(pcss$ts.z, type = "l")
+matplot(pcss$ts.q, type = "l")
+tail(pcss$ts.q)
+pcss$p
 }
 }
 \references{

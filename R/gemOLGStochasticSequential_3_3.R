@@ -4,30 +4,45 @@
 #' @description A 3-by-3 OLG stochastic sequential general equilibrium model.
 #' There are two-period lived consumers and a type of firm. There are three types of commodities, i.e. product, labor and security (i.e. paper asset, store of value).
 #'
-#' In each period there are a young (i.e. age1), an old (i.e. age2) and a firm. The young supplies a unit of labor and the old supplies a unit of security.
+#' In each period there are a young (i.e. age1), an old (i.e. age2) and a firm.
+#' The young supplies a unit of labor and the old supplies a unit of security.
 #'
 #' Consumers only consume products. The young buys the security to save.
 #'
-#' The firm inputs labor to produce the product. Productivity is random. The amount of labor required to produce 1 unit of product is equal to 0.1 or 0.2, both of which occur with equal probability.
+#' The firm inputs labor to produce the product.
+#' Productivity is random.
+#' The amount of labor required to produce 1 unit of product is equal to 0.1 or 0.2,
+#' both of which occur with equal probability.
 #'
-#' All labor is used in production. Therefore, it can be known that the product output in each period (that is, the product supply in the next period) is equal to 10 or 5, that is to say, there are two natural states with equal probability of occurrence in each period: high supply state and low supply state. The states are denoted as a and b, respectively. There are then four cases of natural states experienced by a consumer in two periods: aa, bb, ab and ba.
+#' All labor is used in production.
+#' Therefore, it can be known that the product output in each period
+#' (that is, the product supply in the next period) is equal to 10 or 5,
+#' that is to say, there are two natural states with equal probability of occurrence in each period: good state and bad state.
+#' The states are denoted as a and b, respectively.
+#' There are then four cases of natural states experienced by a consumer in two periods: aa, bb, ab and ba.
 #'
-#' Take the product as numeraire. The ratio of the security price in the latter period to the previous period of the two periods is the gross rate of return. The gross rates of returns on the savings of the young in the four cases is denoted as Raa, Rbb, Rab and Rba, respectively.
+#' Take the product as numeraire.
+#' The ratio of the security price in the latter period to the previous period of the two periods is the gross rate of return.
+#' The gross rates of return on the savings of the young in the four cases is denoted as Raa, Rbb, Rab and Rba, respectively.
 #'
-#' The utility function of the young is -0.5*x1^-1 - 0.25*x2^-1 - 0.25*x3^-1, where x1, x2 and x3 are the (expected) consumption in the current period and the next two natural states, respectively. It can be seen that the intertemporal substitution elasticity and the inter-natural-state substitution elasticity in the utility function are both 0.5, that is, the relative risk aversion coefficient is 2.
+#' The utility function of the young is -0.5*x1^-1 - 0.25*x2^-1 - 0.25*x3^-1,
+#' where x1, x2 and x3 are the (expected) consumption in the current period and the next two natural states, respectively.
+#' It can be seen that the intertemporal substitution elasticity and the inter-natural-state substitution elasticity in the utility function are both 0.5,
+#' that is, the relative risk aversion coefficient is 2.
 #'
-#' In each period, the young determines the saving rate based on the expected gross rates of returns on the security and the utility function.
+#' In each period, the young determines the saving rate based on the expected gross rates of return on the security and the utility function.
 #'
-#' In each period the young adopts the following anticipation method for the gross rate of return of the savings: First, determine the two types of interest rates (Raa, Rab or Rbb, Rba) that need to be predicted according to the current state. Both interest rates are then forecasted using the adaptive expectation method.
+#' In each period the young adopts the following anticipation method for the gross rate of return of the savings: First, determine the two types of gross rates of return (Raa, Rab or Rbb, Rba) that need to be predicted according to the current state. Both interest rates are then forecasted using the adaptive expectation method.
 #'
-#' A market clearing path and a disequilibrium path will be calculated below. The market clearing path will converge to the stochastic equilibrium consisting of two equilibrium states, and the disequilibrium paths not.
+#' A market clearing path and a disequilibrium path will be calculated below.
+#' The market clearing path will converge to the stochastic equilibrium consisting of two equilibrium states, and the disequilibrium paths not.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
-#' #optimal saving rate
-#' osr <- function(Ra, Rb, es=0.5, beta=c(0.5, 0.25, 0.25)){
-#'   sigma <- 1-1/es
-#'   ((beta[2]*Ra^sigma/beta[1]+beta[3]*Rb^sigma/beta[1])^-es+1)^-1
+#' # a function to find the optimal saving rate given the expected gross rates of return.
+#' osr <- function(Ra, Rb, es = 0.5, beta = c(0.5, 0.25, 0.25)) {
+#'   sigma <- 1 - 1 / es
+#'   ((beta[2] * Ra^sigma / beta[1] + beta[3] * Rb^sigma / beta[1])^-es + 1)^-1
 #' }
 #'
 #' dst.firm <- node_new(
@@ -38,70 +53,69 @@
 #'
 #' dst.age1 <-
 #'   node_new("util",
-#'            type = "FIN", rate= c(1, 1),
-#'            "prod","secy",
-#'            last.price = c(1,1,1),
-#'            last.output = 10,
-#'            Raa = 1, Rbb = 1, Rab = 1,  Rba = 1,
-#'            REbb = 1, REba = 1, REab = 1, REaa = 1,
-#'            sr.ts.1 = vector(),
-#'            sr.ts.2 = vector()
+#'     type = "FIN", rate = c(1, 1),
+#'     "prod", "secy",
+#'     last.price = c(1, 1, 1),
+#'     last.output = 10,
+#'     Raa = 1, Rbb = 1, Rab = 1, Rba = 1,
+#'     REbb = 1, REba = 1, REab = 1, REaa = 1,
+#'     sr.ts.1 = vector(),
+#'     sr.ts.2 = vector()
 #'   )
 #'
 #' dst.age2 <-
 #'   node_new("util",
-#'            type = "Leontief", a = 1,
-#'            "prod"
+#'     type = "Leontief", a = 1,
+#'     "prod"
 #'   )
 #'
-#'
-#' policyStochasticTechnology <- function(time,A){
+#' policyStochasticTechnology <- function(time, A) {
 #'   A[[1]]$a <- sample(c(0.1, 0.2), 1)
 #' }
 #'
-#' policySaving <- function(time, A, state){
-#'   output <- state$S[1,1]
+#' policySaving <- function(time, A, state) {
+#'   output <- state$S[1, 1]
 #'
 #'   lambda <- 0.9
 #'
-#'   if (output<8) {
-#'     A[[2]]$REba <- lambda*tail(A[[2]]$Rba, 1)+(1-lambda)*A[[2]]$REba
-#'     A[[2]]$REbb <- lambda*tail(A[[2]]$Rbb, 1)+(1-lambda)*A[[2]]$REbb
+#'   if (output < 8) {
+#'     A[[2]]$REba <- lambda * tail(A[[2]]$Rba, 1) + (1 - lambda) * A[[2]]$REba
+#'     A[[2]]$REbb <- lambda * tail(A[[2]]$Rbb, 1) + (1 - lambda) * A[[2]]$REbb
 #'
 #'     saving.rate <- osr(A[[2]]$REba, A[[2]]$REbb)
 #'     A[[2]]$sr.ts.1 <- c(A[[2]]$sr.ts.1, saving.rate)
 #'   }
 #'
-#'   if (output>=8) {
-#'     A[[2]]$REaa <- lambda*tail(A[[2]]$Raa, 1)+(1-lambda)*A[[2]]$REaa
-#'     A[[2]]$REab <- lambda*tail(A[[2]]$Rab, 1)+(1-lambda)*A[[2]]$REab
+#'   if (output >= 8) {
+#'     A[[2]]$REaa <- lambda * tail(A[[2]]$Raa, 1) + (1 - lambda) * A[[2]]$REaa
+#'     A[[2]]$REab <- lambda * tail(A[[2]]$Rab, 1) + (1 - lambda) * A[[2]]$REab
 #'
-#'     saving.rate  <- osr(A[[2]]$REaa, A[[2]]$REab)
+#'     saving.rate <- osr(A[[2]]$REaa, A[[2]]$REab)
 #'     A[[2]]$sr.ts.2 <- c(A[[2]]$sr.ts.2, saving.rate)
 #'   }
 #'
-#'   A[[2]]$rate <- c(1, saving.rate/(1-saving.rate))
+#'   A[[2]]$rate <- c(1, saving.rate / (1 - saving.rate))
 #' }
 #'
 #'
-#' policyRecord <- function(time, A, state){
+#' policyRecord <- function(time, A, state) {
 #'   last.p <- A[[2]]$last.price
-#'   p <- state$p/state$p[1]
+#'   p <- state$p / state$p[1]
 #'
 #'   last.output <- A[[2]]$last.output
-#'   output <- A[[2]]$last.output <- state$S[1,1]
+#'   output <- A[[2]]$last.output <- state$S[1, 1]
 #'
-#'   if ((last.output<8)&&(output<8)) A[[2]]$Rbb <- c(A[[2]]$Rbb, p[3]/last.p[3])
-#'   if ((last.output<8)&&(output>=8)) A[[2]]$Rba <- c(A[[2]]$Rba, p[3]/last.p[3])
-#'   if ((last.output>=8)&&(output<8)) A[[2]]$Rab <- c(A[[2]]$Rab, p[3]/last.p[3])
-#'   if ((last.output>=8)&&(output>=8)) A[[2]]$Raa <- c(A[[2]]$Raa, p[3]/last.p[3])
+#'   if ((last.output < 8) && (output < 8)) A[[2]]$Rbb <- c(A[[2]]$Rbb, p[3] / last.p[3])
+#'   if ((last.output < 8) && (output >= 8)) A[[2]]$Rba <- c(A[[2]]$Rba, p[3] / last.p[3])
+#'   if ((last.output >= 8) && (output < 8)) A[[2]]$Rab <- c(A[[2]]$Rab, p[3] / last.p[3])
+#'   if ((last.output >= 8) && (output >= 8)) A[[2]]$Raa <- c(A[[2]]$Raa, p[3] / last.p[3])
 #'
 #'   A[[2]]$last.price <- p
 #' }
 #'
 #' dstl <- list(dst.firm, dst.age1, dst.age2)
 #'
-#' B <-  matrix(c(
+#' B <- matrix(c(
 #'   1, 0, 0,
 #'   0, 0, 0,
 #'   0, 0, 0
@@ -113,42 +127,174 @@
 #'   NA, NA, 1
 #' ), 3, 3, TRUE)
 #'
-#' ## a market clearing path
+#' ## a market clearing path.
 #' set.seed(1)
 #' ge <- sdm2(
-#'   A = dstl,  B = B,  S0Exg = S0Exg,
-#'   names.commodity = c("prod","lab", "secy"),
-#'   names.agent = c("firm","age1", "age2"),
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab", "secy"),
+#'   names.agent = c("firm", "age1", "age2"),
 #'   numeraire = "prod",
-#'   policy = list(policyStochasticTechnology,
-#'                 policySaving,
-#'                 policyMarketClearingPrice,
-#'                 policyRecord),
-#'   z0 = c(5,1,1),
+#'   policy = list(
+#'     policyStochasticTechnology,
+#'     policySaving,
+#'     policyMarketClearingPrice,
+#'     policyRecord
+#'   ),
+#'   z0 = c(5, 1, 1),
 #'   maxIteration = 1,
 #'   numberOfPeriods = 40,
-#'   ts=TRUE
+#'   ts = TRUE
 #' )
 #'
-#' matplot(ge$ts.z, type="o", pch=20)
-#' matplot(ge$ts.p, type="o", pch=20)
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
 #'
-#' ## a disequilibrium path
+#' ## a disequilibrium path.
 #' set.seed(1)
 #' de <- sdm2(
-#'   A = dstl,  B = B,  S0Exg = S0Exg,
-#'   names.commodity = c("prod","lab", "secy"),
-#'   names.agent = c("firm","age1", "age2"),
+#'   A = dstl, B = B, S0Exg = S0Exg,
+#'   names.commodity = c("prod", "lab", "secy"),
+#'   names.agent = c("firm", "age1", "age2"),
 #'   numeraire = "prod",
-#'   policy = list(policyStochasticTechnology,
-#'                 policySaving,
-#'                 policyRecord),
+#'   policy = list(
+#'     policyStochasticTechnology,
+#'     policySaving,
+#'     policyRecord
+#'   ),
 #'   maxIteration = 1,
 #'   numberOfPeriods = 400,
-#'   ts=TRUE
+#'   ts = TRUE
 #' )
 #'
-#' matplot(de$ts.z, type="o", pch=20)
-#' matplot(de$ts.p, type="o", pch=20)
+#' matplot(de$ts.z, type = "o", pch = 20)
+#' matplot(de$ts.p, type = "o", pch = 20)
+#'
+#' ## an equilibrium model for solving the optimal saving
+#' # rate based on the expected gross rates of return.
+#' Ra <- 1
+#' Rb <- 0.4
+#'
+#' ge <- sdm2(
+#'   A = function(state) {
+#'     a.bank <- c(1, 0, 0)
+#'     a.consumer <- CES_A(
+#'       sigma = (1 - 1 / 0.5), alpha = 1,
+#'       Beta = c(0.5, 0.25, 0.25), p = state$p
+#'     )
+#'     cbind(a.bank, a.consumer)
+#'   },
+#'   B = matrix(c(
+#'     0, 0,
+#'     Ra, 0,
+#'     Rb, 0
+#'   ), 3, 2, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, 1,
+#'     NA, 0,
+#'     NA, 0
+#'   ), 3, 2, TRUE),
+#'   names.commodity = c("payoff1", "payoff2", "payoff3"),
+#'   names.agent = c("bank", "consumer"),
+#'   numeraire = "payoff1",
+#' )
+#'
+#' ge$p
+#' addmargins(ge$D, 2)
+#' addmargins(ge$S, 2)
+#'
+#' ge$z[1]
+#' osr(Ra, Rb)
+#'
+#' ## a pure exchange model.
+#' dst.age1 <- node_new("util",
+#'   type = "FIN", rate = c(1, 1),
+#'   "payoff", "secy",
+#'   last.price = c(1, 1),
+#'   last.payoff = 1,
+#'   Rbb = 1, Rba = 1, Rab = 1, Raa = 1,
+#'   REbb = 1, REba = 1, REab = 1, REaa = 1,
+#'   sr.ts.1 = vector(),
+#'   sr.ts.2 = vector()
+#' )
+#'
+#' dst.age2 <- node_new("util",
+#'   type = "Leontief", a = 1,
+#'   "payoff"
+#' )
+#'
+#' policyStochasticSupply <- function(state) {
+#'   state$S[1, 1] <- sample(c(5, 10), 1)
+#'   state
+#' }
+#'
+#' policySaving <- function(time, A, state) {
+#'   payoff <- state$S[1, 1]
+#'
+#'   lambda <- 0.9
+#'   if (time >= 5) {
+#'     if (payoff == 5) {
+#'       A[[1]]$REba <- lambda * tail(A[[1]]$Rba, 1) + (1 - lambda) * A[[1]]$REba
+#'       A[[1]]$REbb <- lambda * tail(A[[1]]$Rbb, 1) + (1 - lambda) * A[[1]]$REbb
+#'
+#'       saving.rate <- osr(A[[1]]$REba, A[[1]]$REbb)
+#'       A[[1]]$sr.ts.1 <- c(A[[1]]$sr.ts.1, saving.rate)
+#'     }
+#'
+#'     if (payoff == 10) {
+#'       A[[1]]$REaa <- lambda * tail(A[[1]]$Raa, 1) + (1 - lambda) * A[[1]]$REaa
+#'       A[[1]]$REab <- lambda * tail(A[[1]]$Rab, 1) + (1 - lambda) * A[[1]]$REab
+#'
+#'       saving.rate <- osr(A[[1]]$REaa, A[[1]]$REab)
+#'       A[[1]]$sr.ts.2 <- c(A[[1]]$sr.ts.2, saving.rate)
+#'     }
+#'
+#'     A[[1]]$rate <- c(1, saving.rate / (1 - saving.rate))
+#'   }
+#' }
+#'
+#' policyRecord <- function(time, A, state) {
+#'   last.p <- A[[1]]$last.price
+#'   p <- state$p / state$p[1]
+#'
+#'   last.payoff <- A[[1]]$last.payoff
+#'   payoff <- state$S[1, 1]
+#'
+#'   if ((last.payoff == 5) && (payoff == 5)) A[[1]]$Rbb <- c(A[[1]]$Rbb, p[2] / last.p[2])
+#'   if ((last.payoff == 5) && (payoff == 10)) A[[1]]$Rba <- c(A[[1]]$Rba, p[2] / last.p[2])
+#'   if ((last.payoff == 10) && (payoff == 5)) A[[1]]$Rab <- c(A[[1]]$Rab, p[2] / last.p[2])
+#'   if ((last.payoff == 10) && (payoff == 10)) A[[1]]$Raa <- c(A[[1]]$Raa, p[2] / last.p[2])
+#'
+#'
+#'   A[[1]]$last.price <- p
+#'   A[[1]]$last.payoff <- state$S[1, 1]
+#' }
+#'
+#' set.seed(1)
+#' ge <- sdm2(
+#'   A = list(dst.age1, dst.age2),
+#'   B = matrix(0, 2, 2),
+#'   S0Exg = matrix(c(
+#'     1, NA,
+#'     NA, 1
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("payoff", "secy"),
+#'   names.agent = c("age1", "age2"),
+#'   numeraire = "payoff",
+#'   policy = list(
+#'     policyStochasticSupply,
+#'     policySaving,
+#'     policyMarketClearingPrice,
+#'     policyRecord
+#'   ),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 40,
+#'   ts = TRUE
+#' )
+#'
+#' matplot(ge$ts.z, type = "o", pch = 20)
+#' matplot(ge$ts.p, type = "o", pch = 20)
+#' dst.age1$last.payoff
+#' dst.age1$last.price
+#' dst.age1$Rbb
 #' }
 gemOLGStochasticSequential_3_3 <- function(...) sdm2(...)

@@ -1,5 +1,5 @@
 #' @export
-#' @title Some Examples Illustrating Congestible Non-rival Goods (or Services)
+#' @title Some Examples Illustrating Congestible Non-rival Goods
 #' @aliases gemNonrivalry_Congestiblity
 #' @description Some examples illustrating congestible non-rival goods (or services).
 #' @param ... arguments to be passed to the function sdm2.

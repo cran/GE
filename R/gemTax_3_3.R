@@ -6,7 +6,7 @@
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
 #' @examples
 #' \donttest{
-#' #### turnover tax
+#' #### the turnover tax.
 #' dst.firm <- node_new("prod",
 #'                      type = "FIN",
 #'                      rate = c(1, tax.rate = 0.25),
@@ -28,12 +28,11 @@
 #' ge.TT <- sdm2(
 #'   A = list(dst.firm, dst.laborer, dst.government),
 #'   B = diag(c(1, 0, 0)),
-#'   S0Exg = {
-#'     S0Exg <- matrix(NA, 3, 3)
-#'     S0Exg[2, 2] <- 100
-#'     S0Exg[3, 3] <- 100
-#'     S0Exg
-#'   },
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, 100, NA,
+#'     NA, NA, 100
+#'   ), 3, 3, TRUE),
 #'   names.commodity = c("prod", "lab", "tax"),
 #'   names.agent = c("firm", "laborer", "government"),
 #'   numeraire = "prod"
@@ -44,7 +43,7 @@
 #' ge.TT$D
 #' ge.TT$S
 #'
-#' #### product tax
+#' #### the product tax.
 #' dst.taxed.prod <- node_new("taxed.prod",
 #'                            type = "FIN",
 #'                            rate = c(1, tax.rate = 0.25),
@@ -67,12 +66,11 @@
 #' ge.PT <- sdm2(
 #'   A = list(dst.firm, dst.laborer, dst.government),
 #'   B = diag(c(1, 0, 0)),
-#'   S0Exg = {
-#'     S0Exg <- matrix(NA, 3, 3)
-#'     S0Exg[2, 2] <- 100
-#'     S0Exg[3, 3] <- 100
-#'     S0Exg
-#'   },
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, 100, NA,
+#'     NA, NA, 100
+#'   ), 3, 3, TRUE),
 #'   names.commodity = c("prod", "lab", "tax"),
 #'   names.agent = c("firm", "laborer", "government"),
 #'   numeraire = "prod"
@@ -83,7 +81,7 @@
 #' ge.PT$D
 #' ge.PT$S
 #'
-#' #### consumption tax
+#' #### the consumption tax.
 #' dst.firm <- node_new("output",
 #'                      type = "CD", alpha = 2,
 #'                      beta = c(0.5, 0.5),
@@ -105,12 +103,11 @@
 #' ge.CT <- sdm2(
 #'   A = list(dst.firm, dst.laborer, dst.government),
 #'   B = diag(c(1, 0, 0)),
-#'   S0Exg = {
-#'     S0Exg <- matrix(NA, 3, 3)
-#'     S0Exg[2, 2] <- 100
-#'     S0Exg[3, 3] <- 100
-#'     S0Exg
-#'   },
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, 100, NA,
+#'     NA, NA, 100
+#'   ), 3, 3, TRUE),
 #'   names.commodity = c("prod", "lab", "tax"),
 #'   names.agent = c("firm", "laborer", "government"),
 #'   numeraire = "prod"
@@ -121,7 +118,7 @@
 #' ge.CT$D
 #' ge.CT$S
 #'
-#' #### value added tax
+#' #### the value added tax.
 #' dst.firm <- node_new("output",
 #'   type = "CD", alpha = 2,
 #'   beta = c(0.5, 0.5),
@@ -143,11 +140,11 @@
 #' ge.VAT <- sdm2(
 #'   A = list(dst.firm, dst.laborer, dst.government),
 #'   B = diag(c(1, 0, 0)),
-#'   S0Exg = {
-#'     S0Exg <- matrix(NA, 3, 3)
-#'     S0Exg[2, 2] <- S0Exg[3, 3] <- 100
-#'     S0Exg
-#'   },
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, 100, NA,
+#'     NA, NA, 100
+#'   ), 3, 3, TRUE),
 #'   names.commodity = c("prod", "lab", "tax"),
 #'   names.agent = c("firm", "laborer", "government"),
 #'   numeraire = "prod"
@@ -158,7 +155,7 @@
 #' ge.VAT$D
 #' ge.VAT$S
 #'
-#' #### income tax
+#' #### the income tax.
 #' income.tax.rate <- 1 / 4
 #'
 #' dst.firm <- node_new("output",
@@ -176,13 +173,11 @@
 #'
 #' ge.IT <- sdm2(
 #'   A = list(dst.firm, dst.laborer, dst.government),
-#'   B = diag(c(1, 0),2,3),
-#'   S0Exg = {
-#'     S0Exg <- matrix(NA, 2, 3)
-#'     S0Exg[2, 2] <- 100 * (1 - income.tax.rate)
-#'     S0Exg[2, 3] <- 100 * income.tax.rate
-#'     S0Exg
-#'   },
+#'   B <- diag(c(1, 0), 2, 3),
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, 100 * (1 - income.tax.rate), 100 * income.tax.rate
+#'   ), 2, 3, TRUE),
 #'   names.commodity = c("prod", "lab"),
 #'   names.agent = c("firm", "laborer", "government"),
 #'   numeraire = "prod"
@@ -193,7 +188,7 @@
 #' ge.IT$D
 #' ge.IT$S
 #'
-#' #### turnover tax (Li, 2019, example 4.11)
+#' #### the turnover tax (Li, 2019, example 4.11).
 #' dst.firm <- node_new("output",
 #'                      type = "FIN",
 #'                      rate = c(1, turnover.tax.rate = 1),
@@ -220,12 +215,11 @@
 #' ge.TT2 <- sdm2(
 #'   A = list(dst.firm, dst.laborer1, dst.laborer2),
 #'   B = diag(c(1, 0, 0)),
-#'   S0Exg = {
-#'     S0Exg <- matrix(NA, 3, 3)
-#'     S0Exg[2, 2] <- S0Exg[2, 3] <-
-#'       S0Exg[3, 3] <- 100
-#'     S0Exg
-#'   },
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA,
+#'     NA, 100, NA,
+#'     NA, NA, 100
+#'   ), 3, 3, TRUE),
 #'   names.commodity = c("prod", "lab", "tax"),
 #'   names.agent = c("firm", "laborer1", "laborer2"),
 #'   numeraire = "lab"

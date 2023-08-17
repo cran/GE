@@ -24,13 +24,24 @@ These models are as follows:
 eis <- 0.8 # the elasticity of intertemporal substitution
 rho.beta <- 0.8 # the subjective discount factor
 gr <- 0.03 # the growth rate
-np <- 5 # the number of internal periods
-S0Exg <- matrix(NA, 2 * np - 1, np)
-S0Exg[(np + 1):(2 * np - 1), np] <- 100 * (1 + gr)^(0:(np - 2))
-S0Exg[1, np] <- 140 # the product supply in the first period, which will be adjusted.
+np <- 5 # the number of planning periods
 
-B <- matrix(0, 2 * np - 1, np)
-B[2:np, 1:(np - 1)] <- diag(np - 1)
+n <- 2 * np - 1 # the number of commodity kinds
+m <- np # the number of agent kinds
+
+names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:(np - 1)))
+names.agent <- c(paste0("firm", 1:(np - 1)), "consumer")
+
+# the exogenous supply matrix.
+S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+S0Exg[paste0("lab", 1:(np - 1)), "consumer"] <- 100 * (1 + gr)^(0:(np - 2))
+S0Exg["prod1", "consumer"] <- 140 # the product supply in the first period, which will be adjusted.
+
+# the output coefficient matrix.
+B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+for (k in 1:(np - 1)) {
+  B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+}
 
 dstl.firm <- list()
 for (k in 1:(np - 1)) {
@@ -49,30 +60,43 @@ dst.consumer <- node_new(
   paste0("prod", 1:np)
 )
 
-ge <- sdm2(
+ge.tl <- sdm2(
   A = c(dstl.firm, dst.consumer),
   B = B,
   S0Exg = S0Exg,
-  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:(np - 1))),
-  names.agent = c(paste0("firm", 1:(np - 1)), "consumer"),
+  names.commodity = names.commodity,
+  names.agent = names.agent,
   numeraire = "prod1",
   policy = makePolicyHeadTailAdjustment(gr = gr, np = np)
 )
 
-((1 + gr))^(1 / eis) / rho.beta - 1 # the real interest rate.
-ge$p[1:(np - 1)] / ge$p[2:np] - 1
-ge$z
+sserr(eis, rho.beta, gr) # the steady-state equilibrium return rate, 0.2970
+ge.tl$p[1:(np - 1)] / ge.tl$p[2:np] - 1
+ge.tl$z
 
 ## (2) a financial timeline model with dividend and head-tail adjustment.
-yield <- 0.2593 # (1 + gr)^(1 / eis - 1) / rho.beta - 1
+yield <- sserr(
+  eis = eis, rho.beta = rho.beta,
+  gr = gr, prepaid = TRUE
+) # the prepaid steady-state equilibrium return rate, 0.2593
 
-S0Exg <- matrix(NA, 2 * np, np)
-S0Exg[(np + 1):(2 * np - 1), np] <- 100 * (1 + gr)^(0:(np - 2))
-S0Exg[2 * np, np] <- 100
-S0Exg[1, np] <- 140 # the product supply in the first period, which will be adjusted.
+n <- 2 * np # the number of commodity kinds
+m <- np # the number of agent kinds
 
-B <- matrix(0, 2 * np, np)
-B[2:np, 1:(np - 1)] <- diag(np - 1)
+names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:(np - 1)), "claim")
+names.agent <- c(paste0("firm", 1:(np - 1)), "consumer")
+
+# the exogenous supply matrix.
+S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+S0Exg[paste0("lab", 1:(np - 1)), "consumer"] <- 100 * (1 + gr)^(0:(np - 2))
+S0Exg["claim", "consumer"] <- 100
+S0Exg["prod1", "consumer"] <- 140 # the product supply in the first period, which will be adjusted.
+
+# the output coefficient matrix.
+B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+for (k in 1:(np - 1)) {
+  B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+}
 
 dstl.firm <- list()
 for (k in 1:(np - 1)) {
@@ -94,39 +118,38 @@ dst.consumer <- node_new(
   paste0("prod", 1:np)
 )
 
-ge <- sdm2(
+ge.ftl <- sdm2(
   A = c(dstl.firm, dst.consumer),
   B = B,
   S0Exg = S0Exg,
-  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:(np - 1)), "claim"),
-  names.agent = c(paste0("firm", 1:(np - 1)), "consumer"),
+  names.commodity = names.commodity,
+  names.agent = names.agent,
   numeraire = "prod1",
   policy = makePolicyHeadTailAdjustment(gr = gr, np = np)
 )
 
-#### (3) a financial sequential model with dividend.
-gr <- 0.03 # the growth rate.
-yield <- 0.2593 # (1 + gr)^(1 / eis - 1) / rho.beta - 1
+ge.ftl$z
 
+## (3) a financial sequential model with dividend.
 dst.firm <- node_new("output",
-  type = "FIN",
-  rate = c(1, dividend.rate = yield),
-  "cc1", "equity.share"
+                     type = "FIN",
+                     rate = c(1, dividend.rate = yield),
+                     "cc1", "equity.share"
 )
 node_set(dst.firm, "cc1",
-  type = "CD",
-  alpha = 2, beta = c(0.5, 0.5),
-  "prod", "lab"
+         type = "CD",
+         alpha = 2, beta = c(0.5, 0.5),
+         "prod", "lab"
 )
 
 dst.laborer <- node_new("util",
-  type = "Leontief", a = 1,
-  "prod"
+                        type = "Leontief", a = 1,
+                        "prod"
 )
 
 dst.shareholder <- Clone(dst.laborer)
 
-ge <- sdm2(
+ge.fs <- sdm2(
   A = list(dst.firm, dst.laborer, dst.shareholder),
   B = diag(c(1, 0, 0)),
   S0Exg = {
@@ -140,9 +163,10 @@ ge <- sdm2(
   GRExg = gr
 )
 
-ge$z
+ge.fs$z
 
-ge <- sdm2(
+# a steady-state path.
+ge2.fs <- sdm2(
   A = list(dst.firm, dst.laborer, dst.shareholder),
   B = diag(c(1, 0, 0)),
   S0Exg = {
@@ -156,37 +180,46 @@ ge <- sdm2(
   GRExg = gr,
   maxIteration = 1,
   numberOfPeriods = 20,
-  z0 = c(154.20, 0, 0),
+  z0 = ge.fs$z,
   policy = policyMarketClearingPrice,
   ts = TRUE
 )
 
-ge$ts.z[, 1]
-growth_rate(ge$ts.z[, 1])
+ge2.fs$ts.z[, 1]
+growth_rate(ge2.fs$ts.z[, 1])
 
-#### (4) a financial time-circle model with dividend.
+## (4) a financial time-circle model with dividend.
 np <- 5
-gr <- 0.03
-yield <- 0.2593
-
 zeta <- (1 + gr)^np # the ratio of repayments to loans
-S <- matrix(NA, 2 * np + 1, np + 1)
-S[(np + 1):(2 * np + 1), np + 1] <- c(100 * (1 + gr)^(0:(np - 1)), 100)
 
-B <- matrix(0, 2 * np + 1, np + 1)
-B[1:np, 1:np] <- diag(np)[, c(2:np, 1)]
-B[1, np] <- 1 / zeta
+n <- 2 * np + 1 # the number of commodity kinds
+m <- np + 1 # the number of agent kinds
+
+names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np), "claim")
+names.agent <- c(paste0("firm", 1:np), "consumer")
+
+# the exogenous supply matrix.
+S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+S0Exg[paste0("lab", 1:np), "consumer"] <- 100 * (1 + gr)^(0:(np - 1))
+S0Exg["claim", "consumer"] <- 100
+
+# the output coefficient matrix.
+B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+for (k in 1:(np - 1)) {
+  B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+}
+B["prod1", paste0("firm", np)] <- 1 / zeta
 
 dstl.firm <- list()
 for (k in 1:np) {
   dstl.firm[[k]] <- node_new("output",
-    type = "FIN", rate = c(1, yield),
-    "cc1", "claim"
+                             type = "FIN", rate = c(1, yield),
+                             "cc1", "claim"
   )
   node_set(dstl.firm[[k]], "cc1",
-    type = "CD", alpha = 2,
-    beta = c(0.5, 0.5),
-    paste0("lab", k), paste0("prod", k)
+           type = "CD", alpha = 2,
+           beta = c(0.5, 0.5),
+           paste0("lab", k), paste0("prod", k)
   )
 }
 
@@ -197,16 +230,16 @@ dst.consumer <- node_new(
   paste0("prod", 1:np)
 )
 
-ge <- sdm2(
+ge.ftc <- sdm2(
   A = c(dstl.firm, dst.consumer),
   B = B,
-  S0Exg = S,
-  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np), "claim"),
-  names.agent = c(paste0("firm", 1:np), "consumer"),
+  S0Exg = S0Exg,
+  names.commodity = names.commodity,
+  names.agent = names.agent,
   numeraire = "prod1",
   ts = TRUE
 )
 
-ge$z
+ge.ftc$z
 }
 }

@@ -14,10 +14,10 @@
 #' The exploratory prices are computed based on the prices and sales rates of the previous period.
 #' In economic reality, the market clearing prices are unknown, so exploratory prices are more realistic.
 #' @note
-#' When the stickiness value is positive and the parameter of priceAdjustmentFunction of sdm2 is set to \{function(p, q) p\}
-#' (that is, the current prices are the prices in the previous period),
-#' after the implementation of this policy the current prices will be the weighted mean of the market-clearing prices and the the prices in the previous period.
-#' In general, this function should be used this way.
+#' When the stickiness value is positive and the priceAdjustmentVelocity parameter in sdm2 is set to 0 (meaning
+#' the current prices are equal to those from the previous period), executing the sticky-price policy will yield
+#' current prices that are the weighted average of the market-clearing prices and the prices from the previous period.
+#' Typically, this function should be utilized in this manner.
 #' @seealso \code{\link{sdm2}}
 #' @examples
 #' \donttest{
@@ -29,7 +29,7 @@
 #' }
 #'
 #' ge <- gemCanonicalDynamicMacroeconomic_3_2(
-#'   priceAdjustmentFunction = function(p, q) p,
+#'   priceAdjustmentVelocity = 0,
 #'   policy.supply = makePolicySupply(InitialEndowments),
 #'   policy.price = makePolicyStickyPrice(stickiness = 0.5),
 #'   ts = TRUE,

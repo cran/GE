@@ -8,17 +8,27 @@
 #' @examples
 #' \donttest{
 #' #### a model with tax.
-#' np <- 5 # the number of (internal) periods.
+#' np <- 5 # the number of planning periods.
 #' gr.lab <- 0.03 # the growth rate of the labor supply.
 #' tax.rate <- 0.25
 #'
-#' S <- matrix(NA, 2 * np + 1, np + 1) # the exogenous supply matrix.
-#' S[(np + 1):(2 * np), np] <- 100 * (1 + gr.lab)^(0:(np - 1)) # the labor supply.
-#' S[1, np] <- 10 # the product supply in the first period.
-#' S[2 * np + 1, np + 1] <- np * 100 # the supply of tax receipt
+#' n <- 2 * np + 1 # the number of commodity kinds
+#' m <- np + 1 # the number of agent kinds
 #'
-#' B <- matrix(0, 2 * np + 1, np + 1)
-#' B[2:np, 1:(np - 1)] <- diag(np - 1)
+#' names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np), "tax receipt")
+#' names.agent <- c(paste0("firm", 1:(np - 1)), "laborer", "government")
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:np), "laborer"] <- 100 * (1 + gr.lab)^(0:(np - 1)) # the labor supply
+#' S0Exg["prod1", "laborer"] <- 10 # the product supply in the first period
+#' S0Exg["tax receipt", "government"] <- np * 100 # the supply of tax receipt (i.e. financial claim)
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+#' }
 #'
 #' dstl.firm <- list()
 #' for (k in 1:(np - 1)) {
@@ -28,9 +38,9 @@
 #'     "cc1", "tax receipt"
 #'   )
 #'   node_set(dstl.firm[[k]], "cc1",
-#'     type = "CD",
-#'     alpha = 1, beta = c(0.5, 0.5),
-#'     paste0("prod", k), paste0("lab", k)
+#'            type = "CD",
+#'            alpha = 1, beta = c(0.5, 0.5),
+#'            paste0("prod", k), paste0("lab", k)
 #'   )
 #' }
 #'
@@ -40,14 +50,14 @@
 #'   "cc1", "tax receipt"
 #' )
 #' node_set(dst.laborer, "cc1",
-#'   type = "CES", es = 0.5,
-#'   alpha = 1, beta = rep(1 / np, np),
-#'   paste0("cc1.", 1:np)
+#'          type = "CES", es = 0.5,
+#'          alpha = 1, beta = rep(1 / np, np),
+#'          paste0("cc1.", 1:np)
 #' )
 #' for (k in 1:np) {
 #'   node_set(dst.laborer, paste0("cc1.", k),
-#'     type = "CD", alpha = 1, beta = c(0.5, 0.5),
-#'     paste0("prod", k), paste0("lab", k)
+#'            type = "CD", alpha = 1, beta = c(0.5, 0.5),
+#'            paste0("prod", k), paste0("lab", k)
 #'   )
 #' }
 #'
@@ -59,8 +69,8 @@
 #' )
 #' for (k in 1:np) {
 #'   node_set(dst.government, paste0("cc1.", k),
-#'     type = "CD", alpha = 1, beta = c(0.5, 0.5),
-#'     paste0("prod", k), paste0("lab", k)
+#'            type = "CD", alpha = 1, beta = c(0.5, 0.5),
+#'            paste0("prod", k), paste0("lab", k)
 #'   )
 #' }
 #' node_plot(dst.government, TRUE)
@@ -68,9 +78,9 @@
 #' ge <- sdm2(
 #'   A = c(dstl.firm, dst.laborer, dst.government),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np), "tax receipt"),
-#'   names.agent = c(paste0("firm", 1:(np - 1)), "laborer", "government"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "prod1",
 #'   # policy = makePolicyHeadTailAdjustment(gr = gr.lab, np = np)
 #' )
@@ -80,7 +90,7 @@
 #' ge$DV
 #'
 #' #### a pure exchange model with money.
-#' np <- 3 # the number of (internal) periods.
+#' np <- 3 # the number of planning periods.
 #' gr.lab <- 0.03 # the growth rate of endowments (i.e. labor supply)
 #' eis <- 0.8 # the elasticity of intertemporal substitution
 #' rho.beta <- 0.8 # the subjective discount factor

@@ -15,80 +15,75 @@ An (intertemporal) time circle model with two consumers and two types of firms.
 \examples{
 \donttest{
 #### an example with a Cobb-Douglas intertemporal utility function
-np <- 5 # the number of internal periods, firms.
-n <- 3 * np
-m <- 2 * np + 2
-
+np <- 5 # the number of planning periods, firms.
 zeta <- 1.25 # the ratio of repayments to loans
-S <- matrix(NA, n, m)
-S[(n - np + 1):n, (m - 1):m] <- 100
 
-B <- matrix(0, n, m)
-B[1:np, 1:np] <-
-  B[(np + 1):(2 * np), (np + 1):(2 * np)] <- diag(np)[, c(2:np, 1)]
-B[1, np] <-  B[np + 1, 2 * np] <- 1 / zeta
+n <- 3 * np # the number of commodity kinds
+m <- 2 * np + 2 # the number of agent kinds
 
-dstl.firm.corn <- dstl.firm.iron  <- list()
+names.commodity <- c(
+  paste0("corn", 1:np),
+  paste0("iron", 1:np),
+  paste0("lab", 1:np)
+)
+names.agent <- c(
+  paste0("firm.corn", 1:np), paste0("firm.iron", 1:np),
+  "consumer1", "consumer2"
+)
+
+# the exogenous supply matrix.
+S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+S0Exg[paste0("lab", 1:np), c("consumer1", "consumer2")] <- 100 # the supply of labor
+
+# the output coefficient matrix.
+B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+for (k in 1:(np - 1)) {
+  B[paste0("corn", k + 1), paste0("firm.corn", k)] <- 1
+  B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
+}
+B["corn1", paste0("firm.corn", np)] <- 1 / zeta
+B["iron1", paste0("firm.iron", np)] <- 1 / zeta
+
+dstl.firm.corn <- dstl.firm.iron <- list()
 for (k in 1:np) {
   dstl.firm.corn[[k]] <- node_new(
     "prod",
-    type = "CD",
-    alpha = 1,
-    beta = c(0.5, 0.5),
-    paste0("iron", k),
-    paste0("lab", k)
+    type = "CD", alpha = 1, beta = c(0.5, 0.5),
+    paste0("iron", k), paste0("lab", k)
   )
 
   dstl.firm.iron[[k]] <- node_new(
     "prod",
-    type = "CD",
-    alpha = 2,
-    beta = c(0.5, 0.5),
-    paste0("iron", k),
-    paste0("lab", k)
+    type = "CD", alpha = 2, beta = c(0.5, 0.5),
+    paste0("iron", k), paste0("lab", k)
   )
 }
 
 dst.consumer1 <- node_new(
   "util",
-  type = "CD",
-  alpha = 1,
-  beta = prop.table(rep(1, np)),
+  type = "CD", alpha = 1, beta = prop.table(rep(1, np)),
   paste0("corn", 1:np)
 )
 
 dst.consumer2 <- node_new(
   "util",
-  type = "CD",
-  alpha = 1,
-  beta = prop.table(rep(1, np)),
+  type = "CD", alpha = 1, beta = prop.table(rep(1, np)),
   paste0("cc", 1:np)
 )
 for (k in 1:np) {
   node_set(
-    dst.consumer2,
-    paste0("cc", k),
-    type = "CD",
-    alpha = 1,
-    beta = c(0.5, 0.5),
-    paste0("corn", k),
-    paste0("iron", k)
+    dst.consumer2, paste0("cc", k),
+    type = "CD", alpha = 1, beta = c(0.5, 0.5),
+    paste0("corn", k), paste0("iron", k)
   )
 }
 
 ge <- sdm2(
   A = c(dstl.firm.corn, dstl.firm.iron, dst.consumer1, dst.consumer2),
   B = B,
-  S0Exg = S,
-  names.commodity = c(paste0("corn", 1:np),
-                      paste0("iron", 1:np),
-                      paste0("lab", 1:np)),
-  names.agent = c(
-    paste0("firm.corn", 1:np),
-    paste0("firm.iron", 1:np),
-    "consumer1",
-    "consumer2"
-  ),
+  S0Exg = S0Exg,
+  names.commodity = names.commodity,
+  names.agent = names.agent,
   numeraire = "lab1",
   ts = TRUE
 )

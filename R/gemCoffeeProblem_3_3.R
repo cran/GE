@@ -7,7 +7,7 @@
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
 #' @examples
 #' \donttest{
-#' #### equilibrium coffee problem (Bapat, Raghavan, 1997, example 7.1; Li, 2019, example 8.1)
+#' #### the equilibrium coffee problem (Bapat, Raghavan, 1997, example 7.1; Li, 2019, example 8.1)
 #' ge <- sdm2(
 #'   A = matrix(c(
 #'     0.05, 0.05, 0.1,
@@ -23,8 +23,9 @@
 #'
 #' ge$p
 #'
-#' #### disequilibrium coffee problem with exogenous prices (Li, 2019, example 8.3).
-#' de <- sdm2(
+#' #### the disequilibrium coffee problem with exogenous prices (Li, 2019, example 8.3).
+#' ## Computing the price-control stationary state.
+#' pcss <- sdm2(
 #'   A = matrix(c(
 #'     0.05, 0.05, 0.1,
 #'     0.1, 0, 0.1,
@@ -40,12 +41,12 @@
 #'   ts = TRUE
 #' )
 #'
-#' de$z
-#' addmargins(de$D)
-#' addmargins(de$S)
+#' pcss$z
+#' addmargins(pcss$D, 2)
+#' addmargins(pcss$S, 2)
 #'
-#' matplot(de$ts.z, type = "o", pch = 20)
-#' matplot(de$ts.q, type = "o", pch = 20)
+#' matplot(pcss$ts.z, type = "o", pch = 20)
+#' matplot(pcss$ts.q, type = "o", pch = 20)
 #' }
 
 gemCoffeeProblem_3_3 <- function(...) sdm2(...)

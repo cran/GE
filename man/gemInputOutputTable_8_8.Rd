@@ -107,13 +107,13 @@ colnames(IT17) <- colnames(OT17) <- c(
   "sector.FT.agri", "sector.FT.manu", "sector.FT.serv", "sector.FT.bond.ROW"
 )
 
-# initial equilibrium
+# the benchmark equilibrium.
 ge <- gemInputOutputTable_8_8(
   IT = IT17,
   OT = OT17
 )
 
-#### technology progress
+#### technology progress.
 IT.TP <- IT17
 IT.TP ["lab", "sector.manu"] <-
   IT.TP ["lab", "sector.manu"] * 0.9
@@ -128,7 +128,7 @@ geTP$p / ge$p
 geTP$value.added
 prop.table(geTP$value.added) - prop.table(ge$value.added)
 
-#### capital accumulation
+#### capital accumulation.
 OT.CA <- OT17
 OT.CA["cap", "sector.CI"] <- OT.CA["cap", "sector.CI"] * 1.1
 geCA <- gemInputOutputTable_8_8(
@@ -142,7 +142,7 @@ geCA$p
 geCA$value.added
 prop.table(geCA$value.added) - prop.table(ge$value.added)
 
-#### tax change
+#### tax change.
 OT.TC <- OT17
 OT.TC["tax", "sector.agri"] <- OT.TC["tax", "sector.agri"] * 2
 

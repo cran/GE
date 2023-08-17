@@ -20,15 +20,15 @@ wherein last.output is the output of the firm in the previous period.
 \examples{
 \donttest{
 dst.firm <- node_new("output",
-                     type = "CD", alpha = 1,
-                     beta = c(0.35, 0.65),
-                     "prod", "lab"
+  type = "CD", alpha = 1,
+  beta = c(0.35, 0.65),
+  "prod", "lab"
 )
 
 dst.consumer <- node_new("utility",
-                         type = "CD", alpha = 1,
-                         beta = c(0.4, 0.6),
-                         "prod", "lab"
+  type = "CD", alpha = 1,
+  beta = c(0.4, 0.6),
+  "prod", "lab"
 )
 
 policy.technology <- function(time, state, A) {
@@ -75,7 +75,7 @@ f <- function(z0 = c(0.1, 1),
   )
 
   matplot(ge$ts.z, type = "o", pch = 20)
-  ge
+  invisible(ge)
 }
 
 geLow <- f()
@@ -91,16 +91,16 @@ f(policy = list(
 ))
 
 #### structural transition: disequilibrium path and
-## market-clearing path (instantaneous equilibrium path)
+## a market-clearing path (instantaneous equilibrium path)
 dst.firm <- node_new("output",
-                     type = "CD", alpha = 5,
-                     beta = c(0.5, 0.5),
-                     "prod", "lab"
+  type = "CD", alpha = 5,
+  beta = c(0.5, 0.5),
+  "prod", "lab"
 )
 
 dst.consumer <- node_new("utility",
-                         type = "Leontief", a = 1,
-                         "prod"
+  type = "Leontief", a = 1,
+  "prod"
 )
 
 policy.technology <- function(time, state, A) {
@@ -147,7 +147,7 @@ f <- function(z0 = c(1, 1),
   )
 
   matplot(ge$ts.z, type = "l", pch = 20)
-  ge
+  invisible(ge)
 }
 
 geLow <- f()
@@ -156,14 +156,14 @@ geLow$z
 geHigh <- f(z0 = c(18, 1), p0 = c(1, 9))
 geHigh$z
 
-## structural transition: disequilibrium path
+## structural transition: a disequilibrium path
 f(policy = list(
   policy.technology,
   policy.tax
 ))$z
 
 
-## structural transition: market-clearing path
+## structural transition: a market-clearing path
 f(policy = list(
   policy.technology,
   policy.tax,
@@ -188,6 +188,61 @@ f(policy = list(
   },
   policy.foreign_aid
 ))
+
+#### another example
+dst.firm <- node_new("prod",
+  type = "CD", alpha = 2,
+  beta = c(0.5, 0.5),
+  "prod", "lab"
+)
+
+dst.consumer <- node_new("util",
+  type = "Leontief", a = 1,
+  "prod"
+)
+
+policy.technology <- function(time, state, A) {
+  # state$last.z[1] is the previous output.
+  A[[1]]$alpha <- structural_function(state$last.z[1], c(220, 250), 2, 4)
+}
+
+policy.tax <- function(time, state) {
+  if ((time >= 15) && state$last.z[1] < 240) {
+    state$S[2, 2] <- 80
+    state$S[2, 1] <- 20
+  } else {
+    state$S[2, 2] <- 100
+    state$S[2, 1] <- 0
+  }
+
+  state
+}
+
+ge <- sdm2(
+  A = list(dst.firm, dst.consumer),
+  B = matrix(c(
+    1, 0,
+    0, 0
+  ), 2, 2, TRUE),
+  S0Exg = matrix(c(
+    NA, NA,
+    NA, 100
+  ), 2, 2, TRUE),
+  names.commodity = c("prod", "lab"),
+  names.agent = c("firm", "consumer"),
+  numeraire = "lab",
+  z0 = c(100, 100),
+  maxIteration = 1,
+  numberOfPeriods = 30,
+  policy = list(
+    policy.technology,
+    policy.tax,
+    policyMarketClearingPrice
+  ),
+  ts = TRUE
+)
+
+matplot(ge$ts.z, type = "b", pch = 20)
 }
 }
 \references{

@@ -1,10 +1,11 @@
 #' @export
 #' @title Some Examples of Market Clearing Paths
 #' @aliases gemMarketClearingPath_2_2
-#' @description Some examples of market clearing paths containing a firm and a laborer (consumer).
+#' @description Some examples of zero-dividend market clearing paths containing a firm and a laborer (consumer).
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
+#' ## the benchmark equilibrium
 #' dst.firm <- node_new(
 #'   "prod",
 #'   type = "CD", alpha = 5, beta = c(0.5, 0.5),
@@ -81,6 +82,81 @@
 #' ))
 #'
 #' matplot(ge.TP2$ts.z, type = "o", pch = 20)
+#'
+#' #### A timeline model, the equilibrium of which is the same as the benchmark equilibrium.
+#' # In this model, in terms of form, firms are treated as consumer-type agents rather than
+#' # producer-type agents. Firms hold products. The utility level of each firm determines
+#' # the quantity of the product that the firm owns in the subsequent planning period.
+#' np <- 5 # the number of planning periods
+#' y1 <- 1 # the initial product supply
+#' eis <- 1 # elasticity of intertemporal substitution
+#' rho.beta <- 1 # the subjective discount factor
+#'
+#' n <- 2 * np # the number of commodity kinds
+#' m <- np + 1 # the number of agent kinds
+#'
+#' names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np))
+#' names.agent <- c(paste0("firm", 1:np), "consumer")
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:np), "consumer"] <- 1
+#' for (k in 1:np) {
+#'   S0Exg[paste0("prod", k), paste0("firm", k)] <- y1
+#' }
+#'
+#' dstl.firm <- list()
+#' for (k in 1:np) {
+#'   dstl.firm[[k]] <- node_new(
+#'     "prod",
+#'     type = "CD",
+#'     alpha = 5, beta = c(0.5, 0.5),
+#'     paste0("prod", k), paste0("lab", k)
+#'   )
+#' }
+#'
+#' dst.consumer.CD <- node_new(
+#'   "util",
+#'   type = "CD",
+#'   alpha = 1, beta = prop.table(rep(1, np)),
+#'   paste0("prod", 1:np)
+#' )
+#'
+#' dst.consumer <- node_new(
+#'   "util",
+#'   type = "CES", es = eis,
+#'   alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'   paste0("prod", 1:np)
+#' )
+#'
+#' ge.timeline <- sdm2(
+#'   A = c(dstl.firm, dst.consumer),
+#'   B = matrix(0, n, m),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
+#'   numeraire = "prod1",
+#'   ts = TRUE,
+#'   policy = function(time, state) {
+#'     names(state$last.z) <- state$names.agent
+#'     dimnames(state$S) <- list(names.commodity, names.agent)
+#'
+#'     for (k in 2:np) {
+#'       state$S[paste0("prod", k), paste0("firm", k)] <- state$last.z[paste0("firm", k - 1)]
+#'     }
+#'
+#'     return(state)
+#'   }
+#' )
+#'
+#' head(ge.timeline$p, np) / tail(ge.timeline$p, np)
+#' ge$ts.p[1:5, 1] # the same as above
+#'
+#' ge.timeline$z[1:np]
+#' ge$ts.z[1:np, 1] # the same as above
+#'
+#' ge.timeline$D
+#' ge.timeline$S
 #' }
 
 gemMarketClearingPath_2_2 <- function(...) sdm2(...)

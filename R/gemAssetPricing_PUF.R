@@ -1,10 +1,8 @@
 #' @export
-#' @title Compute Asset Market Equilibria for Some Simple Cases
-#' @aliases gemAssetPricing
+#' @title Compute Asset Market Equilibria with Portfolio Utility Functions for Some Simple Cases
+#' @aliases gemAssetPricing_PUF
 #' @description Compute the equilibrium of an asset market by the function sdm2 and by computing marginal utility of assets.
-#' This function is similar to the function gemSecurityPricing.
-#' The difference is that this function uses portfolio utility functions,
-#' while the function gemSecurityPricing uses payoff utility functions.
+#' The argument of the utility function used in the calculation is the asset vector (i.e. portfolio).
 #' @param S an n-by-m supply matrix of assets.
 #' @param uf a portfolio utility function or a list of m portfolio utility functions.
 #' @param numeraire	the index of the numeraire commodity.
@@ -14,11 +12,11 @@
 #' @references Danthine, J. P., Donaldson, J. (2005, ISBN: 9780123693808) Intermediate Financial Theory. Elsevier Academic Press.
 #' @references Sharpe, William F. (2008, ISBN: 9780691138503) Investors and Markets: Portfolio Choices, Asset Prices, and Investment Advice. Princeton University Press.
 #' @references https://web.stanford.edu/~wfsharpe/apsim/index.html
-#' @seealso \code{\link{gemSecurityPricing}}.
+#' @seealso \code{\link{gemAssetPricing_CUF}}.
 #' @examples
 #' \donttest{
 #' #### an example of Danthine and Donaldson (2005, section 8.3).
-#' ge <- gemAssetPricing(
+#' ge <- gemAssetPricing_PUF(
 #'   S = matrix(c(
 #'     10, 5,
 #'     1, 4,
@@ -33,17 +31,17 @@
 #' ge$p
 #'
 #' #### an example of Sharpe (2008, chapter 2, case 1)
-#' secy1 <- c(1, 0, 0, 0, 0)
-#' secy2 <- c(0, 1, 1, 1, 1)
-#' secy3 <- c(0, 5, 3, 8, 4) - 3 * secy2
-#' secy4 <- c(0, 3, 5, 4, 8) - 3 * secy2
-#' # unit security payoff matrix
-#' UP <- cbind(secy1, secy2, secy3, secy4)
+#' asset1 <- c(1, 0, 0, 0, 0)
+#' asset2 <- c(0, 1, 1, 1, 1)
+#' asset3 <- c(0, 5, 3, 8, 4) - 3 * asset2
+#' asset4 <- c(0, 3, 5, 4, 8) - 3 * asset2
+#' # unit asset payoff matrix
+#' UAP <- cbind(asset1, asset2, asset3, asset4)
 #'
 #' prob <- c(0.15, 0.25, 0.25, 0.35)
 #' wt <- prop.table(c(1, 0.96 * prob)) # weights
 #'
-#' ge <- gemAssetPricing(
+#' ge <- gemAssetPricing_PUF(
 #'   S = matrix(c(
 #'     49, 49,
 #'     30, 30,
@@ -51,8 +49,8 @@
 #'     0, 10
 #'   ), 4, 2, TRUE),
 #'   uf = list(
-#'     function(portfolio) CES(alpha = 1, beta = wt, x = UP %*% portfolio, es = 1 / 1.5),
-#'     function(portfolio) CES(alpha = 1, beta = wt, x = UP %*% portfolio, es = 1 / 2.5)
+#'     function(portfolio) CES(alpha = 1, beta = wt, x = UAP %*% portfolio, es = 1 / 1.5),
+#'     function(portfolio) CES(alpha = 1, beta = wt, x = UAP %*% portfolio, es = 1 / 2.5)
 #'   ),
 #'   maxIteration = 1,
 #'   numberOfPeriods = 1000,
@@ -75,19 +73,19 @@
 #'
 #' asset3 <- c(1, 1, 1, 1)
 #'
-#' ## the unit (asset) payoff matrix of agent 1.
-#' UP1 <- cbind(asset1.1, asset2.1, asset3)
+#' ## the unit asset payoff matrix of agent 1.
+#' UAP1 <- cbind(asset1.1, asset2.1, asset3)
 #'
-#' ## the unit (asset) payoff matrix of agent 2.
-#' UP2 <- cbind(asset1.2, asset2.2, asset3)
+#' ## the unit asset payoff matrix of agent 2.
+#' UAP2 <- cbind(asset1.2, asset2.2, asset3)
 #'
-#' mp1 <- colMeans(UP1)
-#' Cov1 <- cov.wt(UP1, method = "ML")$cov
+#' mp1 <- colMeans(UAP1)
+#' Cov1 <- cov.wt(UAP1, method = "ML")$cov
 #'
-#' mp2 <- colMeans(UP2)
-#' Cov2 <- cov.wt(UP2, method = "ML")$cov
+#' mp2 <- colMeans(UAP2)
+#' Cov2 <- cov.wt(UAP2, method = "ML")$cov
 #'
-#' ge <- gemAssetPricing(
+#' ge <- gemAssetPricing_PUF(
 #'   S = matrix(c(
 #'     1, 5,
 #'     2, 5,
@@ -116,26 +114,25 @@
 #' asset3.2 <- c(1, 1, 1, 1)
 #'
 #' ## the unit asset payoff matrix of agent 1.
-#' UP1 <- cbind(asset1.1, asset2.1, asset3.1)
+#' UAP1 <- cbind(asset1.1, asset2.1, asset3.1)
 #'
 #' ## the unit asset payoff matrix of agent 2.
-#' UP2 <- cbind(asset1.2, asset2.2, asset3.2)
+#' UAP2 <- cbind(asset1.2, asset2.2, asset3.2)
 #'
-#' mp1 <- colMeans(UP1)
-#' Cov1 <- cov.wt(UP1, method = "ML")$cov
+#' mp1 <- colMeans(UAP1)
+#' Cov1 <- cov.wt(UAP1, method = "ML")$cov
 #'
-#' mp2 <- colMeans(UP2)
-#' Cov2 <- cov.wt(UP2, method = "ML")$cov
+#' mp2 <- colMeans(UAP2)
+#' Cov2 <- cov.wt(UAP2, method = "ML")$cov
 #'
-#' ge <- gemAssetPricing(
+#' ge <- gemAssetPricing_PUF(
 #'   S = matrix(c(
 #'     1, 5,
 #'     2, 5,
 #'     3, 5
 #'   ), 3, 2, TRUE),
 #'   uf = list(
-#'     # the utility function of agent 1.
-#'     function(x) AMSDP(x, mp1, Cov1),
+#'     function(x) AMSDP(x, mp1, Cov1), # the utility function of agent 1.
 #'     function(x) AMSDP(x, mp2, Cov2) # the utility function of agent 2.
 #'   ),
 #'   maxIteration = 1,
@@ -190,7 +187,7 @@
 #'   lst.uf[[k]] <- make.uf(mp = PMP[, k], Cov = Cov, gamma = gamma[k])
 #' }
 #'
-#' ge <- gemAssetPricing(
+#' ge <- gemAssetPricing_PUF(
 #'   S = Supply, uf = lst.uf,
 #'   maxIteration = 1,
 #'   numberOfPeriods = 2000,
@@ -204,18 +201,69 @@
 #' ge$D
 #' ge$VMU
 #'
+#' #### a 3-by-2 example.
+#' asset1 <- c(1, 0, 0)
+#' asset2 <- c(0, 0, 2)
+#' asset3 <- c(0, 1, 1)
+#'
+#' # unit asset payoff matrix.
+#' UAP <- cbind(asset1, asset2, asset3)
+#' wt <- c(0.5, 0.25, 0.25) # weights
+#'
+#' uf <- function(portfolio) {
+#'   payoff <- UAP %*% portfolio
+#'   prod(payoff^wt)
+#' }
+#'
+#' ge <- gemAssetPricing_PUF(
+#'   matrix(c(
+#'     1, 1,
+#'     1, 0,
+#'     0, 2
+#'   ), 3, 2, TRUE),
+#'   uf = uf,
+#'   numeraire = 1
+#' )
+#'
+#' ge$p
+#' ge$z
+#' ge$A
+#' addmargins(ge$D, 2)
+#' addmargins(UAP %*% ge$D, 2)
+#' ge$VMU
+#'
+#' ## a price-control stationary state.
+#' pcss <- gemAssetPricing_PUF(
+#'   matrix(c(
+#'     1, 1,
+#'     1, 0,
+#'     0, 2
+#'   ), 3, 2, TRUE),
+#'   uf = uf,
+#'   numeraire = 1,
+#'   pExg = c(1, 2, 1),
+#'   maxIteration = 1,
+#'   numberOfPeriods = 300,
+#'   ts = TRUE
+#' )
+#'
+#' matplot(pcss$ts.q, type = "l")
+#' tail(pcss$ts.q, 3)
+#' addmargins(round(pcss$D, 4), 2)
+#' pcss$VMU
+#'
 #' #### a 2-by-2 example with outside position.
 #' asset1 <- c(1, 0, 0)
 #' asset2 <- c(0, 1, 1)
 #'
-#' # unit (asset) payoff matrix
-#' UP <- cbind(asset1, asset2)
+#' # unit asset payoff matrix
+#' UAP <- cbind(asset1, asset2)
 #' wt <- c(0.5, 0.25, 0.25) # weights
 #'
-#' uf1 <- function(portfolio) prod((UP %*% portfolio + c(0, 0, 2))^wt)
-#' uf2 <- function(portfolio) prod((UP %*% portfolio)^wt)
+#' uf1 <- function(portfolio) prod((UAP %*% portfolio + c(0, 0, 2))^wt)
+#' uf2 <- function(portfolio) prod((UAP %*% portfolio)^wt)
 #'
-#' ge <- gemAssetPricing(
+#' ge <- gemAssetPricing_PUF(
 #'   S = matrix(c(
 #'     1, 1,
 #'     0, 2
@@ -230,7 +278,7 @@
 #' uf2(ge$D[,2])
 #' }
 
-gemAssetPricing <- function(S, uf,
+gemAssetPricing_PUF <- function(S, uf,
                             numeraire = nrow(S),
                             ratio_adjust_coef = 0.1,
                             ...) {

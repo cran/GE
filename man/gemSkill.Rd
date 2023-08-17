@@ -16,7 +16,8 @@ Some general equilibrium models with skill (i.e. human capital).
 \donttest{
 depreciation.rate <- 0.05 # the depreciation rate of skill
 skill.density <- 10
-efficiency.coef <- 20
+relative.efficiency.coef <- 2
+efficiency.coef <- skill.density * relative.efficiency.coef
 
 dst.efficiency.unit <- node_new("efficiency unit",
   type = "Leontief",
@@ -80,15 +81,16 @@ ge <- sdm2(
 
 ge$p
 ge$z
-ge$D
-ge$S
+addmargins(ge$D, 2)
+addmargins(ge$S, 2)
 matplot(ge$ts.p, type = "l")
 
 #### Assumed that the amount of education and training purchased by laborers is
 ## determined primarily by their preferences rather than their investment motives.
 depreciation.rate <- 0.05
 skill.density <- 10
-efficiency.coef <- 20
+relative.efficiency.coef <- 2
+efficiency.coef <- skill.density * relative.efficiency.coef
 
 dst.efficiency.unit <- node_new("efficiency unit",
   type = "Leontief",
@@ -156,8 +158,8 @@ ge <- sdm2(
 
 ge$p
 ge$z
-ge$D
-ge$S
+addmargins(ge$D, 2)
+addmargins(ge$S, 2)
 matplot(log(ge$ts.p), type = "l")
 }
 }

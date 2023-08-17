@@ -51,7 +51,7 @@ ge <- sdm2(
   A = list(dst.firm, dst.consumer), B = B, S0Exg = S0Exg,
   names.commodity = c("prod", "lab"),
   names.agent = c("firm", "consumer"),
-  priceAdjustmentFunction = function(p, q) p,
+  priceAdjustmentVelocity = 0,
   policy = list(
     makePolicyTechnologyChange(agent = "firm"),
     makePolicyStickyPrice(stickiness = 0, time.win = c(1, 20)),

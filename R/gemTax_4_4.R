@@ -1,0 +1,87 @@
+#' @export
+#' @title Some General Equilibrium Models with Endogenous Tax Rates
+#' @aliases gemTax_4_4
+#' @description Some general equilibrium models with endogenous tax rates.
+#' @param ... arguments to be passed to the function sdm2.
+#' @examples
+#' \donttest{
+#' ge <- sdm2(
+#'   A = function(state) {
+#'     a.firm <- CD_A(alpha = 2, Beta = c(0.5, 0.5, 0, 0), state$p)
+#'     a.laborer <- CD_A(alpha = 1, Beta = c(0.75, 0.25, 0, 0), state$p)
+#'     a.government <- c(1, 0, 0, 0)
+#'     a.planner <- c(0, 0, 2, 1)
+#'     cbind(a.firm, a.laborer, a.government, a.planner)
+#'   },
+#'   B = matrix(c(
+#'     1, 0, 0, 0,
+#'     0, 0, 0, 0,
+#'     0, 1, 0, 0,
+#'     0, 0, 1, 0
+#'   ), 4, 4, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA, NA,
+#'     NA, NA, NA, 100,
+#'     NA, NA, NA, NA,
+#'     NA, NA, NA, NA
+#'   ), 4, 4, TRUE),
+#'   names.commodity = c("prod", "lab", "util1", "util2"),
+#'   names.agent = c("firm", "laborer", "government", "planner"),
+#'   numeraire = "prod"
+#' )
+#'
+#' ge$p
+#' ge$z
+#' addmargins(ge$D, 2)
+#' addmargins(ge$S, 2)
+#' addmargins(ge$DV)
+#' addmargins(ge$SV)
+#'
+#' #### an equivalent 2-by-2 model.
+#' dst.firm <- node_new("output",
+#'   type = "CD",
+#'   alpha = 2, beta = c(0.5, 0.5),
+#'   "prod", "lab"
+#' )
+#'
+#' dst.planner <- node_new("util",
+#'   type = "Leontief",
+#'   a = c(2, 1),
+#'   "util1", "util2"
+#' )
+#'
+#' node_set(dst.planner, "util1",
+#'   type = "CD",
+#'   alpha = 1, beta = c(0.75, 0.25),
+#'   "prod", "lab"
+#' )
+#' node_set(dst.planner, "util2",
+#'   type = "Leontief",
+#'   a = 1,
+#'   "prod"
+#' )
+#'
+#' ge <- sdm2(
+#'   A = list(dst.firm, dst.planner),
+#'   B = matrix(c(
+#'     1, 0,
+#'     0, 0
+#'   ), 2, 2, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA,
+#'     NA, 100
+#'   ), 2, 2, TRUE),
+#'   names.commodity = c("prod", "lab"),
+#'   names.agent = c("firm", "planner"),
+#'   numeraire = "prod"
+#' )
+#'
+#' ge$p
+#' ge$z
+#' addmargins(ge$D, 2)
+#' addmargins(ge$S, 2)
+#' addmargins(ge$DV)
+#' addmargins(ge$SV)
+#' }
+
+gemTax_4_4 <- function(...) sdm2(...)

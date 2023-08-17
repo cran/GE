@@ -238,13 +238,13 @@
 #' #### a pure exchange economy with three-period-lived consumers.
 #' ## Suppose each consumer has a Leontief-type utility function min(c1, c2, c3).
 #' GRExg <- 0.03 # the population growth rate
-#' R <- 1 + GRExg
+#' igr <- 1 + GRExg
 #'
 #' dst.age1 <- node_new(
 #'   "util",
 #'   type = "FIN",
 #'   rate = {
-#'     saving.rate <- 1 / (1 + R + R^2)
+#'     saving.rate <- 1 / (1 + igr + igr^2)
 #'     c(1, ratio.saving.consumption = saving.rate / (1 - saving.rate))
 #'   },
 #'   "lab", "secy"
@@ -254,7 +254,7 @@
 #'   "util",
 #'   type = "FIN",
 #'   rate = {
-#'     saving.rate <- 1 / (1 + R)
+#'     saving.rate <- 1 / (1 + igr)
 #'     c(1, ratio.saving.consumption = saving.rate / (1 - saving.rate))
 #'   },
 #'   "lab", "secy"

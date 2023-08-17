@@ -1,9 +1,10 @@
 #' @export
-#' @title Compute Security Market Equilibria for Some Simple Cases
-#' @aliases gemSecurityPricing
-#' @description Compute the equilibrium of a security (i.e. asset) market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
-#' @param S an n-by-m supply matrix of securities.
-#' @param UP a unit (security) payoff k-by-n matrix.
+#' @title Compute Asset Market Equilibria with Commodity Utility Functions for Some Simple Cases
+#' @aliases gemAssetPricing_CUF
+#' @description Compute the equilibrium of an asset market by the function sdm2 and by computing marginal utility of assets (see Sharpe, 2008).
+#' The argument of the utility function used in the calculation is the commodity vector (i.e. payoff vector).
+#' @param S an n-by-m supply matrix of assets.
+#' @param UAP a unit asset payoff k-by-n matrix.
 #' @param uf a utility function or a utility function list.
 #' @param muf a marginal utility function or a marginal utility function list.
 #' @param ratio_adjust_coef a scalar indicating the adjustment velocity of demand structure.
@@ -15,23 +16,23 @@
 #' @references Wang Jiang (2006, ISBN: 9787300073477) Financial Economics. Beijing: China Renmin University Press. (In Chinese)
 #' @references Xu Gao (2018, ISBN: 9787300258232) Twenty-five Lectures on Financial Economics. Beijing: China Renmin University Press. (In Chinese)
 #' @references https://web.stanford.edu/~wfsharpe/apsim/index.html
-#' @seealso \code{\link{gemSecurityPricingExample}}.
+#' @seealso \code{\link{gemAssetPricingExample}}.
 #' @examples
 #' \donttest{
-#' gemSecurityPricing(muf = function(x) 1 / x)
+#' gemAssetPricing_CUF(muf = function(x) 1 / x)
 #'
-#' gemSecurityPricing(
+#' gemAssetPricing_CUF(
 #'   S = cbind(c(1, 0), c(0, 2)),
 #'   muf = function(x) 1 / x
 #' )
 #'
-#' gemSecurityPricing(
-#'   UP = cbind(c(1, 0), c(0, 2)),
+#' gemAssetPricing_CUF(
+#'   UAP = cbind(c(1, 0), c(0, 2)),
 #'   muf = function(x) 1 / x
 #' )
 #'
 #' #### an example of Danthine and Donaldson (2005, section 8.3).
-#' ge <- gemSecurityPricing(
+#' ge <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     10, 5,
 #'     1, 4,
@@ -43,24 +44,24 @@
 #' ge$p
 #'
 #' #### an example of Sharpe (2008, chapter 2, case 1)
-#' secy1 <- c(1, 0, 0, 0, 0)
-#' secy2 <- c(0, 1, 1, 1, 1)
-#' secy3 <- c(0, 5, 3, 8, 4) - 3 * secy2
-#' secy4 <- c(0, 3, 5, 4, 8) - 3 * secy2
-#' # unit security payoff matrix
-#' UP <- cbind(secy1, secy2, secy3, secy4)
+#' asset1 <- c(1, 0, 0, 0, 0)
+#' asset2 <- c(0, 1, 1, 1, 1)
+#' asset3 <- c(0, 5, 3, 8, 4) - 3 * asset2
+#' asset4 <- c(0, 3, 5, 4, 8) - 3 * asset2
+#' # unit asset payoff matrix
+#' UAP <- cbind(asset1, asset2, asset3, asset4)
 #'
 #' prob <- c(0.15, 0.25, 0.25, 0.35)
 #' wt <- prop.table(c(1, 0.96 * prob)) # weights
 #'
-#' geSharpe1 <- gemSecurityPricing(
+#' geSharpe1 <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     49, 49,
 #'     30, 30,
 #'     10, 0,
 #'     0, 10
 #'   ), 4, 2, TRUE),
-#'   UP = UP,
+#'   UAP = UAP,
 #'   uf = list(
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5)
@@ -70,14 +71,14 @@
 #' geSharpe1$p[3:4] + 3 * geSharpe1$p[2]
 #'
 #' ## an example of Sharpe (2008, chapter 3, case 2)
-#' geSharpe2 <- gemSecurityPricing(
+#' geSharpe2 <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     49, 49, 98, 98,
 #'     30, 30, 60, 60,
 #'     10, 0, 20, 0,
 #'     0, 10, 0, 20
 #'   ), 4, 4, TRUE),
-#'   UP = UP,
+#'   UAP = UAP,
 #'   uf = list(
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 1.5),
 #'     function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / 2.5),
@@ -91,7 +92,7 @@
 #' geSharpe2$D
 #'
 #' ## an example of Sharpe (2008, chapter 3, case 3)
-#' geSharpe3 <- gemSecurityPricing(UP,
+#' geSharpe3 <- gemAssetPricing_CUF(UAP,
 #'   uf = function(x) (x - x^2 / 400) %*% wt,
 #'   S = matrix(c(
 #'     49, 98,
@@ -104,14 +105,14 @@
 #' geSharpe3$p[3:4] + 3 * geSharpe3$p[2]
 #'
 #' # the same as above
-#' geSharpe3b <- gemSecurityPricing(
+#' geSharpe3b <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     49, 98,
 #'     30, 60,
 #'     5, 10,
 #'     5, 10
 #'   ), 4, 2, TRUE),
-#'   UP = UP,
+#'   UAP = UAP,
 #'   muf = function(x) (1 - x / 200) * wt
 #' )
 #'
@@ -119,14 +120,14 @@
 #' geSharpe3b$p[3:4] + 3 * geSharpe3b$p[2]
 #'
 #' ## an example of Sharpe (2008, chapter 3, case 4)
-#' geSharpe4 <- gemSecurityPricing(
+#' geSharpe4 <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     49, 98,
 #'     30, 60,
 #'     5, 10,
 #'     5, 10
 #'   ), 4, 2, TRUE),
-#'   UP,
+#'   UAP,
 #'   muf = function(x) abs((x - 20)^(-1)) * wt,
 #'   maxIteration = 100,
 #'   numberOfPeriods = 300,
@@ -144,14 +145,14 @@
 #'
 #' uf1 <- function(x) CES(alpha = 1, beta = wt1, x = x, es = 1 / 1.5)
 #' uf2 <- function(x) CES(alpha = 1, beta = wt2, x = x, es = 1 / 2.5)
-#' geSharpe14 <- gemSecurityPricing(
+#' geSharpe14 <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     49, 49,
 #'     30, 30,
 #'     10, 0,
 #'     0, 10
 #'   ), 4, 2, TRUE),
-#'   UP = UP,
+#'   UAP = UAP,
 #'   uf = list(uf1,uf2)
 #' )
 #'
@@ -163,7 +164,7 @@
 #' mu[,2]/mu[1,2]
 #'
 #' #### an example of Wang (2006, example 10.1, P146)
-#' geWang <- gemSecurityPricing(
+#' geWang <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     1, 0,
 #'     0, 2,
@@ -178,7 +179,7 @@
 #' geWang$p # c(1, (1 + sqrt(17)) / 16)
 #'
 #' # the same as above
-#' geWang.b <- gemSecurityPricing(
+#' geWang.b <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     1, 0,
 #'     0, 2,
@@ -194,7 +195,7 @@
 #'
 #' #### an example of Xu (2018, section 10.4, P151)
 #' wt <- c(1, 0.5, 0.5)
-#' ge <- gemSecurityPricing(
+#' ge <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     1, 0,
 #'     0, 0.5,
@@ -209,8 +210,8 @@
 #' ge$p # c(1, (1 + sqrt(5)) / 4, (1 + sqrt(17)) / 16)
 #'
 #' #### an example of incomplete market
-#' ge <- gemSecurityPricing(
-#'   UP = cbind(c(1, 1), c(2, 1)),
+#' ge <- gemAssetPricing_CUF(
+#'   UAP = cbind(c(1, 1), c(2, 1)),
 #'   uf = list(
 #'     function(x) sum(log(x)) / 2,
 #'     function(x) sum(sqrt(x))
@@ -225,8 +226,8 @@
 #' ge$p
 #'
 #' ## the same as above
-#' ge.b <- gemSecurityPricing(
-#'   UP = cbind(c(1, 1), c(2, 1)),
+#' ge.b <- gemAssetPricing_CUF(
+#'   UAP = cbind(c(1, 1), c(2, 1)),
 #'   muf = list(
 #'     function(x) 1 / x * c(0.5, 0.5),
 #'     function(x) 1 / sqrt(x) * c(0.5, 0.5)
@@ -247,18 +248,18 @@
 #' asset2 <- c(0, 1, 1)
 #'
 #' # unit (asset) payoff matrix
-#' UP <- cbind(asset1, asset2)
+#' UAP <- cbind(asset1, asset2)
 #' wt <- c(0.5, 0.25, 0.25) # weights
 #'
 #' uf1 <- function(x) prod((x + c(0, 0, 2))^wt)
 #' uf2 <- function(x) prod(x^wt)
 #'
-#' ge <- gemSecurityPricing(
+#' ge <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     1, 1,
 #'     0, 2
 #'   ), 2, 2, TRUE),
-#'   UP = UP,
+#'   UAP = UAP,
 #'   uf = list(uf1, uf2),
 #'   numeraire = 1
 #' )
@@ -269,7 +270,7 @@
 #' uf2(ge$Payoff[,2])
 #' }
 #'
-gemSecurityPricing <- function(S = diag(2), UP = diag(nrow(S)),
+gemAssetPricing_CUF <- function(S = diag(2), UAP = diag(nrow(S)),
                                uf = NULL,
                                muf = NULL,
                                ratio_adjust_coef = 0.05,
@@ -280,12 +281,12 @@ gemSecurityPricing <- function(S = diag(2), UP = diag(nrow(S)),
 
   ge <- sdm2(
     A = function(state) {
-      Payoff <- UP %*% (state$last.A %*% dg(state$last.z))
+      Payoff <- UAP %*% (state$last.A %*% dg(state$last.z))
 
       if (is.null(muf)) {
-        VMU <- marginal_utility(Payoff, UP, uf, price = state$p)
+        VMU <- marginal_utility(Payoff, UAP, uf, price = state$p)
       } else {
-        VMU <- marginal_utility(Payoff, UP, price = state$p, muf = muf)
+        VMU <- marginal_utility(Payoff, UAP, price = state$p, muf = muf)
       }
 
       VMU <- pmax(VMU, 1e-10)
@@ -298,14 +299,14 @@ gemSecurityPricing <- function(S = diag(2), UP = diag(nrow(S)),
     },
     B = matrix(0, n, m),
     S0Exg = S,
-    names.commodity = paste0("secy", 1:n),
+    names.commodity = paste0("asset", 1:n),
     names.agent = paste0("agt", 1:m),
     numeraire = numeraire,
     ...
   )
 
-  ge$Payoff <- UP %*% ge$D
-  ge$VMU <- marginal_utility(ge$Payoff, UP, uf = uf, price = ge$p, muf = muf)
+  ge$Payoff <- UAP %*% ge$D
+  ge$VMU <- marginal_utility(ge$Payoff, UAP, uf = uf, price = ge$p, muf = muf)
 
   ge
 }

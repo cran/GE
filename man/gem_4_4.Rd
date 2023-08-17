@@ -14,6 +14,40 @@ Some simple 4-by-4 general equilibrium models.
 }
 \examples{
 \donttest{
+#### A general equilibrium model containing a capital good with service-life
+# wear-and-tear. The new product can be used as a capital good with a service
+# life of two periods, and the used old capital good is the old product.
+ge <- sdm2(
+  A = function(state) {
+    a.firm1 <- CD_A(alpha = 2, Beta = c(0, 0.5, 0.5, 0), state$p)
+    a.consumer <- c(1, 0, 0, 0)
+    a.firm2 <- c(1, 0, 0, 0)
+    a.firm3 <- c(0, 0, 0, 1)
+    cbind(a.firm1, a.consumer, a.firm2, a.firm3)
+  },
+  B = matrix(c(
+    1, 0, 0, 0,
+    0, 0, 1, 1,
+    0, 0, 0, 0,
+    0, 0, 1, 0
+  ), 4, 4, TRUE),
+  S0Exg = matrix(c(
+    NA, NA, NA, NA,
+    NA, NA, NA, NA,
+    NA, 100, NA, NA,
+    NA, NA, NA, NA
+  ), 4, 4, TRUE),
+  names.commodity = c("prod.new", "cap", "lab", "prod.old"),
+  names.agent = c("firm1", "consumer", "firm2", "firm3"),
+  numeraire = "prod.new",
+  priceAdjustmentVelocity = 0.05
+)
+
+ge$p
+ge$z
+addmargins(ge$D, 2)
+addmargins(ge$S, 2)
+
 #### the Shoven-Whalley model at
 ## https://lexjansen.com/nesug/nesug03/st/st002.pdf
 ge <- sdm2(

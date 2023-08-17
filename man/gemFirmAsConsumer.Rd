@@ -17,44 +17,48 @@ consumer-type agents instead of producer-type agents.
 \donttest{
 #### an intertemporal model with firm
 ## (see gemIntertemporal_2_2)
-np <- 3 # the number of internal periods.
+np <- 3 # the number of planning periods
 
-S0Exg <- matrix(c(0, 0, 150,
-                  1000, 0, 0,
-                  0, 1000, 0,
-                  0, 0, 100,
-                  0, 0, 100), 5, 3, TRUE)
-
+S0Exg <- matrix(c(
+  0, 0, 150,
+  1000, 0, 0,
+  0, 1000, 0,
+  0, 0, 100,
+  0, 0, 100
+), 5, 3, TRUE)
 
 B <- matrix(0, 5, 3, TRUE)
 
 dst.firm1 <- node_new("util",
-                      type = "StickyLinear",
-                      beta=c(1, 1),
-                      "prod2", "cc1")
+  type = "StickyLinear",
+  beta = c(1, 1),
+  "prod2", "cc1"
+)
 node_set(dst.firm1, "cc1",
-         type = "CD",
-         alpha = 2, beta=c(0.5, 0.5),
-         "prod1", "lab1")
-
+  type = "CD",
+  alpha = 2, beta = c(0.5, 0.5),
+  "prod1", "lab1"
+)
 
 dst.firm2 <- node_new("util",
-                      type = "StickyLinear",
-                      beta=c(1, 1),
-                      "prod3", "cc1")
+  type = "StickyLinear",
+  beta = c(1, 1),
+  "prod3", "cc1"
+)
 node_set(dst.firm2, "cc1",
-         type = "CD",
-         alpha = 2, beta=c(0.5, 0.5),
-         "prod2", "lab2")
+  type = "CD",
+  alpha = 2, beta = c(0.5, 0.5),
+  "prod2", "lab2"
+)
 
 dst.consumer <- node_new(
   "util",
   type = "CD",
-  alpha = 1,  beta = prop.table(rep(1, np)),
+  alpha = 1, beta = prop.table(rep(1, np)),
   paste0("prod", 1:np)
 )
 
-ge <-  sdm2(
+ge <- sdm2(
   A = list(dst.firm1, dst.firm2, dst.consumer),
   B = B,
   S0Exg = S0Exg,
@@ -65,14 +69,15 @@ ge <-  sdm2(
 )
 
 #### an intertemporal model with bank
-R <- 1.1
-beta.bank <- c(1, 1/R, 1/R^2)
+igr <- 1.1
+beta.bank <- c(1, 1 / igr, 1 / igr^2)
 
 dst.bank <- node_new(
   "output",
   type = "StickyLinear",
   beta = beta.bank,
-  "payoff1", "payoff2", "payoff3")
+  "payoff1", "payoff2", "payoff3"
+)
 
 dst.consumer <- node_new(
   "util",
@@ -95,18 +100,21 @@ ge <- sdm2(
 
 #### an instantaneous sequential model
 dst.firm <- node_new("output",
-                     type = "StickyLinear",
-                     beta=c(1, 1),
-                     "prod", "cc1")
+  type = "StickyLinear",
+  beta = c(1, 1),
+  "prod", "cc1"
+)
 node_set(dst.firm, "cc1",
-         type = "CD",
-         alpha = 2, beta=c(0.5, 0.5),
-         "cap", "lab")
+  type = "CD",
+  alpha = 2, beta = c(0.5, 0.5),
+  "cap", "lab"
+)
 
 dst.consumer <- node_new("util",
-                         type = "Leontief",
-                         a= 1,
-                         "prod")
+  type = "Leontief",
+  a = 1,
+  "prod"
+)
 
 ge <- sdm2(
   A = list(dst.firm, dst.consumer),
@@ -124,14 +132,14 @@ ge$p
 ge$z
 ge$D
 
-## the corresponding model treating firm as producer-type agent
+## the corresponding model treating a firm as a producer-type agent
 ge <- sdm2(
   A = function(state) {
-    a1<- CD_A(alpha = 2, Beta = c(0, 0.5, 0.5), p = state$p)
+    a1 <- CD_A(alpha = 2, Beta = c(0, 0.5, 0.5), p = state$p)
     a2 <- c(1, 0, 0)
     cbind(a1, a2)
   },
-  B = diag(c(1,0), 3, 2),
+  B = diag(c(1, 0), 3, 2),
   S0Exg = matrix(c(
     NA, NA,
     NA, 50,

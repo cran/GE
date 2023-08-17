@@ -18,13 +18,13 @@ Some examples of a 6-by-6 open economy with bond.
 dst.firm1 <- node_new(
   "prod1.CHN",
   type = "SCES", es=1, alpha = 1, beta = c(0.4, 0.4, 0.2),
-  "prod2.CHN", "prod2.ROW", "lab"
+  "prod2.CHN", "prod2.ROW", "lab.CHN"
 )
 
 dst.firm2 <- node_new(
   "prod2.CHN",
   type = "SCES", es=1, alpha = 1, beta = c(0.4, 0.4, 0.2),
-  "prod2.CHN", "prod2.ROW", "lab"
+  "prod2.CHN", "prod2.ROW", "lab.CHN"
 )
 
 dst.consumer <- node_new(
@@ -74,11 +74,11 @@ ge <- sdm2(
     NA, NA, NA, NA, NA, 20
   ), 6, 6, TRUE),
   names.commodity = c(
-    "prod1.CHN", "prod2.CHN", "lab",
+    "prod1.CHN", "prod2.CHN", "lab.CHN",
     "prod1.ROW", "prod2.ROW", "bond.ROW"
   ),
   names.agent = c("firm1", "firm2", "consumer", "FT1", "FT2", "Bond"),
-  numeraire = "lab"
+  numeraire = "lab.CHN"
 )
 
 ge$D
@@ -105,11 +105,11 @@ ge <- sdm2(
     NA, NA, NA, NA, NA, 20
   ), 6, 6, TRUE),
   names.commodity = c(
-    "prod1.CHN", "prod2.CHN", "lab",
+    "prod1.CHN", "prod2.CHN", "lab.CHN",
     "prod1.ROW", "prod2.ROW", "bond.ROW"
   ),
   names.agent = c("firm1", "firm2", "consumer", "FT1", "FT2", "Bond"),
-  numeraire = "lab"
+  numeraire = "lab.CHN"
 )
 
 ge$D

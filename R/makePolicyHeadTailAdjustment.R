@@ -5,16 +5,17 @@
 #' A timeline model is an intertemporal non-sequential model that includes production and a given initial product supply.
 #' Head adjustment refers to the adjustment of the initial product supply to a steady-state value.
 #' Similarly, tail adjustment refers to the adjustment of the share coefficient of the last period of the consumer in the timeline model in order to let the model run in a steady-state equilibrium path.
-#' @param type a string to specify the type of the policy.
+#' @param type a character string specifying the type of the policy, must be one of "both" (default), "head", "tail" or "none".
+#' If type=="none", NULL will be returned.
 #' @param gr the growth rate.
-#' @param np the number of (internal) periods.
+#' @param np the number of planning periods.
 #' @return A policy, which is often used as an argument of the function sdm2.
 #' @seealso {
 #' \code{\link{gemIntertemporal_Dividend}};
 #' \code{\link{gemIntertemporal_Money_Dividend_Example7.5.1}}
 #' }
 
-makePolicyHeadTailAdjustment <- function(type = c("both", "tail", "head"), gr = 0, np) {
+makePolicyHeadTailAdjustment <- function(type = c("both", "tail", "head", "none"), gr = 0, np) {
   policyHeadAdjustment <- function(A, state) {
     ratio.output.head <- state$last.z[2] / (state$last.z[1] * (1 + gr))
     if (is.null(A[[1]]$y1)) {
@@ -35,7 +36,9 @@ makePolicyHeadTailAdjustment <- function(type = c("both", "tail", "head"), gr = 
     }
 
     tmp.n <- length(tmp.node$beta)
-    tail.beta <- tmp.node$beta[tmp.n] / ratio.output.tail
+    tail.beta <- tmp.node$beta[tmp.n]
+    if (tail.beta == 0) tail.beta <- 1 / tmp.n
+    tail.beta <- tail.beta / ratio.output.tail
     tmp.node$beta <- prop.table(c(tmp.node$beta[1:(tmp.n - 1)], tail.beta))
   }
 
@@ -49,6 +52,7 @@ makePolicyHeadTailAdjustment <- function(type = c("both", "tail", "head"), gr = 
     "head" = {
       return(policyHeadAdjustment)
     },
+    "none" = NULL,
     stop("Wrong type.")
   )
 }

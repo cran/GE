@@ -10,14 +10,17 @@ AMSD(x, gamma = 1, wt = NULL, theta = 1)
 AMV(x, gamma = 1, wt = NULL)
 }
 \arguments{
-\item{x}{a numeric vector.}
+\item{x}{a numeric n-vector.}
 
-\item{gamma}{the risk aversion coefficient.}
+\item{gamma}{a non-negative scalar representing the risk aversion coefficient with a default value of 1.}
 
-\item{wt}{a numeric vector of weights (or probability).
+\item{wt}{a numeric n-vector of weights (or probability).
 If wt is NULL, all elements of x are given the same weight.}
 
 \item{theta}{a non-negative scalar with a default value of 1.}
+}
+\value{
+A scalar indicating the utility level.
 }
 \description{
 Compute the utility function mean(x) - (gamma * sd.p(x))^theta / theta or
@@ -41,13 +44,14 @@ AMSD(1:2, gamma = 1, theta = 2)
 
 marginal_utility(
   c(1, 1.001),
-  c(0, 1), function (x) AMSD(x, gamma = 0.5)
+  c(0, 1), function(x) AMSD(x, gamma = 0.5)
 )
 marginal_utility(
   c(1.001, 1),
-  c(0, 1), function (x) AMSD(x, gamma = 0.5)
+  c(0, 1), function(x) AMSD(x, gamma = 0.5)
 )
 }
+
 }
 \references{
 Nakamura, Yutaka (2015). Mean-Variance Utility. Journal of Economic Theory, 160: 536-556.

@@ -4,14 +4,19 @@
 \alias{makePolicyHeadTailAdjustment}
 \title{Make a Policy of Head and/or Tail Adjustment for a Timeline Model}
 \usage{
-makePolicyHeadTailAdjustment(type = c("both", "tail", "head"), gr = 0, np)
+makePolicyHeadTailAdjustment(
+  type = c("both", "tail", "head", "none"),
+  gr = 0,
+  np
+)
 }
 \arguments{
-\item{type}{a string to specify the type of the policy.}
+\item{type}{a character string specifying the type of the policy, must be one of "both" (default), "head", "tail" or "none".
+If type=="none", NULL will be returned.}
 
 \item{gr}{the growth rate.}
 
-\item{np}{the number of (internal) periods.}
+\item{np}{the number of planning periods.}
 }
 \value{
 A policy, which is often used as an argument of the function sdm2.

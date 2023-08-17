@@ -18,7 +18,7 @@ Some examples of a 4-by-4 open economy with bond.
 dst.firm <- node_new(
   "output",
   type = "SCES", alpha = 1, beta = c(0.5, 0.5), es = 1,
-  "prod.CHN", "lab"
+  "prod.CHN", "lab.CHN"
 )
 
 dst.consumer <- node_new(
@@ -34,17 +34,17 @@ node_set(dst.consumer, "cc1",
 dst.FT <- node_new(
   "prod.ROW",
   type = "SCES", alpha = 1, beta = c(2/3, 1/3), es = 1,
-  "prod.CHN", "lab"
+  "prod.CHN", "lab.CHN"
 )
 
-dst.Bond <- node_new(
+dst.ROW <- node_new(
   "util",
   type = "SCES", alpha = 1, beta = c(2/3, 1/3), es = 1,
-  "prod.CHN", "lab"
+  "prod.CHN", "lab.CHN"
 )
 
 ge.open <- sdm2(
-  A = list(dst.firm, dst.consumer, dst.FT, dst.Bond),
+  A = list(dst.firm, dst.consumer, dst.FT, dst.ROW),
   B = matrix(c(
     1, 0, 0, 0,
     0, 0, 0, 0,
@@ -57,45 +57,46 @@ ge.open <- sdm2(
     NA, NA, NA, NA,
     NA, NA, NA, 60
   ), 4, 4, TRUE),
-  names.commodity = c("prod.CHN", "lab", "prod.ROW", "bond.ROW"),
-  names.agent = c("firm", "consumer", "FT", "Bond"),
-  numeraire = "lab"
+  names.commodity = c("prod.CHN", "lab.CHN", "prod.ROW", "bond.ROW"),
+  names.agent = c("firm", "consumer", "FT", "ROW"),
+  numeraire = "lab.CHN"
 )
 
-ge.open$D
 ge.open$p
+addmargins(ge.open$D, 2)
+addmargins(ge.open$S, 2)
 
 ## a corresponding two-country model
-dst.firm <- node_new(
+dst.firm.CHN <- node_new(
   "output",
   type = "SCES", alpha = 1, beta = c(0.5, 0.5), es = 1,
-  "prod", "lab"
+  "prod.CHN", "lab.CHN"
 )
 
-dst.consumer <- node_new(
+dst.consumer.CHN <- node_new(
   "util",
   type = "FIN", beta = c(0.8, 0.2),
   "cc1", "bond.ROW"
 )
-node_set(dst.consumer, "cc1",
+node_set(dst.consumer.CHN, "cc1",
          type = "SCES", alpha = 1, beta = c(0.5, 0.5), es = 1,
-         "prod", "prod.ROW"
+         "prod.CHN", "prod.ROW"
 )
 
 dst.firm.ROW <- node_new(
   "prod.ROW",
   type = "SCES", alpha = 1, beta = c(0.25, 0.25, 0.5), es = 1,
-  "prod", "prod.ROW", "lab.ROW"
+  "prod.CHN", "prod.ROW", "lab.ROW"
 )
 
 dst.consumer.ROW <- node_new(
   "util",
   type = "SCES", alpha = 1, beta = c(0.25, 0.25, 0.25, 0.25), es = 1,
-  "prod", "prod.ROW", "lab", "lab.ROW"
+  "prod.CHN", "prod.ROW", "lab.CHN", "lab.ROW"
 )
 
-ge <- sdm2(
-  A = list(dst.firm, dst.consumer, dst.firm.ROW, dst.consumer.ROW),
+ge.TC <- sdm2(
+  A = list(dst.firm.CHN, dst.consumer.CHN, dst.firm.ROW, dst.consumer.ROW),
   B = matrix(c(
     1, 0, 0, 0,
     0, 0, 0, 0,
@@ -110,19 +111,20 @@ ge <- sdm2(
     NA, NA, NA, 180,
     NA, NA, NA, 60
   ), 5, 4, TRUE),
-  names.commodity = c("prod", "lab", "prod.ROW", "lab.ROW", "bond.ROW"),
-  names.agent = c("firm", "consumer", "firm.ROW", "consumer.ROW"),
-  numeraire = "lab"
+  names.commodity = c("prod.CHN", "lab.CHN", "prod.ROW", "lab.ROW", "bond.ROW"),
+  names.agent = c("firm.CHN", "consumer.CHN", "firm.ROW", "consumer.ROW"),
+  numeraire = "lab.CHN"
 )
 
-ge$D
-ge$p
+ge.TC$p
+addmargins(ge.TC$D, 2)
+addmargins(ge.TC$S, 2)
 
 #### an open economy with domestic bond (bond.CHN)
 dst.firm <- node_new(
   "output",
   type = "CD", alpha = 5, beta = c(0.5, 0.5),
-  "prod.CHN", "lab"
+  "prod.CHN", "lab.CHN"
 )
 
 dst.consumer <- node_new(
@@ -137,14 +139,14 @@ dst.FT <- node_new(
   "prod.CHN"
 )
 
-dst.Bond <- node_new(
+dst.ROW <- node_new(
   "prod.ROW",
   type = "Leontief", a = 1,
   "bond.CHN"
 )
 
 ge <- sdm2(
-  A = list(dst.firm, dst.consumer, dst.FT, dst.Bond),
+  A = list(dst.firm, dst.consumer, dst.FT, dst.ROW),
   B = matrix(c(
     1, 0, 0, 0,
     0, 0, 0, 0,
@@ -157,12 +159,13 @@ ge <- sdm2(
     NA, NA, NA, NA,
     NA, 0.2, NA, NA
   ), 4, 4, TRUE),
-  names.commodity = c("prod.CHN", "lab", "prod.ROW", "bond.CHN"),
-  names.agent = c("firm", "consumer", "FT", "Bond"),
-  numeraire = "lab"
+  names.commodity = c("prod.CHN", "lab.CHN", "prod.ROW", "bond.CHN"),
+  names.agent = c("firm", "consumer", "FT", "ROW"),
+  numeraire = "lab.CHN"
 )
 
-ge$D
 ge$p
+addmargins(ge$D, 2)
+addmargins(ge$S, 2)
 }
 }

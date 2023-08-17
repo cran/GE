@@ -6,6 +6,7 @@
 #' The class of a demand structural tree is Node defined by the package data.tree.
 #' @param node a demand structural tree.
 #' @param p a price vector with names of commodities.
+#' @param trace FALSE (default) or TRUE. If TRUE, calculation intermediate results will be recorded in nodes.
 #' @return A vector consisting of demand coefficients.
 #' @details Demand coefficients often indicate the quantity of various commodities needed by an economic agent in order to obtain a unit of output or utility,
 #' and these commodities can include both real commodities and financial instruments such as tax receipts, stocks, bonds and currency.\cr
@@ -24,8 +25,10 @@
 #' \item CES. In this case, this node also has parameters alpha, beta, theta (optional) and es (or sigma = 1 - 1 / es) (see CGE::CES_A).
 #' \item Leontief. In this case, this node also has the parameter a,
 #' which is a vector and is the parameter of a Leontief function.
-#' \item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta.
-#' These parameters are parameters of a Cobb-Douglas function.
+#' \item CD. CD is Cobb-Douglas. In this case, this node also has parameters alpha and beta,
+#' which are parameters of a Cobb-Douglas function.
+#' \item CESAK. In this case, this node also has parameters es, alpha, betaK and alphaK,
+#' which are parameters of the CESAK function (see \code{\link{CESAK_dc}}). Moreover, the first child node should represent capital goods.
 #' \item FIN. That is the financial type.
 #' In this case, this node also has the parameter rate or beta.
 #' If the parameter beta is not NULL, then the parameter rate will be ignored.
@@ -162,7 +165,7 @@
 #'
 #' node_plot(dst)
 #' demand_coefficient(dst, p)
-demand_coefficient <- function(node, p) {
+demand_coefficient <- function(node, p, trace = FALSE) {
   compute.price_dc <- function(node, p) {
     if (isLeaf(node)) {
       tmp.name <- node$name
@@ -175,9 +178,8 @@ demand_coefficient <- function(node, p) {
     }
 
     p_dc <- lapply(node$children, compute.price_dc, p)
-    the.input.p <- sapply(p_dc, function(x) x$p)
+    the.input.p <- sapply(p_dc, function(x) unname(x$p))
     child.dc <- lapply(p_dc, function(x) x$dc)
-
 
     switch(node$type,
       "SCES" = {
@@ -204,6 +206,9 @@ demand_coefficient <- function(node, p) {
       },
       "CD" = {
         the.input.coef <- CD_A(node$alpha, node$beta, the.input.p)
+      },
+      "CESAK" = {
+        the.input.coef <- CESAK_dc(node$alpha, node$betaK, node$alphaK, the.input.p, node$es)
       },
       "Leontief" = {
         the.input.coef <- node$a
@@ -233,13 +238,13 @@ demand_coefficient <- function(node, p) {
       "StickyLinear" = {
         if (is.null(node$last.a)) node$last.a <- node$beta
         if (is.null(node$coef)) node$coef <- 0.2
-        vmu <- node$beta/the.input.p
-        ratio <- vmu/mean(vmu)
+        vmu <- node$beta / the.input.p
+        ratio <- vmu / mean(vmu)
         a <- node$last.a * ratio_adjust(ratio, node$coef)
-        a <- a/(sum(node$beta*a))
+        a <- a / (sum(node$beta * a))
         the.input.coef <- node$last.a <- a
       },
-      stop("Li: wrong node$type.")
+      stop(paste0("Li: wrong node$type:", node$type))
     )
 
     price <- sum(the.input.p * the.input.coef)
@@ -248,6 +253,13 @@ demand_coefficient <- function(node, p) {
     for (k in seq_along(the.input.coef)) {
       tmp <- unlist(child.dc[[k]]) * the.input.coef[k]
       dc[names(tmp)] <- dc[names(tmp)] + tmp
+    }
+
+    if (trace){
+      node$the.input.p <- the.input.p
+      node$the.input.coef <- the.input.coef
+      node$price <- price
+      node$dc <- dc
     }
 
     return(list(

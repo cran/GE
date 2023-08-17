@@ -4,6 +4,7 @@
 #' @description Some simple 3-by-2 general equilibrium models with a firm and a consumer.
 #' @param ... arguments to be passed to the function sdm2.
 #' @references http://www.econ.ucla.edu/riley/MAE/Course/SolvingForTheWE.pdf
+#' @references He Zhangyong, Song Zheng (2010, ISBN: 9787040297270) Advanced Macroeconomics. Beijing: Higher Education Press.
 #' @examples
 #' \donttest{
 #' ge.CD <- sdm2(
@@ -158,6 +159,56 @@
 #' ge3.SCES$z
 #' ge3.SCES$D
 #' ge3.SCES$S
+#'
+#' #### a model with a quasilinear utility function (see He and Song, 2010, page 19).
+#' alpha.firm <- 2
+#' beta.cap.firm <- 0.6
+#' beta.lab.firm <- 1 - beta.cap.firm
+#' theta.consumer <- 0.8
+#' lab.supply <- 2
+#' cap.supply <- 1
+#'
+#' ge <- sdm2(
+#'   A = function(state) {
+#'     a1 <- CD_A(alpha.firm, rbind(0, beta.lab.firm, beta.cap.firm), state$p)
+#'
+#'     demand.lab.prod <- QL_demand(
+#'       w = state$w[2], p = state$p[2:1], # the prices of lab and prod
+#'       alpha = 1, beta = theta.consumer, type = "CRRA"
+#'     )
+#'     a2 <- c(demand.lab.prod[2:1], 0)
+#'     cbind(a1, a2)
+#'   },
+#'   B = matrix(c(
+#'     1, 0,
+#'     0, 0,
+#'     0, 0
+#'   ), 3, 2, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA,
+#'     NA, lab.supply,
+#'     NA, cap.supply
+#'   ), 3, 2, TRUE),
+#'   names.commodity = c("prod", "lab", "cap"),
+#'   names.agent = c("firm", "consumer"),
+#'   numeraire = "prod"
+#' )
+#'
+#' ge$p
+#' ge$z
+#' ge$D
+#' ge$S
+#'
+#' # the equilibrium leisure
+#' lab.supply - (beta.lab.firm * (alpha.firm * cap.supply^beta.cap.firm)^(1 - theta.consumer))^
+#'   (1 / (beta.cap.firm + beta.lab.firm * theta.consumer))
+#'
+#' # the equilibrium price of labor
+#' w <- ((1 - beta.cap.firm)^(1 - beta.cap.firm) * (alpha.firm * cap.supply^beta.cap.firm))^
+#'   (theta.consumer / (beta.cap.firm + (1 - beta.cap.firm) * theta.consumer))
+#'
+#' # the equilibrium price of capital goods
+#' beta.cap.firm * w^(1 / theta.consumer) / cap.supply
 #' }
 
 gem_3_2 <- function(...) sdm2(...)

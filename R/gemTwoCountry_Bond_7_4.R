@@ -7,8 +7,8 @@
 #' @seealso \cite{\link{gemTwoCountry_Tariff_9_5}}
 #' @examples
 #' \donttest{
-#' es.DFProd <- 0.8 # substitution elasticity between domestic and foreign products
-#' es.CL <- 0.8 # substitution elasticity between capital and labor
+#' es.DFProd <- 0.8 # the substitution elasticity between domestic and foreign products
+#' es.CL <- 0.8 # the substitution elasticity between capital and labor
 #'
 #' dst.firm.CHN <- node_new("output",
 #'   type = "SCES", alpha = 1, beta = c(0.78, 0.22), es = es.CL,
@@ -16,11 +16,9 @@
 #' )
 #'
 #' dst.household.CHN <- node_new("util",
-#'   type = "FIN", rate = c(1, 0.028),
+#'   type = "FIN", rate = c(1,  outbound.investment.rate = 0.028),
 #'   "cc1", "bond.ROW"
-#' ) # 0.1 is the amount of outbound investment corresponding to
-#' # each unit of cc1 (i.e. composite commodity 1).
-#'
+#' )
 #' node_set(dst.household.CHN, "cc1",
 #'   type = "SCES", alpha = 1, beta = c(0.93, 0.07), es = es.DFProd,
 #'   "prod.CHN", "prod.ROW"
@@ -96,8 +94,8 @@
 #'   c("firm.CHN", "household.CHN", "firm.ROW", "household.ROW")
 #' )
 #'
-#' es.DFProd <- 0.8 # substitution elasticity between domestic and foreign products
-#' es.CL <- 0.8 # substitution elasticity between capital and labor
+#' es.DFProd <- 0.8 # the substitution elasticity between domestic and foreign products
+#' es.CL <- 0.8 # the substitution elasticity between capital and labor
 #'
 #' dst.firm.CHN <- node_new("output",
 #'                          type = "SCES",

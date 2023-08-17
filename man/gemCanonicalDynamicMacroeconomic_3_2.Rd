@@ -7,8 +7,8 @@
 gemCanonicalDynamicMacroeconomic_3_2(
   discount.factor = 0.97,
   depreciation.rate = 0.06,
-  beta1.firm = 0.35,
-  beta1.consumer = 0.4,
+  beta.prod.firm = 0.35,
+  beta.prod.consumer = 0.4,
   policy.supply = NULL,
   policy.technology = NULL,
   policy.price = NULL,
@@ -20,10 +20,10 @@ gemCanonicalDynamicMacroeconomic_3_2(
 
 \item{depreciation.rate}{the physical depreciation rate of capital stock.}
 
-\item{beta1.firm}{the first beta parameter of the Cobb-Douglas production function.}
+\item{beta.prod.firm}{the share parameter of the product in the Cobb-Douglas production function.}
 
-\item{beta1.consumer}{the first beta parameter of the Cobb-Douglas utility function.
-This parameter represents the individual's preferences regarding consumption - leisure decisions.}
+\item{beta.prod.consumer}{the share parameter of the product in the Cobb-Douglas period utility function.
+This parameter represents the individual's preferences regarding consumption-leisure decisions.}
 
 \item{policy.supply}{a policy function or a policy function list which adjusts the supplies.}
 
@@ -34,7 +34,7 @@ This parameter represents the individual's preferences regarding consumption - l
 \item{...}{arguments to be to be passed to the function sdm2.}
 }
 \value{
-A general equilibrium (see \code{\link{sdm2}})
+A general equilibrium (see \code{\link{sdm2}}).
 }
 \description{
 A canonical dynamic macroeconomic general equilibrium model (see Torres, 2016, Table 2.1 and 2.2).
@@ -53,7 +53,7 @@ ge <- gemCanonicalDynamicMacroeconomic_3_2(
   ts = TRUE,
   maxIteration = 1,
   numberOfPeriods = 100,
-  z0 = c(0.5, 1)
+  z0 = c(50, 100)
 )
 
 par(mfrow = c(1, 2))
@@ -66,13 +66,13 @@ policyTechnologyChange <- function(time, A) {
   time.win <- c(50, 50)
   discount.factor <- 0.97
   depreciation.rate <- 0.06
-  beta1.firm <- 0.35
+  beta.prod.firm  <- 0.35
   return.rate <- 1 / discount.factor - 1
 
   if (time >= time.win[1] && time <= time.win[2]) {
     A[[1]]$func <- function(p) {
       result <- CD_A(
-        alpha, rbind(beta1.firm, 1 - beta1.firm, 0),
+        alpha, rbind(beta.prod.firm , 1 - beta.prod.firm , 0),
         c(p[1] * (return.rate + depreciation.rate), p[2:3])
       )
       result[3] <- p[1] * result[1] * return.rate / p[3]
@@ -87,7 +87,7 @@ ge <- gemCanonicalDynamicMacroeconomic_3_2(
   ts = TRUE,
   maxIteration = 1,
   numberOfPeriods = 100,
-  z0 = c(0.5, 1)
+  z0 = c(50, 100)
 )
 
 par(mfrow = c(1, 2))
@@ -98,8 +98,8 @@ matplot(ge$ts.p, type = "o", pch = 20)
 ge <- gemCanonicalDynamicMacroeconomic_3_2(
   discount.factor = 0.99,
   depreciation.rate = 0.025,
-  beta1.firm = 0.36,
-  beta1.consumer = 1
+  beta.prod.firm  = 0.36,
+  beta.prod.consumer = 1
 )
 }
 }

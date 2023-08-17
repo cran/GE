@@ -7,8 +7,8 @@
 gemCanonicalDynamicMacroeconomic_4_3(
   discount.factor = 0.97,
   depreciation.rate = 0.06,
-  beta.lab.firm1 = 0.65,
-  beta.lab.consumer = 0.6,
+  beta.prod.firm = 0.35,
+  beta.prod.consumer = 0.4,
   ...
 )
 }
@@ -17,9 +17,9 @@ gemCanonicalDynamicMacroeconomic_4_3(
 
 \item{depreciation.rate}{the physical depreciation rate of capital stock.}
 
-\item{beta.lab.firm1}{the share parameter for labor of the Cobb-Douglas production function of the production firm.}
+\item{beta.prod.firm}{the share parameter of the product in the Cobb-Douglas production function of the production firm.}
 
-\item{beta.lab.consumer}{the share parameter for labor of the Cobb-Douglas utility function of the consumer.}
+\item{beta.prod.consumer}{the share parameter of the product in the Cobb-Douglas period utility function of the consumer.}
 
 \item{...}{arguments to be to be passed to the function sdm2.}
 }
@@ -38,19 +38,17 @@ and 3 agents (i.e. a production firm, a consumer and a capital-leasing firm).
 #### a market-clearing path that converges to the steady-state equilibrium
 ge <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = 100,
-  policy = policyMarketClearingPrice,
-  z0 = c(1, 1, 1)
+  policy = policyMarketClearingPrice
 )
 
 matplot(ge$ts.z, type = "o", pch = 20)
 matplot(ge$ts.p, type = "o", pch = 20)
 
 ## population growth: a market-clearing path
-## that converges a balanced growth path
+## that converges to a balanced growth path
 ge <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = 100,
   GRExg = 0.01,
-  z0 = c(1, 1, 1),
   policy = policyMarketClearingPrice
 )
 
@@ -62,7 +60,6 @@ matplot(growth_rate(ge$ts.z), type = "l")
 ge <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = 5000,
   priceAdjustmentVelocity = 0.03,
-  z0 = c(1, 1, 1)
 )
 
 ge$p
@@ -74,7 +71,6 @@ node_plot(ge$dstl[[3]], param = TRUE)
 ge <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = 4000,
   priceAdjustmentVelocity = 0.03,
-  z0 = c(1, 1, 1),
   policy = function(time, state) {
     if (time == 1500) {
       state$S[1, 1] <- state$S[1, 1] * 0.999
@@ -83,7 +79,7 @@ ge <- gemCanonicalDynamicMacroeconomic_4_3(
   }
 )
 
-#### business cycle
+#### business cycles
 de <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = 1000,
   priceAdjustmentVelocity = 0.15
@@ -112,7 +108,7 @@ plot(alpha.shock)
 ge <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = nPeriod,
   p0 = c(1, 1.34312, 0.09093, 0.08865),
-  z0 = c(0.7447, 0.6120, 2.8665),
+  z0 = c(74.47, 61.20, 286.65),
   policy = list(
     function(time, A) {
       A[[1]]$alpha <- alpha.shock[time]
@@ -123,6 +119,7 @@ ge <- gemCanonicalDynamicMacroeconomic_4_3(
 
 matplot(ge$ts.z[, 1], type = "o", pch = 20)
 }
+
 }
 \references{
 Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomic General Equilibrium Models (Second Edition). Vernon Press.

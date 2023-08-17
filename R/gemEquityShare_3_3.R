@@ -61,14 +61,25 @@
 #' #### An equivalent intertemporal model.
 #' gr <- 0.03
 #' rho.beta <- 0.8
-#' np <- 5 # the number of internal periods
-#' y1 <- 100
-#' S0Exg <- matrix(NA, 2 * np - 1, np)
-#' S0Exg[(np + 1):(2 * np - 1), np] <- 100 * (1 + gr)^(0:(np - 2))
-#' S0Exg[1, np] <- y1
+#' np <- 5 # the number of planning periods
+#' y1 <- 100 # the initial product supply
 #'
-#' B <- matrix(0, 2 * np - 1, np)
-#' B[2:np, 1:(np - 1)] <- diag(np - 1)
+#' n <- 2 * np - 1 # the number of commodity kinds
+#' m <- np # the number of agent kinds
+#'
+#' names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:(np - 1)))
+#' names.agent <- c(paste0("firm", 1:(np - 1)), "consumer")
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:(np - 1)), "consumer"] <- 100 * (1 + gr)^(0:(np - 2))
+#' S0Exg["prod1", "consumer"] <- y1
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+#' }
 #'
 #' dstl.firm <- list()
 #' for (k in 1:(np - 1)) {
@@ -91,8 +102,8 @@
 #'   A = c(dstl.firm, dst.consumer),
 #'   B = B,
 #'   S0Exg = S0Exg,
-#'   names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:(np - 1))),
-#'   names.agent = c(paste0("firm", 1:(np - 1)), "consumer"),
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "prod1",
 #'   policy = makePolicyHeadTailAdjustment(gr = gr, np = np)
 #' )

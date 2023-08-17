@@ -6,14 +6,14 @@
 #' and 2 agents (i.e. a firm and a consumer). Labor is the numeraire.
 #' @param discount.factor the intertemporal discount factor.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
-#' @param beta1.firm the first beta parameter of the Cobb-Douglas production function.
-#' @param beta1.consumer the first beta parameter of the Cobb-Douglas utility function.
-#' This parameter represents the individual's preferences regarding consumption - leisure decisions.
+#' @param beta.prod.firm  the share parameter of the product in the Cobb-Douglas production function.
+#' @param beta.prod.consumer the share parameter of the product in the Cobb-Douglas period utility function.
+#' This parameter represents the individual's preferences regarding consumption-leisure decisions.
 #' @param policy.supply a policy function or a policy function list which adjusts the supplies.
 #' @param policy.technology a policy function or a policy function list which adjusts the technology.
 #' @param policy.price a policy function or a policy function list which adjusts the prices.
 #' @param ... arguments to be to be passed to the function sdm2.
-#' @return A general equilibrium (see \code{\link{sdm2}})
+#' @return A general equilibrium (see \code{\link{sdm2}}).
 #' @references Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomic General Equilibrium Models (Second Edition). Vernon Press.
 #' @references Li Xiangyang (2018, ISBN: 9787302497745) Dynamic Stochastic General Equilibrium (DSGE) Model: Theory, Methodology, and Dynare Practice. Tsinghua University Press. (In Chinese)
 #' @seealso The market clearing path (alias temporary equilibrium path, instantaneous equilibrium path) can be computed with the function \code{\link{policyMarketClearingPrice}}.
@@ -27,7 +27,7 @@
 #'   ts = TRUE,
 #'   maxIteration = 1,
 #'   numberOfPeriods = 100,
-#'   z0 = c(0.5, 1)
+#'   z0 = c(50, 100)
 #' )
 #'
 #' par(mfrow = c(1, 2))
@@ -40,13 +40,13 @@
 #'   time.win <- c(50, 50)
 #'   discount.factor <- 0.97
 #'   depreciation.rate <- 0.06
-#'   beta1.firm <- 0.35
+#'   beta.prod.firm  <- 0.35
 #'   return.rate <- 1 / discount.factor - 1
 #'
 #'   if (time >= time.win[1] && time <= time.win[2]) {
 #'     A[[1]]$func <- function(p) {
 #'       result <- CD_A(
-#'         alpha, rbind(beta1.firm, 1 - beta1.firm, 0),
+#'         alpha, rbind(beta.prod.firm , 1 - beta.prod.firm , 0),
 #'         c(p[1] * (return.rate + depreciation.rate), p[2:3])
 #'       )
 #'       result[3] <- p[1] * result[1] * return.rate / p[3]
@@ -61,7 +61,7 @@
 #'   ts = TRUE,
 #'   maxIteration = 1,
 #'   numberOfPeriods = 100,
-#'   z0 = c(0.5, 1)
+#'   z0 = c(50, 100)
 #' )
 #'
 #' par(mfrow = c(1, 2))
@@ -72,15 +72,15 @@
 #' ge <- gemCanonicalDynamicMacroeconomic_3_2(
 #'   discount.factor = 0.99,
 #'   depreciation.rate = 0.025,
-#'   beta1.firm = 0.36,
-#'   beta1.consumer = 1
+#'   beta.prod.firm  = 0.36,
+#'   beta.prod.consumer = 1
 #' )
 #' }
 
 gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
                                                  depreciation.rate = 0.06,
-                                                 beta1.firm = 0.35,
-                                                 beta1.consumer = 0.4,
+                                                 beta.prod.firm  = 0.35,
+                                                 beta.prod.consumer = 0.4,
                                                  policy.supply = NULL,
                                                  policy.technology = NULL,
                                                  policy.price = NULL,
@@ -91,7 +91,7 @@ gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
     type = "FUNC",
     func = function(p) {
       result <- CD_A(
-        1, rbind(beta1.firm, 1 - beta1.firm, 0),
+        1, rbind(beta.prod.firm , 1 - beta.prod.firm , 0),
         c(p[1] * (return.rate + depreciation.rate), p[2:3])
       )
       result[3] <- p[1] * result[1] * return.rate / p[3]
@@ -101,7 +101,7 @@ gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
   )
 
   dst.consumer <- node_new("util",
-    type = "CD", alpha = 1, beta = c(beta1.consumer, 1 - beta1.consumer),
+    type = "CD", alpha = 1, beta = c(beta.prod.consumer, 1 - beta.prod.consumer),
     "prod", "lab"
   )
 
@@ -120,11 +120,11 @@ gemCanonicalDynamicMacroeconomic_3_2 <- function(discount.factor = 0.97,
       B[1, 1] <- 1
       B
     },
-    S0Exg = {
-      S0Exg <- matrix(NA, 3, 2)
-      S0Exg[2, 2] <- S0Exg[3, 2] <- 1
-      S0Exg
-    },
+    S0Exg = matrix(c(
+      NA, NA,
+      NA, 100,
+      NA, 100
+    ), 3, 2, TRUE),
     names.commodity = c("prod", "lab", "equity.share"),
     names.agent = c("firm", "consumer"),
     numeraire = "lab",

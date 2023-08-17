@@ -10,10 +10,11 @@
 #' wherein beta1 + beta2 == 1.
 #'
 #' When es==1, the DCES utility function becomes the Stone-Geary utility function.
-#' @param es the elasticity of substitution.
+#' @param es a scalar indicating the elasticity of substitution.
 #' @param beta an n-vector consisting of the marginal expenditure share coefficients.
-#' @param xi an n-vector. Each element of xi parameterizes whether
-#' the particular good is a necessity for the household (Acemoglu, 2009, page 152).
+#' The sum of all components of beta should be 1.
+#' @param xi an n-vector or a scalar. If xi is a scalar, it will be recycled to an n-vector.
+#' Each element of xi parameterizes whether the particular good is a necessity for the household (Acemoglu, 2009, page 152).
 #' For example, xi[i] > 0 may mean that the household needs to consume at least a certain amount of good i to survive.
 #' @param x an n-vector consisting of the inputs.
 #' @param w a scalar indicating the income.
@@ -163,7 +164,7 @@
 #' }
 #'
 DCES <- function(es, beta, xi, x) {
-  if (!isTRUE(all.equal(sum(beta), 1))) warning("Li: The sum of beta should be 1.")
+  if (!isTRUE(all.equal(sum(beta), 1))) warning("Li: The sum of all components of beta should be 1.")
 
   if (any(beta == 0)) {
     warning("Li: The beta vector contains zero.")
@@ -180,9 +181,14 @@ DCES <- function(es, beta, xi, x) {
 
   if (es == 1) {
     return(prod(((x - xi) / beta)^beta))
-  } else {
-    return(sum(beta^(1 / es) * (x - xi)^(1 - 1 / es))^(es / (es - 1)))
   }
+
+  if (es == 0) {
+    return(min((x - xi) / beta))
+  }
+
+  sigma <- 1 - 1 / es
+  return(sum(beta * ((x - xi) / beta)^sigma)^(1 / sigma))
 }
 
 #' @export

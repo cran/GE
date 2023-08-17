@@ -36,12 +36,13 @@ f <- function(x) list(list(sum(x)), prod(x))
 apply_expand.grid(f, a = c(1, 2), b = c(3, 4))
 
 ####
-f <- function(x){
+f <- function(x) {
   result <- SCES_A(alpha = 1, Beta = c(0.5, 0.5), p = c(x["p1"], 1), es = x["es"])
-  names(result) <- c("dc1","dc2")
+  names(result) <- c("dc1", "dc2")
   result
 }
 
 apply_expand.grid(f, p1 = seq(0.1, 10, 0.1), es = c(0.3, 0.5, 1))
 }
+
 }

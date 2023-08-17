@@ -9,16 +9,39 @@ AMSDP(x, mp, Cov, gamma = 1, theta = 1)
 \arguments{
 \item{x}{a numeric n-vector representing a portfolio.}
 
-\item{mp}{a numeric n-vector representing the mean payoff of each of the n securities.}
+\item{mp}{a numeric n-vector representing the mean payoff of each of the n assets.}
 
-\item{Cov}{the n-by-n covariance matrix of the payoff vectors of n securities.}
+\item{Cov}{the n-by-n covariance matrix of the payoff vectors of n assets.}
 
-\item{gamma}{the risk aversion coefficient.}
+\item{gamma}{a non-negative scalar representing the risk aversion coefficient with a default value of 1.}
 
 \item{theta}{a non-negative scalar with a default value of 1.}
 }
+\value{
+A scalar indicating the utility level.
+}
 \description{
 Compute the utility function x \%*\% mp - gamma^theta * (t(x) \%*\% Cov \%*\% x)^(0.5 * theta) / theta for a portfolio x.
+}
+\examples{
+\donttest{
+UAP <- matrix(c(
+  0, 1, 1,
+  0, 2, 1,
+  1, 1, 1,
+  1, 2, 1,
+  2, 0, 1
+), nrow = 5, byrow = TRUE)
+
+portfolio <- c(1.977, 1.183, 3.820)
+
+AMSDP(portfolio, colMeans(UAP),
+  cov.wt(UAP, method = "ML")$cov,
+  gamma = 1, theta = 1
+)
+
+AMSD(UAP \%*\% portfolio, gamma = 1, theta = 1)
+}
 }
 \references{
 Danthine, J. P., Donaldson, J. (2005, ISBN: 9780123693808) Intermediate Financial Theory. Elsevier Academic Press.

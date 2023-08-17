@@ -68,3 +68,6 @@ tail(ge$ts.S[3, 3, ])
 plot(ge$ts.S[3, 3, ], type = "l")
 }
 }
+\seealso{
+\code{\link{gemExogenousPrice}}
+}

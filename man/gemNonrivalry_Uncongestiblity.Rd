@@ -55,6 +55,7 @@ ge <- sdm2(
 )
 
 ge$p # Lindahl prices
+ge$z
 addmargins(ge$D, 2)
 addmargins(ge$S, 2)
 addmargins(ge$DV)
@@ -122,7 +123,7 @@ addmargins(ge2$DV)
 
 ## Calculate a stationary state with price regulation.
 ## Both services have the same price and service 2 is oversupplied.
-ss <- sdm2(
+pcss <- sdm2(
   A = list(dst.firm, dst.consumer1, dst.consumer2),
   B = matrix(c(
     1, 0, 0,
@@ -147,15 +148,15 @@ ss <- sdm2(
   ts = TRUE
 )
 
-ss$p
-addmargins(ss$D, 2)
-addmargins(ss$S, 2)
-matplot(ss$ts.q, type = "l")
-matplot(ss$ts.z, type = "l")
-matplot(ss$ts.p, type = "l")
+pcss$p
+addmargins(pcss$D, 2)
+addmargins(pcss$S, 2)
+matplot(pcss$ts.q, type = "l")
+matplot(pcss$ts.z, type = "l")
+matplot(pcss$ts.p, type = "l")
 
 ##
-ss <- sdm2(
+pcss <- sdm2(
   A = list(dst.firm, dst.consumer1, dst.consumer2),
   B = matrix(c(
     1, 0, 0,
@@ -182,14 +183,14 @@ ss <- sdm2(
   ts = TRUE
 )
 
-ss$p
-addmargins(ss$D, 2)
-addmargins(ss$S, 2)
-addmargins(ss$DV)
-addmargins(ss$SV)
-matplot(ss$ts.q, type = "l")
-matplot(ss$ts.z, type = "l")
-matplot(ss$ts.p, type = "l")
+pcss$p
+addmargins(pcss$D, 2)
+addmargins(pcss$S, 2)
+addmargins(pcss$DV)
+addmargins(pcss$SV)
+matplot(pcss$ts.q, type = "l")
+matplot(pcss$ts.z, type = "l")
+matplot(pcss$ts.p, type = "l")
 }
 }
 \references{

@@ -2,52 +2,60 @@
 #' @title Some Examples of Intertemporal Models with One Consumer and Two Types of Firms
 #' @aliases gemIntertemporal_3_3
 #' @description Some examples of intertemporal models with one consumer and two types of firms.
-#' There are three commodities (i.e. corn, iron and labor).
+#' There are three types of commodities (i.e. corn, iron and labor).
 #' The consumer may consume corn and iron in each period, and may have a nested intertemporal utility function.
 #' @param ... arguments to be passed to the function sdm2.
 #' @references Zen Xiangjin (1995, ISBN: 7030046560). Basics of Economic Cybernetics. Beijing: Science Press. (In Chinese)
 #' @examples
 #' \donttest{
-#' #### an example with a consumer with a nested intertemporal utility function
-#' np <- 5 # the number of internal periods, firms.
+#' #### an example with a nested intertemporal utility function
+#' np <- 5 # the number of planning periods
 #'
-#' ## exogenous supply matrix
-#' n <- 3 * np - 1
-#' m <- 2 * (np - 1) + 1
-#' S <- matrix(NA, n, m)
-#' S[(2 * np + 1):(3 * np - 1), m] <- 100
-#' S[1, m] <- 25 #corn1
-#' S[np + 1, m] <- 100 #iron1
+#' n <- 3 * np - 1 # the number of commodity kinds
+#' m <- 2 * (np - 1) + 1 # the number of agent kinds
 #'
-#' B <- matrix(0, n, m)
-#' B[2:np, 1:(np - 1)] <- B[(np + 2):(2 * np), np:(m - 1)] <-
-#'   diag(np - 1)
+#' names.commodity <- c(
+#'   paste0("corn", 1:np),
+#'   paste0("iron", 1:np),
+#'   paste0("lab", 1:(np - 1))
+#' )
+#' names.agent <- c(
+#'   paste0("firm.corn", 1:(np - 1)),
+#'   paste0("firm.iron", 1:(np - 1)),
+#'   "consumer"
+#' )
 #'
-#' dstl.firm.corn <- dstl.firm.iron  <- list()
+#' ## the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:(np - 1)), "consumer"] <- 100
+#' S0Exg["corn1", "consumer"] <- 25
+#' S0Exg["iron1", "consumer"] <- 100
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("corn", k + 1), paste0("firm.corn", k)] <-
+#'     B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
+#' }
+#'
+#' dstl.firm.corn <- dstl.firm.iron <- list()
 #' for (k in 1:(np - 1)) {
 #'   dstl.firm.corn[[k]] <- node_new(
 #'     "prod",
-#'     type = "CD",
-#'     alpha = 1,
-#'     beta = c(0.5, 0.5),
-#'     paste0("iron", k),
-#'     paste0("lab", k)
+#'     type = "CD", alpha = 1, beta = c(0.5, 0.5),
+#'     paste0("iron", k), paste0("lab", k)
 #'   )
 #'
 #'   dstl.firm.iron[[k]] <- node_new(
 #'     "prod",
-#'     type = "CD",
-#'     alpha = 2,
-#'     beta = c(0.5, 0.5),
-#'     paste0("iron", k),
-#'     paste0("lab", k)
+#'     type = "CD", alpha = 2, beta = c(0.5, 0.5),
+#'     paste0("iron", k), paste0("lab", k)
 #'   )
 #' }
 #'
 #' dst.consumer <- node_new(
 #'   "util",
-#'   type = "CD",
-#'   alpha = 1,
+#'   type = "CD", alpha = 1,
 #'   beta = prop.table(rep(1, np)),
 #'   paste0("cc", 1:np)
 #' )
@@ -55,24 +63,17 @@
 #'   node_set(
 #'     dst.consumer,
 #'     paste0("cc", k),
-#'     type = "CD",
-#'     alpha = 1,
-#'     beta = c(0.5, 0.5),
-#'     paste0("corn", k),
-#'     paste0("iron", k)
+#'     type = "CD", alpha = 1, beta = c(0.5, 0.5),
+#'     paste0("corn", k), paste0("iron", k)
 #'   )
 #' }
 #'
-#' ge <-   sdm2(
+#' ge <- sdm2(
 #'   A = c(dstl.firm.corn, dstl.firm.iron, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = c(paste0("corn", 1:np),
-#'                       paste0("iron", 1:np),
-#'                       paste0("lab", 1:(np - 1))),
-#'   names.agent = c(paste0("firm.corn", 1:(np - 1)),
-#'                   paste0("firm.iron", 1:(np - 1)),
-#'                   "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "lab1",
 #'   ts = TRUE
 #' )
@@ -84,65 +85,69 @@
 #' ge$DV
 #' ge$SV
 #'
-#' #### an example with a consumer with a non-nested intertemporal utility function
-#' np <- 3 # the number of internal periods, firms.
+#' #### an example with a non-nested intertemporal utility function
+#' np <- 3 # the number of planning periods
 #'
 #' ## There are np types of corn, np-1 types of iron and np-1 types of labor.
 #' ## There are np-1 corn firms, np-2 iron firms and one consumer.
 #' n <- 3 * np - 2
 #' m <- 2 * np - 2
 #'
-#' ## exogenous supply matrix
-#' S <- matrix(NA, n, m)
-#' S[(2 * np):n, m] <- 100
-#' S[1, m] <- 25 #corn1
-#' S[np + 1, m] <- 100 #iron1
+#' names.commodity <- c(
+#'   paste0("corn", 1:np),
+#'   paste0("iron", 1:(np - 1)),
+#'   paste0("lab", 1:(np - 1))
+#' )
+#' names.agent <- c(
+#'   paste0("firm.corn", 1:(np - 1)),
+#'   paste0("firm.iron", 1:(np - 2)),
+#'   "consumer"
+#' )
 #'
-#' B <- matrix(0, n, m)
-#' B[2:np, 1:(np - 1)]  <- diag(np - 1)
-#' B[(np + 2):(2 * np - 1), np:(m - 1)] <- diag(np - 2)
+#' ## the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:(np - 1)), "consumer"] <- 100
+#' S0Exg["corn1", "consumer"] <- 25
+#' S0Exg["iron1", "consumer"] <- 100
 #'
-#' dstl.firm.corn <- dstl.firm.iron  <- list()
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("corn", k + 1), paste0("firm.corn", k)] <- 1
+#' }
+#' for (k in 1:(np - 2)) {
+#'   B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
+#' }
+#'
+#' dstl.firm.corn <- dstl.firm.iron <- list()
 #' for (k in 1:(np - 1)) {
 #'   dstl.firm.corn[[k]] <- node_new(
 #'     "prod",
-#'     type = "CD",
-#'     alpha = 1,
-#'     beta = c(0.5, 0.5),
-#'     paste0("iron", k),
-#'     paste0("lab", k)
+#'     type = "CD", alpha = 1, beta = c(0.5, 0.5),
+#'     paste0("iron", k), paste0("lab", k)
 #'   )
 #' }
 #'
 #' for (k in seq_along(np:(2 * np - 3))) {
 #'   dstl.firm.iron[[k]] <- node_new(
 #'     "prod",
-#'     type = "CD",
-#'     alpha = 2,
-#'     beta = c(0.5, 0.5),
-#'     paste0("iron", k),
-#'     paste0("lab", k)
+#'     type = "CD", alpha = 2, beta = c(0.5, 0.5),
+#'     paste0("iron", k), paste0("lab", k)
 #'   )
 #' }
 #'
 #' dst.consumer <- node_new(
 #'   "util",
-#'   type = "CD",
-#'   alpha = 1,
-#'   beta = prop.table(rep(1, np)),
+#'   type = "CD", alpha = 1, beta = prop.table(rep(1, np)),
 #'   paste0("corn", 1:np)
 #' )
 #'
-#' ge <-   sdm2(
+#' ge <- sdm2(
 #'   A = c(dstl.firm.corn, dstl.firm.iron, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = c(paste0("corn", 1:np),
-#'                       paste0("iron", 1:(np - 1)),
-#'                       paste0("lab", 1:(np - 1))),
-#'   names.agent = c(paste0("firm.corn", 1:(np - 1)),
-#'                   paste0("firm.iron", 1:(np - 2)),
-#'                   "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "lab1",
 #'   ts = TRUE
 #' )
@@ -155,14 +160,14 @@
 #' ge$SV
 #'
 #' #### an example of Zeng (1995, page 227)
-#' ic1 <- 1 / 10 #input coefficient
+#' ic1 <- 1 / 10 # input coefficient
 #' ic2 <- 1 / 7
-#' dc1 <- 2 / 3 #depreciation coefficient
+#' dc1 <- 2 / 3 # depreciation coefficient
 #' dc2 <- 9 / 10
 #'
 #' ge <- sdm2(
 #'   A = {
-#'     #corn, iron1, iron2, iron3, iron4
+#'     # corn, iron1, iron2, iron3, iron4
 #'     a1.1 <- c(0, ic1, 0, 0, 0)
 #'     a1.2 <- c(0, ic2, 0, 0, 0)
 #'     a2.1 <- c(0, 0, ic1, 0, 0)

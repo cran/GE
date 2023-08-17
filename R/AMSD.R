@@ -9,11 +9,12 @@
 #' weighted.mean(x, wt) - (gamma * sd.p(x, wt))^theta / theta. When theta == 2, it is the additive mean-variance utility function (i.e.
 #' the function AMV).
 #' When theta == 1 (the default value), it is the additive mean and standard deviation utility function.
-#' @param x a numeric vector.
-#' @param gamma the risk aversion coefficient.
+#' @param x a numeric n-vector.
+#' @param gamma a non-negative scalar representing the risk aversion coefficient with a default value of 1.
 #' @param theta a non-negative scalar with a default value of 1.
-#' @param wt a numeric vector of weights (or probability).
+#' @param wt a numeric n-vector of weights (or probability).
 #' If wt is NULL, all elements of x are given the same weight.
+#' @return A scalar indicating the utility level.
 #' @references Nakamura, Yutaka (2015). Mean-Variance Utility. Journal of Economic Theory, 160: 536-556.
 #' @examples
 #' \donttest{
@@ -22,14 +23,14 @@
 #'
 #' marginal_utility(
 #'   c(1, 1.001),
-#'   c(0, 1), function (x) AMSD(x, gamma = 0.5)
+#'   c(0, 1), function(x) AMSD(x, gamma = 0.5)
 #' )
 #' marginal_utility(
 #'   c(1.001, 1),
-#'   c(0, 1), function (x) AMSD(x, gamma = 0.5)
+#'   c(0, 1), function(x) AMSD(x, gamma = 0.5)
 #' )
 #' }
-
+#'
 AMSD <- function(x, gamma = 1, wt = NULL, theta = 1) {
   if (is.null(wt)) wt <- rep(1, length(x))
   weighted.mean(x, wt) - (gamma * sd.p(x, wt))^theta / theta

@@ -1,14 +1,14 @@
 #' @export
-#' @title Some Examples of Security Pricing
-#' @aliases gemSecurityPricingExample
-#' @description These examples illustrate how to find the equilibrium of a security (i.e. asset) market by the function sdm2 and by computing marginal utility of securities (see Sharpe, 2008).
+#' @title Some Examples of Asset Pricing
+#' @aliases gemAssetPricingExample
+#' @description These examples illustrate how to find the equilibrium of an asset market by the function sdm2 and by computing marginal utility of assets (see Sharpe, 2008).
 #' @param ... arguments to be passed to the function sdm2.
 #' @return  A general equilibrium.
 #' @references Danthine, J. P., Donaldson, J. (2005, ISBN: 9780123693808) Intermediate Financial Theory. Elsevier Academic Press.
 #' @references Sharpe, William F. (2008, ISBN: 9780691138503) Investors and Markets: Portfolio Choices, Asset Prices, and Investment Advice. Princeton University Press.
 #' @references Xu Gao (2018, ISBN: 9787300258232) Twenty-five Lectures on Financial Economics. Beijing: China Renmin University Press. (In Chinese)
 #' @references https://web.stanford.edu/~wfsharpe/apsim/index.html
-#' @seealso \code{\link{gemSecurityPricing}}.
+#' @seealso \code{\link{gemAssetPricing_CUF}}.
 #' @examples
 #' \donttest{
 #' #### an example of Danthine and Donaldson (2005, section 8.3).
@@ -28,21 +28,21 @@
 #'     1, 4,
 #'     2, 6
 #'   ), 3, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3"),
+#'   names.commodity = c("asset1", "asset2", "asset3"),
 #'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1",
+#'   numeraire = "asset1",
 #'   ts = TRUE
 #' )
 #'
 #' ge$p
 #'
 #' #### an example of Sharpe (2008, chapter 2)
-#' secy1 <- c(1, 0, 0, 0, 0)
-#' secy2 <- c(0, 1, 1, 1, 1)
-#' secy3 <- c(0, 5, 3, 8, 4) - 3 * secy2
-#' secy4 <- c(0, 3, 5, 4, 8) - 3 * secy2
-#' # unit (security) payoff matrix
-#' UP <- cbind(secy1, secy2, secy3, secy4)
+#' asset1 <- c(1, 0, 0, 0, 0)
+#' asset2 <- c(0, 1, 1, 1, 1)
+#' asset3 <- c(0, 5, 3, 8, 4) - 3 * asset2
+#' asset4 <- c(0, 3, 5, 4, 8) - 3 * asset2
+#' # unit asset payoff matrix
+#' UAP <- cbind(asset1, asset2, asset3, asset4)
 #'
 #' prob <- c(0.15, 0.25, 0.25, 0.35)
 #' wt <- prop.table(c(1, 0.96 * prob)) # weights
@@ -52,9 +52,9 @@
 #'
 #' ge <- sdm2(
 #'   A = function(state) {
-#'     Payoff <- UP %*% (state$last.A %*% dg(state$last.z))
+#'     Payoff <- UAP %*% (state$last.A %*% dg(state$last.z))
 #'
-#'     VMU <- marginal_utility(Payoff, UP, list(
+#'     VMU <- marginal_utility(Payoff, UAP, list(
 #'       function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / gamma.agt1),
 #'       function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / gamma.agt2)
 #'     ), price = state$p)
@@ -71,30 +71,30 @@
 #'     10, 0,
 #'     0, 10
 #'   ), 4, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3", "secy4"),
+#'   names.commodity = c("asset1", "asset2", "asset3", "asset4"),
 #'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1"
+#'   numeraire = "asset1"
 #' )
 #'
 #' ge$p
 #' ge$p[3:4] + 3 * ge$p[2]
 #'
 #' #### an example of Xu (2018, section 10.4, P151)
-#' secy1 <- c(1, 0, 0)
-#' secy2 <- c(0, 1, 0)
-#' secy3 <- c(0, 0, 1)
+#' asset1 <- c(1, 0, 0)
+#' asset2 <- c(0, 1, 0)
+#' asset3 <- c(0, 0, 1)
 #' prob <- c(0.5, 0.5)
 #' wt <- c(1, prob)
-#' UP <- cbind(secy1, secy2, secy3)
+#' UAP <- cbind(asset1, asset2, asset3)
 #'
 #' gamma.agt1 <- 1
 #' gamma.agt2 <- 0.5
 #'
 #' ge <- sdm2(
 #'   A = function(state) {
-#'     Payoff <- UP %*% (state$last.A %*% dg(state$last.z))
+#'     Payoff <- UAP %*% (state$last.A %*% dg(state$last.z))
 #'
-#'     VMU <- marginal_utility(Payoff, UP, list(
+#'     VMU <- marginal_utility(Payoff, UAP, list(
 #'       # Here CRRA(...)$u, CRRA(...)$CE and CES functions are interexchangeable.
 #'       function(x) CRRA(x, gamma = gamma.agt1, p = wt)$u,
 #'       function(x) CES(alpha = 1, beta = wt, x = x, es = 1 / gamma.agt2)
@@ -110,9 +110,9 @@
 #'     0, 0.5,
 #'     0, 2
 #'   ), 3, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3"),
+#'   names.commodity = c("asset1", "asset2", "asset3"),
 #'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1",
+#'   numeraire = "asset1",
 #'   maxIteration = 1,
 #'   ts = TRUE
 #' )
@@ -122,12 +122,12 @@
 #' ## the same as above.
 #' dst.agt1 <- node_new("util",
 #'   type = "CD", alpha = 1, beta = c(0.5, 0.25, 0.25),
-#'   "secy1", "secy2", "secy3"
+#'   "asset1", "asset2", "asset3"
 #' )
 #'
 #' dst.agt2 <- node_new("util",
 #'   type = "CES", alpha = 1, beta = c(2, 1, 1), sigma = 0.5,
-#'   "secy1", "secy2", "secy3"
+#'   "asset1", "asset2", "asset3"
 #' )
 #'
 #' ge <- sdm2(
@@ -138,9 +138,9 @@
 #'     0, 0.5,
 #'     0, 2
 #'   ), 3, 2, TRUE),
-#'   names.commodity = c("secy1", "secy2", "secy3"),
+#'   names.commodity = c("asset1", "asset2", "asset3"),
 #'   names.agent = c("agt1", "agt2"),
-#'   numeraire = "secy1",
+#'   numeraire = "asset1",
 #'   maxIteration = 1,
 #'   ts = TRUE
 #' )
@@ -154,17 +154,17 @@
 #' asset4 <- c(0, 0, 4, 2, 6, 2)
 #' asset5 <- c(0, 0, 1, 0, 2, 0)
 #'
-#' # unit (asset) payoff matrix
-#' UP <- cbind(asset1, asset2, asset3, asset4, asset5)
+#' # unit asset payoff matrix
+#' UAP <- cbind(asset1, asset2, asset3, asset4, asset5)
 #'
 #' muf1 <- function(x) 1 / x
 #' muf2 <- function(x) 1 / x * c(0.4, 0.1, 0.2, 0.05, 0.2, 0.05)
 #'
 #' ge <- sdm2(
 #'   A = function(state) {
-#'     Payoff <- UP %*% (state$last.A[, 1:2] %*% dg(state$last.z[1:2]))
+#'     Payoff <- UAP %*% (state$last.A[, 1:2] %*% dg(state$last.z[1:2]))
 #'
-#'     VMU <- marginal_utility(Payoff, UP, muf = list(muf1, muf2), price = state$p)
+#'     VMU <- marginal_utility(Payoff, UAP, muf = list(muf1, muf2), price = state$p)
 #'     Ratio <- sweep(VMU, 2, colMeans(VMU), "/")
 #'
 #'     A <- state$last.A[, 1:2] * ratio_adjust(Ratio, coef = 0.15, method = "linear")
@@ -200,8 +200,8 @@
 #' asset2 <- c(0, 1, 3, 1, 2)
 #' asset3 <- c(0, 2, 1, 3, 1)
 #'
-#' # unit payoff matrix
-#' UP <- cbind(asset1, asset2, asset3)
+#' # the asset unit payoff matrix.
+#' UAP <- cbind(asset1, asset2, asset3)
 #'
 #' dst.consumer1 <- node_new("util",
 #'                           type = "CES", es = 0.5, alpha = 1, beta = c(0.5, 0.5),
@@ -247,13 +247,13 @@
 #'   output(dst.consumer2, x)
 #' }
 #'
-#' ge <- gemSecurityPricing(
+#' ge <- gemAssetPricing_CUF(
 #'   S = matrix(c(
 #'     3, 3,
 #'     1, 0,
 #'     0, 2
 #'   ), 3, 2, TRUE),
-#'   UP = UP,
+#'   UAP = UAP,
 #'   uf = list(uf1, uf2)
 #' )
 #'
@@ -261,4 +261,4 @@
 #' ge$z
 #' }
 
-gemSecurityPricingExample <- function(...) sdm2(...)
+gemAssetPricingExample <- function(...) sdm2(...)

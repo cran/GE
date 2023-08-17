@@ -19,39 +19,47 @@
 #' @examples
 #' \donttest{
 #' #### an example with a Cobb-Douglas intertemporal utility function
-#' np <- 5 # the number of internal periods, firms.
-#'
+#' np <- 5 # the number of planning periods, firms.
 #' zeta <- 1.25 # the ratio of repayments to loans
-#' S <- matrix(NA, 2 * np, np + 1)
-#' S[(np + 1):(2 * np), np + 1] <- 100
 #'
-#' B <- matrix(0, 2 * np, np + 1)
-#' B[1:np, 1:np] <- diag(np)[, c(2:np, 1)]
-#' B[1, np] <- 1 / zeta
+#' n <- 2 * np # the number of commodity kinds
+#' m <- np + 1 # the number of agent kinds
+#'
+#' names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np))
+#' names.agent <- c(paste0("firm", 1:np), "consumer")
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:np), "consumer"] <- 100 # the supply of labor
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+#' }
+#' B["prod1", paste0("firm", np)] <- 1 / zeta
 #'
 #' dstl.firm <- list()
 #' for (k in 1:np) {
 #'   dstl.firm[[k]] <- node_new(
 #'     "prod",
-#'     type = "CD", alpha = 2,
-#'     beta = c(0.5, 0.5),
+#'     type = "CD", alpha = 2, beta = c(0.5, 0.5),
 #'     paste0("lab", k), paste0("prod", k)
 #'   )
 #' }
 #'
 #' dst.consumer <- node_new(
 #'   "util",
-#'   type = "CD", alpha = 1,
-#'   beta = prop.table(rep(1, np)),
+#'   type = "CD", alpha = 1, beta = prop.table(rep(1, np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
 #' ge <- sdm2(
 #'   A = c(dstl.firm, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
-#'   names.agent = c(paste0("firm", 1:np), "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "lab1",
 #'   ts = TRUE
 #' )
@@ -66,17 +74,16 @@
 #' ## an example with a Leontief intertemporal utility function
 #' dst.consumer <- node_new(
 #'   "util",
-#'   type = "Leontief",
-#'   a = rep(1, np),
+#'   type = "Leontief", a = rep(1, np),
 #'   paste0("prod", 1:np)
 #' )
 #'
 #' ge2 <- sdm2(
 #'   A = c(dstl.firm, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
-#'   names.agent = c(paste0("firm", 1:np), "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "lab1",
 #'   ts = TRUE
 #' )
@@ -92,7 +99,7 @@
 #' ge3 <- sdm2(
 #'   A = c(dstl.firm, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
+#'   S0Exg = S0Exg,
 #'   names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
 #'   names.agent = c(paste0("firm", 1:np), "consumer"),
 #'   numeraire = "lab1",
@@ -100,31 +107,37 @@
 #'   policy = makePolicyMeanValue(30)
 #' )
 #'
-#' #### an example with a linear intertemporal utility function (e.g. beta1*x1+beta2*x2)
+#' #### an example with a linear intertemporal utility function (e.g. beta1 * x1 + beta2 * x2)
 #' ## The demand structure of the consumer will be adjusted sluggishly to accelerate convergence.
-#' np <- 5 # the number of internal periods, firms.
-#' rho <- 0.9 # subjective discount factor
+#' np <- 5 # the number of planning periods, firms.
+#' rho <- 0.9 # the subjective discount factor
 #'
-#' beta.consumer <- rep(rho ^ (0:(np - 1)))
+#' beta.consumer <- rep(rho^(0:(np - 1)))
+#' zeta <- (1 / rho)^np
 #'
-#' zeta <-  (1 / rho) ^ np
+#' n <- 2 * np # the number of commodity kinds
+#' m <- np + 1 # the number of agent kinds
 #'
-#' S <- matrix(NA, 2 * np, np + 1)
-#' S[(np + 1):(2 * np), np + 1] <- 100
+#' names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np))
+#' names.agent <- c(paste0("firm", 1:np), "consumer")
 #'
-#' B <- matrix(0, 2 * np, np + 1)
-#' B[1:np, 1:np] <- diag(np)[, c(2:np, 1)]
-#' B[1, np] <- 1 / zeta
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:np), "consumer"] <- 100 # the supply of labor
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+#' }
+#' B["prod1", paste0("firm", np)] <- 1 / zeta
 #'
 #' dstl.firm <- list()
 #' for (k in 1:np) {
 #'   dstl.firm[[k]] <- node_new(
 #'     "prod",
-#'     type = "CD",
-#'     alpha = 2,
-#'     beta = c(0.5, 0.5),
-#'     paste0("lab", k),
-#'     paste0("prod", k)
+#'     type = "CD", alpha = 2, beta = c(0.5, 0.5),
+#'     paste0("lab", k), paste0("prod", k)
 #'   )
 #' }
 #'
@@ -146,9 +159,9 @@
 #' ge <- sdm2(
 #'   A = c(dstl.firm, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np)),
-#'   names.agent = c(paste0("firm", 1:np), "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "lab1",
 #'   ts = TRUE,
 #'   priceAdjustmentVelocity = 0.1

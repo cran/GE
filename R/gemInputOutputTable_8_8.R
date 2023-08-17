@@ -75,13 +75,13 @@
 #'   "sector.FT.agri", "sector.FT.manu", "sector.FT.serv", "sector.FT.bond.ROW"
 #' )
 #'
-#' # initial equilibrium
+#' # the benchmark equilibrium.
 #' ge <- gemInputOutputTable_8_8(
 #'   IT = IT17,
 #'   OT = OT17
 #' )
 #'
-#' #### technology progress
+#' #### technology progress.
 #' IT.TP <- IT17
 #' IT.TP ["lab", "sector.manu"] <-
 #'   IT.TP ["lab", "sector.manu"] * 0.9
@@ -96,7 +96,7 @@
 #' geTP$value.added
 #' prop.table(geTP$value.added) - prop.table(ge$value.added)
 #'
-#' #### capital accumulation
+#' #### capital accumulation.
 #' OT.CA <- OT17
 #' OT.CA["cap", "sector.CI"] <- OT.CA["cap", "sector.CI"] * 1.1
 #' geCA <- gemInputOutputTable_8_8(
@@ -110,7 +110,7 @@
 #' geCA$value.added
 #' prop.table(geCA$value.added) - prop.table(ge$value.added)
 #'
-#' #### tax change
+#' #### tax change.
 #' OT.TC <- OT17
 #' OT.TC["tax", "sector.agri"] <- OT.TC["tax", "sector.agri"] * 2
 #'
@@ -137,20 +137,16 @@
 
 gemInputOutputTable_8_8 <- function(IT,
                                     OT,
-
                                     es.agri = 0,
                                     es.manu = 0,
                                     es.serv = 0,
                                     es.CI = 0,
                                     es.FT = 0,
-
                                     es.VA.agri = 0.25,
                                     es.VA.manu = 0.5,
                                     es.VA.serv = 0.8,
-
                                     es.prodDM = 0.5,
                                     ...) {
-
   names.commodity <- c(
     "agriD", "manuD", "servD", "agriI", "manuI", "servI",
     "lab", "cap", "tax", "dividend", "bond.ROW"
@@ -191,37 +187,48 @@ gemInputOutputTable_8_8 <- function(IT,
   dividend.rate.serv <- IT["dividend", "sector.serv"] / sum(IT[c("lab", "cap"), "sector.serv"])
 
   # dst industry ------------------------------------------------------------
-  dst.industry <- node_new("output",
-                           "cc1", "cc2")
-  node_set(dst.industry, "cc1",
-           "cc.agri",  "cc.manu","cc.serv")
+  dst.industry <- node_new(
+    "output",
+    "cc1", "cc2"
+  )
+  node_set(
+    dst.industry, "cc1",
+    "cc.agri", "cc.manu", "cc.serv"
+  )
 
   node_set(dst.industry, "cc.agri",
-           type = "SCES",
-           alpha = 1,
-           beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
-           es = es.prodDM,
-           "agriD","agriI")
+    type = "SCES",
+    alpha = 1,
+    beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
+    es = es.prodDM,
+    "agriD", "agriI"
+  )
 
   node_set(dst.industry, "cc.manu",
-           type = "SCES",
-           alpha = 1,
-           beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
-           es = es.prodDM,
-           "manuD","manuI")
+    type = "SCES",
+    alpha = 1,
+    beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
+    es = es.prodDM,
+    "manuD", "manuI"
+  )
 
   node_set(dst.industry, "cc.serv",
-           type = "SCES",
-           alpha = 1,
-           beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
-           es = es.prodDM,
-           "servD","servI")
+    type = "SCES",
+    alpha = 1,
+    beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
+    es = es.prodDM,
+    "servD", "servI"
+  )
 
-  node_set(dst.industry, "cc2",
-           "cc2.1","tax","dividend")
+  node_set(
+    dst.industry, "cc2",
+    "cc2.1", "tax", "dividend"
+  )
 
-  node_set(dst.industry, "cc2.1",
-           "lab","cap")
+  node_set(
+    dst.industry, "cc2.1",
+    "lab", "cap"
+  )
 
   # dst.agri ----------------------------------------------------------------
   dst.agri <- Clone(dst.industry)
@@ -235,19 +242,22 @@ gemInputOutputTable_8_8 <- function(IT,
   ))
 
   node_set(dst.agri, "cc1",
-           type = "Leontief",
-           a = prop.table(d.agri[1:3]))
+    type = "Leontief",
+    a = prop.table(d.agri[1:3])
+  )
 
   node_set(dst.agri, "cc2",
-           type = "FIN",
-           beta = prop.table(c(sum(d.agri[4:5]), d.agri[6], d.agri[7])))
+    type = "FIN",
+    beta = prop.table(c(sum(d.agri[4:5]), d.agri[6], d.agri[7]))
+  )
 
 
   node_set(dst.agri, "cc2.1",
-           type = "SCES",
-           sigma = 1 - 1 / es.VA.agri,
-           alpha = 1,
-           beta = prop.table(d.agri[4:5]))
+    type = "SCES",
+    sigma = 1 - 1 / es.VA.agri,
+    alpha = 1,
+    beta = prop.table(d.agri[4:5])
+  )
 
   # dst.manu ----------------------------------------------------------------
   dst.manu <- Clone(dst.industry)
@@ -261,17 +271,21 @@ gemInputOutputTable_8_8 <- function(IT,
   ))
 
   node_set(dst.manu, "cc1",
-           type = "Leontief",
-           a = prop.table(d.manu[1:3]))
+    type = "Leontief",
+    a = prop.table(d.manu[1:3])
+  )
 
-  node_set(dst.manu, "cc2", type = "FIN",
-           rate = c(sum(d.manu[4:5]) / sum(d.manu[4:7]), tax.rate.manu, dividend.rate.manu))
+  node_set(dst.manu, "cc2",
+    type = "FIN",
+    rate = c(sum(d.manu[4:5]) / sum(d.manu[4:7]), tax.rate.manu, dividend.rate.manu)
+  )
 
   node_set(dst.manu, "cc2.1",
-           type = "SCES",
-           sigma = 1 - 1 / es.VA.manu,
-           alpha = 1,
-           beta = prop.table(d.manu[4:5]))
+    type = "SCES",
+    sigma = 1 - 1 / es.VA.manu,
+    alpha = 1,
+    beta = prop.table(d.manu[4:5])
+  )
 
   # dst.serv ----------------------------------------------------------------
   dst.serv <- Clone(dst.industry)
@@ -284,61 +298,74 @@ gemInputOutputTable_8_8 <- function(IT,
     sum(d.serv[4:7])
   ))
 
-  node_set(dst.serv, "cc1",type = "Leontief",
-           a = prop.table(d.serv[1:3]))
+  node_set(dst.serv, "cc1",
+    type = "Leontief",
+    a = prop.table(d.serv[1:3])
+  )
 
-  node_set(dst.serv, "cc2", type = "FIN",
-           rate = c(sum(d.serv[4:5]) / sum(d.serv[4:7]), tax.rate.serv, dividend.rate.serv))
+  node_set(dst.serv, "cc2",
+    type = "FIN",
+    rate = c(sum(d.serv[4:5]) / sum(d.serv[4:7]), tax.rate.serv, dividend.rate.serv)
+  )
 
-  node_set(dst.serv, "cc2.1",type = "SCES",
-           sigma = 1 - 1 / es.VA.serv,
-           alpha = 1,
-           beta = prop.table(d.serv[4:5]))
+  node_set(dst.serv, "cc2.1",
+    type = "SCES",
+    sigma = 1 - 1 / es.VA.serv,
+    alpha = 1,
+    beta = prop.table(d.serv[4:5])
+  )
 
   # dst.CI ------------------------------------------------------------------
   dst.CI <- node_new("util",
-                     type = "FIN",
-                     beta = prop.table(c(
-                       sum(IT[, "sector.CI"]) - IT["bond.ROW", "sector.CI"],
-                       IT["bond.ROW", "sector.CI"])),
-                     "cc1",  "bond.ROW")
+    type = "FIN",
+    beta = prop.table(c(
+      sum(IT[, "sector.CI"]) - IT["bond.ROW", "sector.CI"],
+      IT["bond.ROW", "sector.CI"]
+    )),
+    "cc1", "bond.ROW"
+  )
 
-  node_set(dst.CI,"cc1",
-           type = "SCES",
-           es = es.CI,
-           alpha = 1,
-           beta = prop.table(d.CI[1:3]),
-           "cc.agri","cc.manu","cc.serv")
+  node_set(dst.CI, "cc1",
+    type = "SCES",
+    es = es.CI,
+    alpha = 1,
+    beta = prop.table(d.CI[1:3]),
+    "cc.agri", "cc.manu", "cc.serv"
+  )
 
-  node_set(dst.CI,"cc.agri",
-           type = "SCES",
-           alpha = 1,
-           beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
-           es = es.prodDM,
-           "agriD","agriI")
+  node_set(dst.CI, "cc.agri",
+    type = "SCES",
+    alpha = 1,
+    beta = c(1 - prop.productI["agri"], prop.productI["agri"]),
+    es = es.prodDM,
+    "agriD", "agriI"
+  )
 
-  node_set(dst.CI,"cc.manu",
-           type = "SCES",
-           alpha = 1,
-           beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
-           es = es.prodDM,
-           "manuD","manuI")
+  node_set(dst.CI, "cc.manu",
+    type = "SCES",
+    alpha = 1,
+    beta = c(1 - prop.productI["manu"], prop.productI["manu"]),
+    es = es.prodDM,
+    "manuD", "manuI"
+  )
 
-  node_set(dst.CI,"cc.serv",
-           type = "SCES",
-           alpha = 1,
-           beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
-           es = es.prodDM,
-           "servD","servI")
+  node_set(dst.CI, "cc.serv",
+    type = "SCES",
+    alpha = 1,
+    beta = c(1 - prop.productI["serv"], prop.productI["serv"]),
+    es = es.prodDM,
+    "servD", "servI"
+  )
 
 
   # dst.FT ------------------------------------------------------------------
   dst.FT.agri <- node_new("output",
-                          type = "SCES",
-                          es = es.FT,
-                          alpha = sum(OT[, "sector.FT.agri"]) / sum(IT[, "sector.FT.agri"]),
-                          beta = prop.table(IT[1:3, "sector.FT.agri"]),
-                          "agriD","manuD","servD")
+    type = "SCES",
+    es = es.FT,
+    alpha = sum(OT[, "sector.FT.agri"]) / sum(IT[, "sector.FT.agri"]),
+    beta = prop.table(IT[1:3, "sector.FT.agri"]),
+    "agriD", "manuD", "servD"
+  )
 
   dst.FT.manu <- Clone(dst.FT.agri)
   dst.FT.serv <- Clone(dst.FT.agri)
@@ -377,7 +404,7 @@ gemInputOutputTable_8_8 <- function(IT,
       tmp["cap", "sector.CI"] <- sum(OT["cap", ])
       tmp["tax", ] <- OT["tax", ]
       tmp["dividend", "sector.CI"] <- sum(OT["dividend", ])
-      #tmp["bond.ROW", "sector.FT.bond.ROW"] <- OT17["bond.ROW", "sector.FT.bond.ROW"]
+      # tmp["bond.ROW", "sector.FT.bond.ROW"] <- OT17["bond.ROW", "sector.FT.bond.ROW"]
       tmp
     },
     names.commodity = names.commodity,

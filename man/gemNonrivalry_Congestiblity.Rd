@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemNonrivalry_Congestiblity.R
 \name{gemNonrivalry_Congestiblity}
 \alias{gemNonrivalry_Congestiblity}
-\title{Some Examples Illustrating Congestible Non-rival Goods (or Services)}
+\title{Some Examples Illustrating Congestible Non-rival Goods}
 \usage{
 gemNonrivalry_Congestiblity(...)
 }

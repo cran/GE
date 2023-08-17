@@ -16,12 +16,13 @@ DCES_compensated_demand(es, beta, xi, u, p)
 DCES_indirect(es, beta, xi, w, p)
 }
 \arguments{
-\item{es}{the elasticity of substitution.}
+\item{es}{a scalar indicating the elasticity of substitution.}
 
-\item{beta}{an n-vector consisting of the marginal expenditure share coefficients.}
+\item{beta}{an n-vector consisting of the marginal expenditure share coefficients.
+The sum of all components of beta should be 1.}
 
-\item{xi}{an n-vector. Each element of xi parameterizes whether
-the particular good is a necessity for the household (Acemoglu, 2009, page 152).
+\item{xi}{an n-vector or a scalar. If xi is a scalar, it will be recycled to an n-vector.
+Each element of xi parameterizes whether the particular good is a necessity for the household (Acemoglu, 2009, page 152).
 For example, xi[i] > 0 may mean that the household needs to consume at least a certain amount of good i to survive.}
 
 \item{x}{an n-vector consisting of the inputs.}

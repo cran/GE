@@ -6,19 +6,37 @@
 #' @examples
 #' \donttest{
 #' #### an example with a Cobb-Douglas intertemporal utility function
-#' np <- 5 # the number of internal periods, firms.
-#' n <- 3 * np
-#' m <- 2*np+1
-#'
+#' np <- 5 # the number of planning periods, firms.
 #' zeta <- 1.25 # the ratio of repayments to loans
-#' S <- matrix(NA, n, m)
-#' S[(n-np+ 1):n, m] <- 100
 #'
-#' B <- matrix(0, n, m)
-#' B[1:np, 1:np] <- B[(np+1):(2*np), (np+1):(2*np)] <- diag(np)[, c(2:np, 1)]
-#' B[1, np] <-  B[np+1, 2*np]<- 1 / zeta
+#' n <- 3 * np # the number of commodity kinds
+#' m <- 2 * np + 1 # the number of agent kinds
 #'
-#' dstl.firm.corn <- dstl.firm.iron  <- list()
+#' names.commodity <- c(
+#'   paste0("corn", 1:np),
+#'   paste0("iron", 1:np),
+#'   paste0("lab", 1:np)
+#' )
+#' names.agent <- c(
+#'   paste0("firm.corn", 1:np),
+#'   paste0("firm.iron", 1:np),
+#'   "consumer"
+#' )
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:np), "consumer"] <- 100 # the supply of labor
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("corn", k + 1), paste0("firm.corn", k)] <- 1
+#'   B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
+#' }
+#' B["corn1", paste0("firm.corn", np)] <- 1 / zeta
+#' B["iron1", paste0("firm.iron", np)] <- 1 / zeta
+#'
+#' dstl.firm.corn <- dstl.firm.iron <- list()
 #' for (k in 1:np) {
 #'   dstl.firm.corn[[k]] <- node_new(
 #'     "prod",
@@ -45,13 +63,9 @@
 #' ge <- sdm2(
 #'   A = c(dstl.firm.corn, dstl.firm.iron, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = c(paste0("corn", 1:np),
-#'                       paste0("iron", 1:np),
-#'                       paste0("lab", 1:np)),
-#'   names.agent = c(paste0("firm.corn", 1:np),
-#'                   paste0("firm.iron", 1:np),
-#'                   "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "lab1",
 #'   ts = TRUE
 #' )

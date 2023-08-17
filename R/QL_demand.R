@@ -2,11 +2,13 @@
 #' @title Quasilinear Demand Functions
 #' @aliases QL_demand
 #' @description Some quasilinear demand functions. The corresponding utility functions are as follows: \cr
-#'   power: x1 + alpha * x2^beta, wherein alpha>0, 0<beta<1 \cr
-#'   log: x1 + alpha * log(x2), wherein alpha>0 \cr
-#'   quadratic1: x1 + alpha * x2 - 0.5 * beta * x2^2, wherein alpha>0, beta>0 \cr
-#'   quadratic2: x1 + beta * (alpha * x2 - 0.5 * x2^2), wherein alpha>0, beta>0 \cr
-#'   min: x1 + alpha * min(x2, beta)
+#'   power: x1 + alpha * x2^beta, wherein alpha>0, 0<beta<1. \cr
+#'   log: x1 + alpha * log(x2), wherein alpha>0. \cr
+#'   quadratic1: x1 + alpha * x2 - 0.5 * beta * x2^2, wherein alpha>0, beta>0. \cr
+#'   quadratic2: x1 + beta * (alpha * x2 - 0.5 * x2^2), wherein alpha>0, beta>0. \cr
+#'   min: x1 + alpha * min(x2, beta), wherein alpha>0, beta>0. \cr
+#'   CRRA: x1 + alpha * (x2^(1 - beta) - 1) / (1 - beta), wherein alpha>0, beta>0. If beta==1, the function becomes
+#'   x1 + alpha * log(x2).
 #' @param w a scalar indicating the income.
 #' @param p a 2-vector indicating the prices.
 #' @param alpha a scalar.
@@ -21,15 +23,15 @@
 #'
 #' QL_demand(w = 1, p = c(1, 5), alpha = 2, beta = 0.5)
 #' }
-
+#'
 QL_demand <- function(w, p, alpha, beta,
-                      type = c("power", "log", "quadratic1", "quadratic2", "min")) {
+                      type = c("power", "log", "quadratic1", "quadratic2", "min", "CRRA")) {
   d <- rbind(0, 0)
   w <- w / p[1]
   p2 <- p[2] / p[1]
   switch(type[1],
     "power" = {
-      d[2] <- (p2 / alpha / beta)^(1 / (beta - 1))
+      d[2] <- (alpha * beta / p2)^(1 / (1 - beta))
     },
     "log" = {
       d[2] <- alpha / p2
@@ -46,6 +48,9 @@ QL_demand <- function(w, p, alpha, beta,
       } else {
         d[2] <- 0
       }
+    },
+    "CRRA" = {
+      d[2] <- (alpha / p2)^(1 / beta)
     },
     stop("Wrong type.")
   )

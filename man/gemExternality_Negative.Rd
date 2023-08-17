@@ -15,6 +15,8 @@ Some examples illustrating negative externality.
 \examples{
 \donttest{
 #### negative externality of consumption to consumption
+# Here the distortion means that an agent
+# will use environmental resources for free.
 dst.consumer1.distorted <- node_new("util",
   type = "CD",
   alpha = 1, beta = c(0.5, 0.5),
@@ -48,7 +50,7 @@ ge.externality <- sdm2(
     0, 0
   ), 3, 2, TRUE),
   names.commodity = c("lab", "land", "env"),
-  names.agent = c("consumer1", "consumer2"),
+  names.agent = c("consumer1.distorted", "consumer2"),
   numeraire = "lab",
   policy = function(state) {
     last.D <- state$last.A \%*\% dg(state$last.z)
@@ -79,6 +81,41 @@ ge$p
 ge$z
 addmargins(ge$D, 2)
 addmargins(ge$S, 2)
+
+## A corrective tax is imposed on distorted consumer 1.
+# 54\% of tax revenue is allocated to distorted consumers 1, 46\% to consumers 2.
+dst.consumer1.distorted.taxed <- node_new("util",
+                                          type = "CD",
+                                          alpha = 1, beta = c(0.5, 0.5),
+                                          "lab", "cc1"
+)
+node_set(dst.consumer1.distorted.taxed, "cc1",
+         type = "FIN", rate = c(1, ge$DV[3, 1] / ge$DV[2, 1]),
+         "land", "tax"
+)
+
+ge.corrective.tax <- sdm2(
+  A = list(dst.consumer1.distorted.taxed, dst.consumer2),
+  B = matrix(0, 4, 2),
+  S0Exg = matrix(c(
+    50, 0,
+    0, 50,
+    0, 0,
+    54, 46
+  ), 4, 2, TRUE),
+  names.commodity = c("lab", "land", "env", "tax"),
+  names.agent = c("consumer1.distorted", "consumer2"),
+  numeraire = "lab",
+  policy = function(state) {
+    last.D <- state$last.A \%*\% dg(state$last.z)
+    state$S[3, 2] <- 100 - last.D[2, 1]
+    state
+  }
+)
+
+ge.corrective.tax$z
+addmargins(ge.corrective.tax$D, 2)
+addmargins(ge.corrective.tax$S, 2)
 
 ## negative externality of production to consumption
 dst.firm1.distorted <- dst.consumer1.distorted

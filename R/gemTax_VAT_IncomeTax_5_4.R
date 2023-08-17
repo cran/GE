@@ -40,10 +40,10 @@
 #' )
 #'
 #' dst.government <- node_new("util",
-#'                           type = "SCES",
-#'                           es = 0.5, alpha = 1,
-#'                           beta = c(0.5, 0.5),
-#'                           "manu", "serv"
+#'                            type = "SCES",
+#'                            es = 0.5, alpha = 1,
+#'                            beta = c(0.5, 0.5),
+#'                            "manu", "serv"
 #' )
 #'
 #' dstl <- list(dst.manu, dst.serv, dst.household, dst.government)

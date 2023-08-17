@@ -13,38 +13,46 @@
 #' @examples
 #' \donttest{
 #' #### an example with a 5-period-lived consumer
-#' np <- 5 # the number of internal periods
+#' np <- 5 # the number of planning periods
 #'
 #' interest.rate <- 0.1
-#' S <- matrix(NA, np, np)
-#' S[1:np, np] <- 100 / (np:1)
 #'
-#' B <- matrix(0, np, np)
-#' B[2:np, 1:(np - 1)] <- diag(np - 1)
+#' n <- np # the number of commodity kinds
+#' m <- np # the number of agent kinds
+#'
+#' names.commodity <- paste0("payoff", 1:np)
+#' names.agent <- c(paste0("bank", 1:(np - 1)), "consumer")
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("payoff", 1:np), "consumer"] <- 100 / (np:1)
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("payoff", k + 1), paste0("bank", k)] <- 1
+#' }
 #'
 #' dstl.bank <- list()
 #' for (k in 1:(np - 1)) {
 #'   dstl.bank[[k]] <- node_new("output",
-#'                              type = "Leontief",
-#'                              a = 1 / (1 + interest.rate),
-#'                              paste0("payoff", k))
+#'                              type = "Leontief", a = 1 / (1 + interest.rate),
+#'                              paste0("payoff", k)
+#'   )
 #' }
 #'
 #' dst.consumer <- node_new(
 #'   "util",
-#'   type = "SCES",
-#'   es = 1,
-#'   alpha = 1,
-#'   beta = prop.table(1:np),
+#'   type = "SCES", es = 1, alpha = 1, beta = prop.table(1:np),
 #'   paste0("payoff", 1:np)
 #' )
 #'
 #' ge <- sdm2(
 #'   A = c(dstl.bank, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = paste0("payoff", 1:np),
-#'   names.agent = c(paste0("bank", 1:(np - 1)), "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "payoff1",
 #'   policy = makePolicyMeanValue(30),
 #'   ts = TRUE
@@ -61,13 +69,13 @@
 #' ##
 #' dst.consumer$es <- 0
 #' dst.consumer$beta <- rep(1 / np, np)
-#' S[1:np, np] <- 100 / (1:np)
+#' S0Exg[paste0("payoff", 1:np), "consumer"] <- 100 / (1:np)
 #' ge <- sdm2(
 #'   A = c(dstl.bank, dst.consumer),
 #'   B = B,
-#'   S0Exg = S,
-#'   names.commodity = paste0("payoff", 1:np),
-#'   names.agent = c(paste0("bank", 1:(np - 1)), "consumer"),
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
 #'   numeraire = "payoff1",
 #'   policy = makePolicyMeanValue(30),
 #'   ts = TRUE

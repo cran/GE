@@ -13,14 +13,25 @@
 #' @examples
 #' \donttest{
 #' #### an example with a Cobb-Douglas intertemporal utility function
-#' np <- 5  # the number of internal periods
-#' y1 <- 150
-#' S <- matrix(NA, 2 * np - 1, np)
-#' S[(np + 1):(2 * np - 1), np] <- 100
-#' S[1, np] <- y1
+#' np <- 5 # the number of planning periods
+#' y1 <- 150 # the initial product supply
 #'
-#' B <- matrix(0, 2 * np - 1, np)
-#' B[2:np, 1:(np - 1)] <- diag(np - 1)
+#' n <- 2 * np - 1 # the number of commodity kinds
+#' m <- np # the number of agent kinds
+#'
+#' names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:(np - 1)))
+#' names.agent <- c(paste0("firm", 1:(np - 1)), "consumer")
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:(np - 1)), "consumer"] <- 100
+#' S0Exg["prod1", "consumer"] <- y1
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+#' }
 #'
 #' dstl.firm <- list()
 #' for (k in 1:(np - 1)) {
@@ -35,7 +46,7 @@
 #' dst.consumer.CD <- node_new(
 #'   "util",
 #'   type = "CD",
-#'   alpha = 1,  beta = prop.table(rep(1, np)),
+#'   alpha = 1, beta = prop.table(rep(1, np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
@@ -43,9 +54,9 @@
 #'   sdm2(
 #'     A = dstl,
 #'     B = B,
-#'     S0Exg = S,
-#'     names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:(np - 1))),
-#'     names.agent = c(paste0("firm", 1:(np - 1)), "consumer"),
+#'     S0Exg = S0Exg,
+#'     names.commodity = names.commodity,
+#'     names.agent = names.agent,
 #'     numeraire = "prod1",
 #'     ts = TRUE
 #'   )
@@ -76,6 +87,40 @@
 #' ge2$S
 #' ge2$DV
 #' ge2$SV
+#'
+#' ## Assume that the consumer has a CES (i.e. CRRA) intertemporal utility function.
+#' # eis is the elasticity of intertemporal substitution.
+#' # rho.beta is the subjective discount factor.
+#' f2 <- function(eis = 1, rho.beta = 1, head.tail.adjustment = "none") {
+#'   dst.consumer <- node_new(
+#'     "util",
+#'     type = "CES", es = eis,
+#'     alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'     paste0("prod", 1:np)
+#'   )
+#'
+#'   ge <- sdm2(
+#'     A = c(dstl.firm, dst.consumer),
+#'     B = B,
+#'     S0Exg = S0Exg,
+#'     names.commodity = names.commodity,
+#'     names.agent = names.agent,
+#'     numeraire = "prod1",
+#'     ts = TRUE,
+#'     policy = makePolicyHeadTailAdjustment(head.tail.adjustment, np = np)
+#'   )
+#'
+#'   list(
+#'     p = ge$p, z = ge$z,
+#'     D = addmargins(ge$D, 2), S = addmargins(ge$S, 2),
+#'     DV = addmargins(ge$DV), SV = addmargins(ge$SV)
+#'   )
+#' }
+#'
+#' f2(rho.beta = 0.9)
+#' f2(rho.beta = 0.9, head.tail.adjustment = "both") # the steady state in the worldsheet
+#' f2(rho.beta = 1.25, head.tail.adjustment = "both") # the steady state in the worldsheet
+#' f2(eis = 2, rho.beta = 0.9)
 #' }
 
 

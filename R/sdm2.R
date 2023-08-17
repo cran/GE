@@ -10,7 +10,7 @@
 #' or a function A(state) which returns an n-by-m matrix.
 #' n is the number of commodity types. m is the number of economic agents.
 #' The argument state is a list consisting of time (the current time), p (the current price vector),
-#' last.z (the output and utility vector of the previous period), w (the current wealth vector) and last.A (the demand coefficient matrix the previous period).
+#' last.z (the output and utility vector of the previous period), w (the current wealth vector) and last.A (the demand coefficient matrix of the previous period).
 #' @param B	an n-by-m matrix containing of the output coefficients (i.e. yield coefficients) of producers.
 #' Each producer produces one or more commodities.
 #' The output of each producer is equal to its activity level multiplied by the output coefficients.
@@ -42,8 +42,8 @@
 #' @param depreciationCoef the depreciation coefficient (i.e. 1 minus the depreciation rate) of the unsold products.
 #' @param priceAdjustmentFunction the price adjustment function. The arguments are a price n-vector p and a sales rate n-vector q.
 #' The return value is a price n-vector. The default price adjustment method is p * (1 - priceAdjustmentVelocity * (1 - q)).
-#' @param priceAdjustmentVelocity the price adjustment velocity.
-#' @param trace if TRUE, information is printed during the running of sdm.
+#' @param priceAdjustmentVelocity a scalar or an n-vector specifying the price adjustment velocity.
+#' @param trace if TRUE, information is printed during the running of sdm2.
 #' @param ts if TRUE, the time series of the last outer iteration are returned.
 #' @param policy a policy function or a list consisting of policy functions and/or policy function lists. A policy function has the following optional parameters:
 #' \itemize{

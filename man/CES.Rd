@@ -4,20 +4,20 @@
 \alias{CES}
 \title{CES Function}
 \usage{
-CES(sigma = 1 - 1/es, alpha, beta, x, theta = NULL, es = NA)
+CES(sigma = 1 - 1/es, alpha, beta, x, theta = rep(1, length(beta)), es = NA)
 }
 \arguments{
-\item{sigma}{the sigma coefficient.}
+\item{sigma}{a scalar not greater than one.}
 
-\item{alpha}{the alpha coefficient.}
+\item{alpha}{a nonnegative scalar.}
 
-\item{beta}{a vector consisting of the beta coefficients.}
+\item{beta}{a nonnegative n-vector.}
 
-\item{x}{a vector consisting of the inputs.}
+\item{x}{a nonnegative n-vector consisting of the inputs.}
 
-\item{theta}{a vector consisting of the theta coefficients.}
+\item{theta}{the all-ones n-vector (default) or a positive n-vector.}
 
-\item{es}{the elasticity of substitution. If es is not NA, the value of sigma will be ignored.}
+\item{es}{the elasticity of substitution. If es is not NA, the value of sigma (i.e. 1 - 1 / es) will be ignored.}
 }
 \value{
 A scalar indicating the output or utility level.
@@ -27,7 +27,8 @@ CES function, e.g. alpha * (beta1 * (x1 / theta1)^sigma + beta2 * (x2 / theta2)^
 }
 \examples{
 \donttest{
-CES(1, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))
+CES(0.5, 1, c(0.4, 0.6), c(1, 1), c(0.4, 0.6))
+CES(0.5, 1, c(0.4, 0.6), c(1, 2))
 }
 
 }

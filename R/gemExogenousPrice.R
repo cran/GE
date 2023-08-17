@@ -1,11 +1,12 @@
 #' @export
-#' @title Some Examples with Exogenous Price (Price Regulation)
+#' @title Some Examples with Exogenous Price (Price Control)
 #' @aliases gemExogenousPrice
-#' @description Some examples with exogenous price (price regulation).
-#' When a price regulation policy is imposed in a structural dynamic model,
-#' the economy may converge to a fixed point (i.e. a price regulation equilibrium)
-#' where the market does not clear.
+#' @description Some examples with exogenous price (i.e. price control, price regulation).
+#' When a price control policy is imposed in a structural dynamic model,
+#' the economy may converge to a steady state where the market does not clear.
 #' @param ... arguments to be passed to the function sdm2.
+#' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
+#' @seealso \code{\link{gemExogenousPrice_EndogenousLaborSupply_3_3}}
 #' @examples
 #' \donttest{
 #' dst.firm <- node_new("output",
@@ -21,7 +22,7 @@
 #' )
 #'
 #' f <- function(pExg = NULL, policy = NULL) {
-#'   ge <- sdm2(
+#'   pcss <- sdm2(
 #'     A = list(dst.firm, dst.consumer),
 #'     B = diag(c(1, 0)),
 #'     S0Exg = {
@@ -40,18 +41,18 @@
 #'     policy = policy
 #'   )
 #'
-#'   print(ge$p)
-#'   print(ge$z)
+#'   print(pcss$p)
+#'   print(pcss$z)
 #'   par(mfrow = c(1, 2))
-#'   matplot(ge$ts.p, type = "l")
-#'   matplot(ge$ts.z, type = "l")
-#'   ge
+#'   matplot(pcss$ts.p, type = "l")
+#'   matplot(pcss$ts.z, type = "l")
+#'   invisible(pcss)
 #' }
 #'
-#' ## No price regulation policy.
+#' ## No price control policy.
 #' f()
 #'
-#' ## Set the market prices to the steady equilibrium prices from the beginning.
+#' ## Set the market prices to the steady-state equilibrium prices from the beginning.
 #' ## The labor market keeps oversupplied.
 #' result <- f(pExg = c(0.16, 1))
 #' matplot(result$ts.q, type = "l") # sale rates
@@ -62,13 +63,13 @@
 #'   state
 #' })
 #'
-#' ## The price regulation policy is implemented from the 10th period.
+#' ## The price control policy is implemented from the 10th period.
 #' f(policy = function(time, state) {
 #'   if (time >= 10) state$p <- c(0.16, 1)
 #'   state
 #' })
 #'
-#' ## The price regulation policy is implemented from the 30th period.
+#' ## The price control policy is implemented from the 30th period.
 #' f(policy = function(time, state) {
 #'   if (time >= 30) state$p <- c(0.16, 1)
 #'   state
@@ -84,12 +85,86 @@
 #' })
 #'
 #' ##
-#' ge <- f(policy = function(time, state) {
+#' pcss <- f(policy = function(time, state) {
 #'   if (time >= 30) state$p <- c(0.17, 1)
 #'   state
 #' })
 #'
-#' tail(ge$ts.q)
+#' tail(pcss$ts.q)
+#'
+#' #### another 2-by-2 example.
+#' f <- function(GRExg = 0, pExg = c(2, 1)) {
+#'   pcss <- sdm(
+#'     A = matrix(c(
+#'       0, 1,
+#'       1, 0
+#'     ), 2, 2, TRUE),
+#'     B = matrix(c(
+#'       1, 0,
+#'       0, 0
+#'     ), 2, 2, TRUE),
+#'     S0Exg = matrix(c(
+#'       NA, NA,
+#'       NA, 100
+#'     ), 2, 2, TRUE),
+#'     GRExg = GRExg,
+#'     pExg = pExg,
+#'     maxIteration = 1,
+#'     numberOfPeriods = 300,
+#'     depreciationCoef = 0,
+#'     z0 = c(100, 0),
+#'     ts = TRUE
+#'   )
+#'   matplot(pcss$ts.z, type = "l")
+#'   print("pcss$z:")
+#'   pcss$z
+#'   print("tail(pcss$ts.q, 3)")
+#'   print(tail(pcss$ts.q, 3))
+#'   invisible(pcss)
+#' }
+#'
+#' f()
+#' f(GRExg = 0.01)
+#' f(pExg = c(1, 2))
+#'
+#' #### Example 9.5 in Li (2019).
+#' f <- function(GRExg = 0, pExg = c(1, NA, 0.625)) {
+#'   pcss <- sdm(
+#'     A = function(state) {
+#'       alpha <- rbind(1, 1, 1)
+#'       Beta <- matrix(c(
+#'         0, 1, 1,
+#'         0.5, 0, 0,
+#'         0.5, 0, 0
+#'       ), 3, 3, TRUE)
+#'       CD_A(alpha, Beta, state$p)
+#'     },
+#'     B = diag(c(1, 0, 0)),
+#'     S0Exg = matrix(c(
+#'       NA, NA, NA,
+#'       NA, 100, NA,
+#'       NA, NA, 100
+#'     ), 3, 3, TRUE),
+#'     GRExg = GRExg,
+#'     pExg = pExg,
+#'     maxIteration = 1,
+#'     numberOfPeriods = 300,
+#'     depreciationCoef = 0,
+#'     z0 = c(100, 0, 0),
+#'     ts = TRUE
+#'   )
+#'   matplot(pcss$ts.z, type = "l")
+#'   print("pcss$z:")
+#'   pcss$z
+#'   print("tail(pcss$ts.q, 3)")
+#'   print(tail(pcss$ts.q, 3))
+#'   invisible(pcss)
+#' }
+#'
+#' f()
+#' f(GRExg = 0.01)
+#' f(pExg = c(1, 0.25, 0.25))
+#' f(pExg = c(1, 0.2, 0.25))
 #' }
 
 

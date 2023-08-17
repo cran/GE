@@ -23,6 +23,13 @@ node_plot <- function(node, param = FALSE, ...) {
               "beta=(", paste0(round(the.node$beta, 4), collapse = ", "), ")"
             )
           },
+          "CESAK" = {
+            the.name <- paste0(
+              the.name, "\n",
+              "es=", round(the.node$es, 4), ", alpha=", round(the.node$alpha, 4), "\n",
+              "betaK=", round(the.node$betaK, 4), ", alphaK=", round(the.node$alphaK, 4)
+            )
+          },
           "CES" = ,
           "SCES" = {
             if (is.null(the.node$es) && !is.null(the.node$sigma)) the.node$es <- 1 / (1 - the.node$sigma)

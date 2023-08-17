@@ -126,7 +126,7 @@ f <- function(policy = NULL,
   ge
 }
 
-## disequilibrium path
+## a disequilibrium path
 de <- f(numberOfPeriods = 500)
 
 ## market-clearing path converging to equilibrium
@@ -137,7 +137,7 @@ ge <- f(
 ge$p
 ge$z
 
-## market-clearing path with persisting fluctuations
+## a market-clearing path with persisting fluctuations
 de <- f(policy = list(
   policy.credit,
   policyMarketClearingPrice

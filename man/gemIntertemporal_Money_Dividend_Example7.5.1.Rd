@@ -77,58 +77,68 @@ ge.seq$ts.z[,1]
 growth_rate(ge.seq$ts.z[,1])
 
 #### (2) a time-circle model.
-np <- 5 # the number of (internal) periods.
+np <- 5 # the number of planning periods
 gr <- 0.1 # the growth rate.
 dividend.rate <- 0.25
 ir <- 0.25
 zeta <- (1 + gr)^np # the ratio of repayments to loans
 
-S <- matrix(NA, 2 * np+1, np + 1) # the exogenous supply matrix.
-S[(np + 1):(2 * np), np + 1] <- 100 * (1 + gr)^(0:(np - 1)) # labor supply.
-S[2* np + 1, np+1] <- np*100 # claim supply.
+n <- 2 * np + 1 # the number of commodity kinds
+m <- np + 1 # the number of agent kinds
 
-B <- matrix(0, 2 * np + 1, np+1)
-B[1:np, 1:np] <- diag(np)[, c(2:np, 1)]
-B[1, np] <- 1 / zeta
+names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np), "claim")
+names.agent <- c(paste0("firm", 1:np), "consumer")
+
+# the exogenous supply matrix.
+S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+S0Exg[paste0("lab", 1:np), "consumer"] <- 100 * (1 + gr)^(0:(np - 1)) # the labor supply.
+S0Exg["claim", "consumer"] <- np * 100 # the financial claim supply.
+
+# the output coefficient matrix.
+B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+for (k in 1:(np - 1)) {
+  B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+}
+B["prod1", paste0("firm", np)] <- 1 / zeta
 
 dstl.firm <- list()
 for (k in 1:np) {
   dstl.firm[[k]] <- node_new(
     "prod",
-    type = "FIN", rate = c(1, (1+ir)*(1+dividend.rate)-1),
-    "cc1","claim"
+    type = "FIN", rate = c(1, (1 + ir) * (1 + dividend.rate) - 1),
+    "cc1", "claim"
   )
-  node_set( dstl.firm[[k]], "cc1",
-            type = "CD", alpha = 1, beta = c(0.5, 0.5),
-            paste0("prod", k), paste0("lab", k)
+  node_set(dstl.firm[[k]], "cc1",
+           type = "CD", alpha = 1, beta = c(0.5, 0.5),
+           paste0("prod", k), paste0("lab", k)
   )
 }
 
 dst.consumer <- node_new(
   "util",
   type = "FIN", rate = c(1, ir),
-  "cc1","claim"
+  "cc1", "claim"
 )
 node_set(dst.consumer, "cc1",
          # type = "CES", es = 1,
          type = "CD",
-         alpha = 1,  beta = rep(1/np,np),
+         alpha = 1, beta = rep(1 / np, np),
          paste0("cc1.", 1:np)
 )
 for (k in 1:np) {
-  node_set(dst.consumer, paste0("cc1.",k),
+  node_set(dst.consumer, paste0("cc1.", k),
            type = "CD", alpha = 1, beta = c(0.5, 0.5),
            paste0("prod", k), paste0("lab", k)
   )
 }
 node_plot(dst.consumer, TRUE)
 
-ge.tc <-  sdm2(
+ge.tc <- sdm2(
   A = c(dstl.firm, dst.consumer),
   B = B,
-  S0Exg = S,
-  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np), "claim"),
-  names.agent = c(paste0("firm", 1:np), "consumer"),
+  S0Exg = S0Exg,
+  names.commodity = names.commodity,
+  names.agent = names.agent,
   numeraire = "prod1"
 )
 
@@ -136,18 +146,28 @@ ge.tc$D
 ge.tc$z
 
 #### (3) a timeline model with head-tail adjustment.
-np <- 5 # the number of (internal) periods.
+np <- 5 # the number of planning periods
 gr <- 0.1
 dividend.rate <- 0.25
 ir <- 0.25
 
-S <- matrix(NA, 2 * np + 1, np) # exogenous supply matrix.
-S[(np + 1):(2 * np), np] <- 100 * (1 + gr)^(0:(np - 1))
-S[2 * np + 1, np] <- np * 100
-S[1, np] <- 10 # the product supply in the first period, which will be adjusted.
+n <- 2 * np + 1 # the number of commodity kinds
+m <- np # the number of agent kinds
 
-B <- matrix(0, 2 * np + 1, np)
-B[2:np, 1:(np - 1)] <- diag(np - 1)
+names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np), "claim")
+names.agent <- c(paste0("firm", 1:(np - 1)), "consumer")
+
+# the exogenous supply matrix.
+S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+S0Exg[paste0("lab", 1:np), "consumer"] <- 100 * (1 + gr)^(0:(np - 1))
+S0Exg["claim", "consumer"] <- np * 100
+S0Exg["prod1", "consumer"] <- 10 # the product supply in the first period, which will be adjusted.
+
+# the output coefficient matrix.
+B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+for (k in 1:(np - 1)) {
+  B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+}
 
 dstl.firm <- list()
 for (k in 1:(np - 1)) {
@@ -182,9 +202,9 @@ for (k in 1:np) {
 ge.tl <- sdm2(
   A = c(dstl.firm, dst.consumer),
   B = B,
-  S0Exg = S,
-  names.commodity = c(paste0("prod", 1:np), paste0("lab", 1:np), "claim"),
-  names.agent = c(paste0("firm", 1:(np - 1)), "consumer"),
+  S0Exg = S0Exg,
+  names.commodity = names.commodity,
+  names.agent = names.agent,
   numeraire = "prod1",
   policy = makePolicyHeadTailAdjustment(gr = gr, np = np)
 )
