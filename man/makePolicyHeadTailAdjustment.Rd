@@ -16,7 +16,7 @@ If type=="none", NULL will be returned.}
 
 \item{gr}{the growth rate.}
 
-\item{np}{the number of planning periods.}
+\item{np}{the number of economic periods.}
 }
 \value{
 A policy, which is often used as an argument of the function sdm2.

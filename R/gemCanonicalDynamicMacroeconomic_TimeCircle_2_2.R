@@ -2,8 +2,8 @@
 #' @title A Canonical Dynamic Macroeconomic General Equilibrium Model in Time-circle Form (see Torres, 2016)
 #' @aliases gemCanonicalDynamicMacroeconomic_TimeCircle_2_2
 #' @description A canonical dynamic macroeconomic general equilibrium model in time-circle form (see Torres, 2016, Table 2.1 and 2.2).
-#' @param alpha.firm a positive vector, indicating the efficiency parameters of the firm for each planning period.
-#' The number of planning periods will be set to length(alpha.firm) .
+#' @param alpha.firm a positive vector, indicating the efficiency parameters of the firm for each economic period.
+#' The number of economic periods will be set to length(alpha.firm) .
 #' @param es.prod.lab.firm the elasticity of substitution between product and labor in the production function of the firm.
 #' @param beta.prod.firm  the share parameter of the product in the production function.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
@@ -61,10 +61,10 @@
 #' # ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(alpha.firm = alpha.firm)
 #'
 #' ## The steady state product supply is 343.92.
-#' ## the (planning) time series of product supply
+#' ## the (economic) time series of product supply
 #' # plot(ge$z[1:np] / 343.92 - 1, type = "o", pch = 20)
 #' ## The steady state product consumption is 57.27.
-#' ## the (planning) time series of product consumption
+#' ## the (economic) time series of product consumption
 #' # plot(ge$D[2:np, np + 1] / 57.27 - 1, type = "o", pch = 20)
 #'
 #' #### Take the wage prepayment assumption.
@@ -120,7 +120,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
   m <- np + 2 # the number of agent kinds
 
   names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:np), "claim", paste0("prod", np + 1))
-  names.agent <- c(paste0("firm", 1:np), "consumer", "quasifirm")
+  names.agent <- c(paste0("firm", 1:np), "consumer", "bank")
 
   # the exogenous supply matrix.
   S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
@@ -132,7 +132,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
   for (k in 1:np) {
     B[paste0("prod", k + 1), paste0("firm", k)] <- 1
   }
-  B["prod1", "quasifirm"] <- 1 / zeta
+  B["prod1", "bank"] <- 1 / zeta
 
   dstl.firm <- list()
   for (k in 1:np) {
@@ -143,11 +143,11 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
     )
   }
 
-  dst.quasifirm <- node_new("prod",
+  dst.bank <- node_new("prod",
     type = "FIN", rate = c(1, (1 + yield)^np - 1),
     "cc1", "claim"
   )
-  node_set(dst.quasifirm, "cc1",
+  node_set(dst.bank, "cc1",
     type = "Leontief", a = 1,
     paste0("prod", np + 1)
   )
@@ -183,7 +183,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
   )
 
   ge <- sdm2(
-    A = c(dstl.firm, dst.consumer, dst.quasifirm),
+    A = c(dstl.firm, dst.consumer, dst.bank),
     B = B,
     S0Exg = S0Exg,
     names.commodity = names.commodity,
@@ -196,7 +196,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
 
   ge$dstl.firm <- dstl.firm
   ge$dst.consumer <- dst.consumer
-  ge$dst.quasifirm <- dst.quasifirm
+  ge$dst.bank <- dst.bank
 
   return(ge)
 }

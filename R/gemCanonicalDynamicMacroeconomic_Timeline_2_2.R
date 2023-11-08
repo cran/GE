@@ -3,8 +3,8 @@
 #' @aliases gemCanonicalDynamicMacroeconomic_Timeline_2_2
 #' @description A canonical dynamic macroeconomic general equilibrium model in timeline form (see Torres, 2016, Table 2.1 and 2.2).
 #' The firm has a CESAK production function.
-#' @param alpha.firm a positive vector, indicating the efficiency parameters of the firm for each planning period.
-#' The number of planning periods will be set to length(alpha.firm) + 1.
+#' @param alpha.firm a positive vector, indicating the efficiency parameters of the firm for each economic period.
+#' The number of economic periods will be set to length(alpha.firm) + 1.
 #' @param es.prod.lab.firm the elasticity of substitution between product and labor in the production function of the firm.
 #' @param beta.prod.firm  the share parameter of the product in the production function.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
@@ -58,7 +58,7 @@
 #' ge$D
 #' ge$S
 #'
-#' ##### anticipated technology shock.
+#' ##### a fully anticipated technology shock.
 #' ## Warning: Running the program below takes several minutes.
 #' # np <- 120
 #' # alpha.firm <- rep(1, np - 1)
@@ -66,10 +66,10 @@
 #' # ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(alpha.firm = alpha.firm)
 #' #
 #' ## The steady state product supply is 343.92.
-#' ## the (planning) time series of product supply.
+#' ## the (economic) time series of product supply.
 #' # plot(ge$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 20)
 #' ## The steady state product consumption is 57.27.
-#' ## the (planning) time series of product consumption.
+#' ## the (economic) time series of product consumption.
 #' # plot(ge$D[2:(np - 1), np] / 57.27 - 1, type = "o", pch = 20)
 #' # plot(growth_rate(ge$p[1:(np)]), type = "o", pch = 20)
 #' # plot(growth_rate(ge$p[(np + 1):(2 * np)]), type = "o", pch = 20)
@@ -85,33 +85,44 @@
 #' # )
 #' #
 #' ## The steady state product supply is 343.92.
-#' ## the (planning) time series of product supply.
+#' ## the (economic) time series of product supply.
 #' # plot(ge$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 20)
 #' ## The steady state product consumption is 57.27.
-#' ## the (planning) time series of product consumption.
+#' ## the (economic) time series of product consumption.
 #' # plot(ge$D[2:(np - 1), np] / 57.27 - 1, type = "o", pch = 20)
 #' # plot(growth_rate(ge$p[1:(np)]), type = "o", pch = 20)
 #' # plot(growth_rate(ge$p[(np + 1):(2 * np)]), type = "o", pch = 20)
 #' #
-#' ##### a technology shock anticipated three periods in advance.
+#' ### a technology shock anticipated several periods in advance.
 #' # np <- 50
 #' # alpha.firm <- rep(1, np - 1)
-#' # alpha.firm[4] <- 1.05
-#' # ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(
+#' # alpha.firm[5] <- 1.05
+#' # ge5 <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(
 #' #   alpha.firm = alpha.firm,
 #' #   initial.product.supply = 286.6341, # the steady state value
 #' #   head.tail.adjustment = "tail"
 #' # )
 #' #
 #' ## The steady state product supply is 343.92.
-#' ## the (planning) time series of product supply
-#' # plot(ge$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 20)
+#' ## the (economic) time series of product supply
+#' # plot(ge5$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 20)
 #' ## The steady state product consumption is 57.27.
-#' ## the (planning) time series of product consumption
-#' # plot(ge$D[2:(np - 1), np] / 57.27 - 1, type = "o", pch = 20)
-#' # plot(growth_rate(ge$p[1:(np)]), type = "o", pch = 20)
-#' # plot(growth_rate(ge$p[(np + 1):(2 * np)]), type = "o", pch = 20)
+#' ## the (economic) time series of product consumption
+#' # plot(ge5$D[2:(np - 1), np] / 57.27 - 1, type = "o", pch = 20)
+#' # plot(growth_rate(ge5$p[1:(np)]), type = "o", pch = 20)
+#' # plot(growth_rate(ge5$p[(np + 1):(2 * np)]), type = "o", pch = 20)
 #' #
+#' # alpha.firm <- rep(1, np - 1)
+#' # alpha.firm[10] <- 1.05
+#' # ge10 <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(
+#' #   alpha.firm = alpha.firm,
+#' #   initial.product.supply = 286.6341, # the steady state value
+#' #   head.tail.adjustment = "tail"
+#' # )
+#' # plot(ge$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 20, ylim = c(-0.005, 0.017))
+#' # lines(ge5$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 21)
+#' # lines(ge10$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 22)
+#'
 #' ##### an unanticipated technology shock.
 #' ## Warning: Running the program below takes several minutes.
 #' # np <- 100
@@ -128,10 +139,10 @@
 #' # )
 #' #
 #' ## The steady state product supply is 343.92.
-#' ## the (planning) time series of product supply
+#' ## the (economic) time series of product supply
 #' # plot(ge$z[1:(np - 1)] / 343.92 - 1, type = "o", pch = 20)
 #' ## The steady state product consumption is 57.27.
-#' ## the (planning) time series of product consumption
+#' ## the (economic) time series of product consumption
 #' # plot(ge$D[2:(np - 1), np] / 57.27 - 1, type = "o", pch = 20)
 #' # plot(growth_rate(ge$p[1:(np)]), type = "o", pch = 20)
 #' # plot(growth_rate(ge$p[(np + 1):(2 * np)]), type = "o", pch = 20)

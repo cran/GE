@@ -14,13 +14,16 @@
 #' Suppose that the amount returned is zeta times the amount borrowed.
 #' @param ... arguments to be passed to the function sdm2.
 #' @seealso {
-#' \code{\link{gemOLGTimeCircle}}
+#' \code{\link{gemOLG_TimeCircle}}
 #' }
 #' @examples
 #' \donttest{
 #' #### an example with a Cobb-Douglas intertemporal utility function
-#' np <- 5 # the number of planning periods, firms.
+#' np <- 5 # the number of economic periods, firms.
+#' gr <- 0 #  # the growth rate of the labor supply
 #' zeta <- 1.25 # the ratio of repayments to loans
+#' # zeta <- (1 + gr)^np
+#' rho.beta <- 1
 #'
 #' n <- 2 * np # the number of commodity kinds
 #' m <- np + 1 # the number of agent kinds
@@ -30,7 +33,7 @@
 #'
 #' # the exogenous supply matrix.
 #' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
-#' S0Exg[paste0("lab", 1:np), "consumer"] <- 100 # the supply of labor
+#' S0Exg[paste0("lab", 1:np), "consumer"] <- 100 * (1 + gr)^(0:(np - 1)) # the supply of labor
 #'
 #' # the output coefficient matrix.
 #' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
@@ -50,7 +53,7 @@
 #'
 #' dst.consumer <- node_new(
 #'   "util",
-#'   type = "CD", alpha = 1, beta = prop.table(rep(1, np)),
+#'   type = "CD", alpha = 1, beta = prop.table(rho.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
@@ -60,7 +63,7 @@
 #'   S0Exg = S0Exg,
 #'   names.commodity = names.commodity,
 #'   names.agent = names.agent,
-#'   numeraire = "lab1",
+#'   numeraire = "prod1",
 #'   ts = TRUE
 #' )
 #'
@@ -109,7 +112,7 @@
 #'
 #' #### an example with a linear intertemporal utility function (e.g. beta1 * x1 + beta2 * x2)
 #' ## The demand structure of the consumer will be adjusted sluggishly to accelerate convergence.
-#' np <- 5 # the number of planning periods, firms.
+#' np <- 5 # the number of economic periods, firms.
 #' rho <- 0.9 # the subjective discount factor
 #'
 #' beta.consumer <- rep(rho^(0:(np - 1)))

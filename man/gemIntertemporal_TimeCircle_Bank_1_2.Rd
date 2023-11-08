@@ -21,7 +21,7 @@ The consumer has a CES intertemporal utility function and attempts to maximize i
 \examples{
 \donttest{
 #### an example with a 5-period-lived consumer (see Zhang, 2008, section 1.3)
-np <- 5 # the number of planning periods
+np <- 5 # the number of economic periods
 interest.rate <- 0.1
 zeta <- (1 + interest.rate)^np # the ratio of repayments to loans
 

@@ -11,23 +11,24 @@ gemIntertemporal_TimeCircle_3_4(...)
 }
 \description{
 An (intertemporal) time circle model with two consumers and two types of firms.
+There are three commodities in the model, namely wheat, iron, and labor.
 }
 \examples{
 \donttest{
 #### an example with a Cobb-Douglas intertemporal utility function
-np <- 5 # the number of planning periods, firms.
+np <- 5 # the number of economic periods, firms.
 zeta <- 1.25 # the ratio of repayments to loans
 
 n <- 3 * np # the number of commodity kinds
 m <- 2 * np + 2 # the number of agent kinds
 
 names.commodity <- c(
-  paste0("corn", 1:np),
+  paste0("wheat", 1:np),
   paste0("iron", 1:np),
   paste0("lab", 1:np)
 )
 names.agent <- c(
-  paste0("firm.corn", 1:np), paste0("firm.iron", 1:np),
+  paste0("firm.wheat", 1:np), paste0("firm.iron", 1:np),
   "consumer1", "consumer2"
 )
 
@@ -38,15 +39,15 @@ S0Exg[paste0("lab", 1:np), c("consumer1", "consumer2")] <- 100 # the supply of l
 # the output coefficient matrix.
 B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
 for (k in 1:(np - 1)) {
-  B[paste0("corn", k + 1), paste0("firm.corn", k)] <- 1
+  B[paste0("wheat", k + 1), paste0("firm.wheat", k)] <- 1
   B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
 }
-B["corn1", paste0("firm.corn", np)] <- 1 / zeta
+B["wheat1", paste0("firm.wheat", np)] <- 1 / zeta
 B["iron1", paste0("firm.iron", np)] <- 1 / zeta
 
-dstl.firm.corn <- dstl.firm.iron <- list()
+dstl.firm.wheat <- dstl.firm.iron <- list()
 for (k in 1:np) {
-  dstl.firm.corn[[k]] <- node_new(
+  dstl.firm.wheat[[k]] <- node_new(
     "prod",
     type = "CD", alpha = 1, beta = c(0.5, 0.5),
     paste0("iron", k), paste0("lab", k)
@@ -62,7 +63,7 @@ for (k in 1:np) {
 dst.consumer1 <- node_new(
   "util",
   type = "CD", alpha = 1, beta = prop.table(rep(1, np)),
-  paste0("corn", 1:np)
+  paste0("wheat", 1:np)
 )
 
 dst.consumer2 <- node_new(
@@ -74,12 +75,12 @@ for (k in 1:np) {
   node_set(
     dst.consumer2, paste0("cc", k),
     type = "CD", alpha = 1, beta = c(0.5, 0.5),
-    paste0("corn", k), paste0("iron", k)
+    paste0("wheat", k), paste0("iron", k)
   )
 }
 
 ge <- sdm2(
-  A = c(dstl.firm.corn, dstl.firm.iron, dst.consumer1, dst.consumer2),
+  A = c(dstl.firm.wheat, dstl.firm.iron, dst.consumer1, dst.consumer2),
   B = B,
   S0Exg = S0Exg,
   names.commodity = names.commodity,

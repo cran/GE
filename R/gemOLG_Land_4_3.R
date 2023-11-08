@@ -1,6 +1,6 @@
 #' @export
 #' @title An Overlapping Generations Model with Land
-#' @aliases gemOLGLand_4_3
+#' @aliases gemOLG_Land_4_3
 #' @description Some examples of an overlapping generations model with land.
 #' @param ... arguments to be passed to the function sdm2.
 #' @details
@@ -24,7 +24,7 @@
 #' However, age2 has no incentive to do so.
 #' @references Rhee, Changyong (1991) Dynamic Inefficiency in an Economy with Land. Review of Economic Studies. 58(4), pp:791-797.
 #' @seealso {
-#' \code{\link{gemOLGPureExchange_2_2}}
+#' \code{\link{gemOLG_PureExchange}}
 #' }
 #' @examples
 #' \donttest{
@@ -109,4 +109,4 @@
 #' ge$SV
 #' }
 
-gemOLGLand_4_3 <- function(...) sdm2(...)
+gemOLG_Land_4_3 <- function(...) sdm2(...)

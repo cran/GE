@@ -10,7 +10,7 @@
 #' rho.beta <- 0.97 # the subjective discount factor of the consumer
 #' alphaK <- 1.1 # the parameter of the AK production function
 #'
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #'
 #' n <- np # the number of commodity kinds
 #' m <- np # the number of agent kinds

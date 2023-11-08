@@ -1,6 +1,6 @@
 #' @export
 #' @title Overlapping Generations Models with Private Firm
-#' @aliases gemOLGPrivateFirm
+#' @aliases gemOLG_PrivateFirm
 #' @description Some examples of overlapping generations models with private firm.
 #' A public (i.e. publicly held) firm exists permanently and operates independently.
 #' If a public firm ownership transfers between generations, this transfer will be done through
@@ -24,7 +24,7 @@
 #' @param ... arguments to be passed to the function sdm2.
 #' @references Acemoglu, D. (2009, ISBN: 9780691132921) Introduction to Modern Economic Growth. Princeton University Press.
 #' @seealso {
-#' \code{\link{gemOLGFPureExchange}}
+#' \code{\link{gemOLGF_PureExchange}}
 #' }
 #' @examples
 #' \donttest{
@@ -148,4 +148,4 @@
 
 
 
-gemOLGPrivateFirm <- function(...) sdm2(...)
+gemOLG_PrivateFirm <- function(...) sdm2(...)

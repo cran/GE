@@ -71,7 +71,7 @@ matplot(growth_rate(ge$ts.z), type = "l")
 ge$ts.z
 
 ## a timeline model
-np <- 5 # the number of planning periods.
+np <- 5 # the number of economic periods.
 
 n <- 2 * np - 1 # the number of commodity kinds
 m <- np # the number of agent kinds

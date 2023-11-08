@@ -95,8 +95,8 @@ matplot(ge.TP2$ts.z, type = "o", pch = 20)
 #### A timeline model, the equilibrium of which is the same as the benchmark equilibrium.
 # In this model, in terms of form, firms are treated as consumer-type agents rather than
 # producer-type agents. Firms hold products. The utility level of each firm determines
-# the quantity of the product that the firm owns in the subsequent planning period.
-np <- 5 # the number of planning periods
+# the quantity of the product that the firm owns in the subsequent economic period.
+np <- 5 # the number of economic periods
 y1 <- 1 # the initial product supply
 eis <- 1 # elasticity of intertemporal substitution
 rho.beta <- 1 # the subjective discount factor

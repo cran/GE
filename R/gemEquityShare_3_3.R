@@ -36,7 +36,7 @@
 #'   numeraire = "prod"
 #' )
 #'
-#' ge$p #The third component is the dividend per unit of share.
+#' ge$p # The third component is the dividend per unit of share.
 #' ge$DV
 #' ge$SV
 #'
@@ -58,10 +58,10 @@
 #' ge$z
 #' ge$p
 #'
-#' #### An equivalent intertemporal model.
+#' #### an equivalent intertemporal model.
 #' gr <- 0.03
 #' rho.beta <- 0.8
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #' y1 <- 100 # the initial product supply
 #'
 #' n <- 2 * np - 1 # the number of commodity kinds

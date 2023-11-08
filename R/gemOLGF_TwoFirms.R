@@ -1,10 +1,10 @@
 #' @export
 #' @title Overlapping Generations Financial Models with Two Firms
-#' @aliases gemOLGFTwoFirms
+#' @aliases gemOLGF_TwoFirms
 #' @description Some examples of overlapping generations financial models with two firms.
 #' @param ... arguments to be passed to the function sdm2.
 #' @seealso {
-#' \code{\link{gemOLGFPureExchange}}
+#' \code{\link{gemOLGF_PureExchange}}
 #' }
 #' @examples
 #' \donttest{
@@ -106,4 +106,4 @@
 #' ge$S
 #' }
 
-gemOLGFTwoFirms <- function(...) sdm2(...)
+gemOLGF_TwoFirms <- function(...) sdm2(...)

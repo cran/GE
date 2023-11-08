@@ -17,8 +17,8 @@ which can be treated in the same way in models.
 \examples{
 \donttest{
 #### a model with tax.
-np <- 5 # the number of planning periods.
-gr.lab <- 0.03 # the growth rate of the labor supply.
+np <- 5 # the number of economic periods
+gr.lab <- 0.03 # the growth rate of the labor supply
 tax.rate <- 0.25
 
 n <- 2 * np + 1 # the number of commodity kinds
@@ -99,11 +99,11 @@ ge$z
 ge$DV
 
 #### a pure exchange model with money.
-np <- 3 # the number of planning periods.
-gr.lab <- 0.03 # the growth rate of endowments (i.e. labor supply)
+np <- 3 # the number of economic periods
+gr.lab <- 0.03 # the growth rate of the labor supply
 eis <- 0.8 # the elasticity of intertemporal substitution
 rho.beta <- 0.8 # the subjective discount factor
-interest.rate <- 0.2593 # (1 + gr.lab)^(1 / eis - 1) / rho.beta - 1
+interest.rate <- sserr(eis, rho.beta, gr.lab, prepaid = TRUE) # 0.2593
 
 dst.laborer <- node_new(
   "util",
@@ -137,6 +137,46 @@ ge <- sdm2(
   names.agent = c("laborer", "money.owner"),
   numeraire = c(money1 = interest.rate)
 )
+
+ge$p
+ge$z
+addmargins(ge$D, 2)
+addmargins(ge$S, 2)
+
+## In the following program, the periods to which
+## the money belongs are not distinguished.
+dst.laborer <- node_new(
+  "util",
+  type = "FIN",
+  rate = c(1, interest.rate),
+  "cc1", "money"
+)
+node_set(dst.laborer, "cc1",
+  type = "CES", es = eis,
+  alpha = 1, beta = rho.beta^(0:(np - 1)),
+  paste0("lab", 1:np)
+)
+
+dst.money.owner <- Clone(dst.laborer)
+
+ge <- sdm2(
+  A = list(dst.laborer, dst.money.owner),
+  B = matrix(0, np + 1, 2),
+  S0Exg = {
+    tmp <- matrix(0, np + 1, 2)
+    tmp[1:np, 1] <- 100 * (1 + gr.lab)^(0:(np - 1))
+    tmp[np + 1, 2] <- 100
+    tmp
+  },
+  names.commodity = c(paste0("lab", 1:np), "money"),
+  names.agent = c("laborer", "money.owner"),
+  numeraire = c(money = interest.rate)
+)
+
+ge$p
+ge$z
+addmargins(ge$D, 2)
+addmargins(ge$S, 2)
 
 #### a two-period model with production and money.
 interest.rate1 <- 0.25

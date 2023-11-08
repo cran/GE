@@ -15,7 +15,7 @@
 #' eis <- 0.8 # the elasticity of intertemporal substitution
 #' rho.beta <- 0.8 # the subjective discount factor
 #' gr <- 0.03 # the growth rate
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #'
 #' n <- 2 * np - 1 # the number of commodity kinds
 #' m <- np # the number of agent kinds
@@ -232,6 +232,22 @@
 #' )
 #'
 #' ge.ftc$z
+#'
+#' ##
+#' ge.tc <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(
+#'   alpha.firm = rep(2, 5),
+#'   es.prod.lab.firm = 1,
+#'   beta.prod.firm = 0.5,
+#'   depreciation.rate = 1,
+#'   eis = 0.8,
+#'   rho.beta = 0.8,
+#'   beta.prod.consumer = 1,
+#'   es.prod.lab.consumer = 1,
+#'   gr = 0.03,
+#'   wage.payment = "pre"
+#' )
+#'
+#' ge.tc$z
 #' }
 
 gemIntertemporal_Dividend <- function(...) sdm2(...)

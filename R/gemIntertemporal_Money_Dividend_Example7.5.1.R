@@ -69,7 +69,7 @@
 #' growth_rate(ge.seq$ts.z[,1])
 #'
 #' #### (2) a time-circle model.
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #' gr <- 0.1 # the growth rate.
 #' dividend.rate <- 0.25
 #' ir <- 0.25
@@ -138,7 +138,7 @@
 #' ge.tc$z
 #'
 #' #### (3) a timeline model with head-tail adjustment.
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #' gr <- 0.1
 #' dividend.rate <- 0.25
 #' ir <- 0.25

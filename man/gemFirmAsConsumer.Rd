@@ -17,7 +17,7 @@ consumer-type agents instead of producer-type agents.
 \donttest{
 #### an intertemporal model with firm
 ## (see gemIntertemporal_2_2)
-np <- 3 # the number of planning periods
+np <- 3 # the number of economic periods
 
 S0Exg <- matrix(c(
   0, 0, 150,

@@ -18,7 +18,7 @@
 #' gr.tech <- 0.02 # the technological progress rate
 #' gr.lab <- 0.03 # the growth rate of labor supply
 #' gr <- (1 + gr.lab) * (1 + gr.tech) - 1 # the growth rate
-#' np <- 4 # the number of planning periods
+#' np <- 4 # the number of economic periods
 #'
 #' n <- 2 * np - 1 # the number of commodity kinds
 #' m <- np # the number of agent kinds

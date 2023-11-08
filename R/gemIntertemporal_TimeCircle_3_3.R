@@ -6,7 +6,7 @@
 #' @examples
 #' \donttest{
 #' #### an example with a Cobb-Douglas intertemporal utility function
-#' np <- 5 # the number of planning periods, firms.
+#' np <- 5 # the number of economic periods, firms.
 #' zeta <- 1.25 # the ratio of repayments to loans
 #'
 #' n <- 3 * np # the number of commodity kinds

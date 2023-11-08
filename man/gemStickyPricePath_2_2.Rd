@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemStickyPricePath_2_2.R
 \name{gemStickyPricePath_2_2}
 \alias{gemStickyPricePath_2_2}
-\title{An Example Illustrating the Sticky-Price Path}
+\title{Some Examples Illustrating the Sticky-Price Path and Business Cycles}
 \usage{
 gemStickyPricePath_2_2(...)
 }
@@ -10,7 +10,7 @@ gemStickyPricePath_2_2(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-This is an example that illustrates the sticky-price path.
+These are some examples that illustrate the sticky-price path and business cycles.
 }
 \examples{
 \donttest{
@@ -54,6 +54,46 @@ ge <- sdm2(
   ),
   priceAdjustmentVelocity = 0,
   numberOfPeriods = 60,
+  maxIteration = 1
+)
+
+matplot(ge$ts.z, type = "b", pch = 20)
+
+#### another example.
+## When the stickiness is 0, there will be business cycles.
+stickiness <- 0.5
+
+dst.firm <- node_new(
+  "output",
+  type = "Leontief", a = 0.2,
+  "lab"
+)
+
+dst.consumer <- node_new(
+  "util",
+  type = "CES", es = 0.3, alpha = 1, beta = c(0.5, 0.5),
+  "prod", "lab"
+)
+
+ge <- sdm2(
+  A = list(dst.firm, dst.consumer),
+  B = matrix(c(
+    1, 0,
+    0, 0
+  ), 2, 2, TRUE),
+  S0Exg = matrix(c(
+    NA, NA,
+    NA, 100
+  ), 2, 2, TRUE),
+  names.commodity = c("prod", "lab"),
+  names.agent = c("firm", "consumer"),
+  numeraire = "lab",
+  z0 = c(100, 100),
+  p0 = c(1, 1),
+  ts = TRUE,
+  policy = makePolicyStickyPrice(stickiness	= stickiness),
+  priceAdjustmentVelocity = 0,
+  numberOfPeriods = 40,
   maxIteration = 1
 )
 

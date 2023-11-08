@@ -1,6 +1,6 @@
 #' @export
 #' @title Overlapping Generations Pure Exchange Models with Bank
-#' @aliases gemOLGPureExchange_Bank
+#' @aliases gemOLG_PureExchange_Bank
 #' @description Some examples of overlapping generations pure exchange models with bank.
 #' Under a pay-as-you-go system, banks may only redistribute payoffs among consumers in each period.
 #' This is, in each period a bank can get a part of payoff of age1 and pay it to age2 immediately.
@@ -8,7 +8,7 @@
 #' Each consumer only transacts with the bank, and she can assume that there are no other consumers.
 #' @param ... arguments to be passed to the function sdm2.
 #' @seealso {
-#' \code{\link{gemOLGPureExchange_2_2}}
+#' \code{\link{gemOLG_PureExchange}}
 #' }
 #' @examples
 #' \donttest{
@@ -111,4 +111,4 @@
 #' }
 #'
 
-gemOLGPureExchange_Bank <- function(...) sdm2(...)
+gemOLG_PureExchange_Bank <- function(...) sdm2(...)

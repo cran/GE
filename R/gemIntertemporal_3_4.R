@@ -6,7 +6,7 @@
 #' @examples
 #' \donttest{
 #' #### an example with Cobb-Douglas production functions and intertemporal utility functions.
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #'
 #' n <- 3 * np - 1 # the number of commodity kinds
 #' m <- 2 * (np - 1) + 2 # the number of agent kinds

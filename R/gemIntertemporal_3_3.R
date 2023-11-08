@@ -9,7 +9,7 @@
 #' @examples
 #' \donttest{
 #' #### an example with a nested intertemporal utility function
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #'
 #' n <- 3 * np - 1 # the number of commodity kinds
 #' m <- 2 * (np - 1) + 1 # the number of agent kinds
@@ -86,7 +86,7 @@
 #' ge$SV
 #'
 #' #### an example with a non-nested intertemporal utility function
-#' np <- 3 # the number of planning periods
+#' np <- 3 # the number of economic periods
 #'
 #' ## There are np types of corn, np-1 types of iron and np-1 types of labor.
 #' ## There are np-1 corn firms, np-2 iron firms and one consumer.

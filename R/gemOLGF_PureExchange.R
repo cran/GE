@@ -1,6 +1,6 @@
 #' @export
 #' @title Overlapping Generations Financial Models for Pure Exchange Economies
-#' @aliases gemOLGFPureExchange
+#' @aliases gemOLGF_PureExchange
 #' @description Some examples of overlapping generations models with financial instrument for pure exchange economies.
 #'
 #' In these examples, there is a financial instrument (namely security) which serves as saving means and can be regarded as money, the shares of a firm, etc.
@@ -32,7 +32,7 @@
 #' we cannot get the optimal allocation by introducing securities.
 #' So we need the family system.
 #' @seealso {
-#' \code{\link{gemOLGPureExchange_2_2}}
+#' \code{\link{gemOLG_PureExchange}}
 #' }
 #' @examples
 #' \donttest{
@@ -145,7 +145,7 @@
 #'
 #' #### the basic overlapping generations (inefficient) exchange model.
 #' ## Here the lab2 is regarded as a financial instrument (saving instrument).
-#' ## See gemOLGPureExchange_2_2.
+#' ## See gemOLG_PureExchange.
 #' dst.age1 <- node_new(
 #'   "util",
 #'   type = "FIN",
@@ -323,4 +323,4 @@
 #' }
 #'
 
-gemOLGFPureExchange <- function(...) sdm2(...)
+gemOLGF_PureExchange <- function(...) sdm2(...)

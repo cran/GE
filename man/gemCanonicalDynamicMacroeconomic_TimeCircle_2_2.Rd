@@ -20,8 +20,8 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(
 )
 }
 \arguments{
-\item{alpha.firm}{a positive vector, indicating the efficiency parameters of the firm for each planning period.
-The number of planning periods will be set to length(alpha.firm) .}
+\item{alpha.firm}{a positive vector, indicating the efficiency parameters of the firm for each economic period.
+The number of economic periods will be set to length(alpha.firm) .}
 
 \item{es.prod.lab.firm}{the elasticity of substitution between product and labor in the production function of the firm.}
 
@@ -91,10 +91,10 @@ ge$S
 # ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(alpha.firm = alpha.firm)
 
 ## The steady state product supply is 343.92.
-## the (planning) time series of product supply
+## the (economic) time series of product supply
 # plot(ge$z[1:np] / 343.92 - 1, type = "o", pch = 20)
 ## The steady state product consumption is 57.27.
-## the (planning) time series of product consumption
+## the (economic) time series of product consumption
 # plot(ge$D[2:np, np + 1] / 57.27 - 1, type = "o", pch = 20)
 
 #### Take the wage prepayment assumption.

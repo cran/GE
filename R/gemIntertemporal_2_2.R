@@ -13,7 +13,7 @@
 #' @examples
 #' \donttest{
 #' #### an example with a Cobb-Douglas intertemporal utility function
-#' np <- 5 # the number of planning periods
+#' np <- 5 # the number of economic periods
 #' y1 <- 150 # the initial product supply
 #'
 #' n <- 2 * np - 1 # the number of commodity kinds

@@ -15,7 +15,7 @@ Some examples of an intertemporal model with two consumers and a type of bank.
 \examples{
 \donttest{
 #### an example with a 5-period-lived consumer
-np <- 5 # the number of planning periods
+np <- 5 # the number of economic periods
 interest.rate <- 0.1
 
 n <- np # the number of commodity kinds

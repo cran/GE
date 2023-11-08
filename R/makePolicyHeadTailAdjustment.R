@@ -8,7 +8,7 @@
 #' @param type a character string specifying the type of the policy, must be one of "both" (default), "head", "tail" or "none".
 #' If type=="none", NULL will be returned.
 #' @param gr the growth rate.
-#' @param np the number of planning periods.
+#' @param np the number of economic periods.
 #' @return A policy, which is often used as an argument of the function sdm2.
 #' @seealso {
 #' \code{\link{gemIntertemporal_Dividend}};

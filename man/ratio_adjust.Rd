@@ -13,7 +13,8 @@ ratio_adjust(
 \arguments{
 \item{ratio}{a numeric vector or a positive numeric n-by-m matrix.}
 
-\item{coef}{a positive number, a positive numeric vector or a positive numeric n-by-m matrix.}
+\item{coef}{a positive number, a positive numeric vector or a positive numeric n-by-m matrix.
+The smaller this value, the closer the adjusted ratio will be to one.}
 
 \item{method}{a character string specifying the adjustment method.}
 }

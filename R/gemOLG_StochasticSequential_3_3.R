@@ -297,4 +297,4 @@
 #' dst.age1$last.price
 #' dst.age1$Rbb
 #' }
-gemOLGStochasticSequential_3_3 <- function(...) sdm2(...)
+gemOLG_StochasticSequential_3_3 <- function(...) sdm2(...)

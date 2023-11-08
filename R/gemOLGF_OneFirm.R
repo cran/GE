@@ -1,15 +1,15 @@
 #' @export
 #' @title Overlapping Generations Financial Models with One Firm
-#' @aliases gemOLGFOneFirm
+#' @aliases gemOLGF_OneFirm
 #' @description Some examples of overlapping generations financial models with one firm.
 #'
-#' When there is a population growth, we will take the security-split assumption (see \code{\link{gemOLGFPureExchange}}).
+#' When there is a population growth, we will take the security-split assumption (see \code{\link{gemOLGF_PureExchange}}).
 #' @param ... arguments to be passed to the function sdm2.
 #' @references Samuelson, P. A. (1958) An Exact Consumption-Loan Model of Interest with or without the Social Contrivance of Money. Journal of Political Economy, vol. 66(6): 467-482.
 #' @references de la Croix, David and Philippe Michel (2002, ISBN: 9780521001151) A Theory of Economic Growth: Dynamics and Policy in Overlapping Generations. Cambridge University Press.
 #' @seealso {
-#' \code{\link{gemOLGPureExchange_2_2}}
-#' \code{\link{gemOLGTimeCircle}}
+#' \code{\link{gemOLG_PureExchange}}
+#' \code{\link{gemOLG_TimeCircle}}
 #' }
 #' @examples
 #' \donttest{
@@ -282,4 +282,4 @@
 #' }
 #'
 
-gemOLGFOneFirm <- function(...) sdm2(...)
+gemOLGF_OneFirm <- function(...) sdm2(...)

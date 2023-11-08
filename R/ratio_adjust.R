@@ -11,6 +11,7 @@
 #' }
 #' @param ratio a numeric vector or a positive numeric n-by-m matrix.
 #' @param coef a positive number, a positive numeric vector or a positive numeric n-by-m matrix.
+#' The smaller this value, the closer the adjusted ratio will be to one.
 #' @param method a character string specifying the adjustment method.
 #' @return A vector or a matrix with dimensions the same as the argument ratio.
 #' @examples

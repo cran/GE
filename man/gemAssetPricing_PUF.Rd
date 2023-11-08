@@ -46,7 +46,7 @@ asset1 <- c(1, 0, 0, 0, 0)
 asset2 <- c(0, 1, 1, 1, 1)
 asset3 <- c(0, 5, 3, 8, 4) - 3 * asset2
 asset4 <- c(0, 3, 5, 4, 8) - 3 * asset2
-# unit asset payoff matrix
+# the unit asset payoff matrix
 UAP <- cbind(asset1, asset2, asset3, asset4)
 
 prob <- c(0.15, 0.25, 0.25, 0.35)
@@ -163,10 +163,10 @@ Supply <- matrix(runif(n * m, 10, 100), n, m)
 # the risk aversion coefficients of agents.
 gamma <- runif(m, 0.25, 1)
 
-# predicted mean payoff, which may be gross return rates, price indices or prices.
+# the predicted mean payoffs, which may be gross return rates, price indices or prices.
 PMP <- matrix(runif(n * m, min = 0.8, max = 1.5), n, m)
 
-# predicted standard deviation of payoff.
+# the predicted standard deviations of payoffs.
 PSD <- matrix(runif(n * m, min = 0.01, max = 0.2), n, m)
 PSD[n, ] <- 0
 
@@ -200,16 +200,15 @@ for (k in 1:m) {
 
 ge <- gemAssetPricing_PUF(
   S = Supply, uf = lst.uf,
-  maxIteration = 1,
-  numberOfPeriods = 2000,
   priceAdjustmentVelocity = 0.05,
-  policy = makePolicyMeanValue(150),
-  ts = TRUE
+  policy = makePolicyMeanValue(100),
+  ts = TRUE,
+  tolCond = 1e-04
 )
 
-matplot(ge$ts.p, type = "l")
 ge$p
-ge$D
+round(addmargins(ge$D, 2), 3)
+round(addmargins(ge$S, 2), 3)
 ge$VMU
 
 #### a 3-by-2 example.
@@ -217,7 +216,7 @@ asset1 <- c(1, 0, 0)
 asset2 <- c(0, 0, 2)
 asset3 <- c(0, 1, 1)
 
-# unit asset payoff matrix.
+# the unit asset payoff matrix.
 UAP <- cbind(asset1, asset2, asset3)
 wt <- c(0.5, 0.25, 0.25) # weights
 
@@ -267,7 +266,7 @@ pcss$VMU
 asset1 <- c(1, 0, 0)
 asset2 <- c(0, 1, 1)
 
-# unit asset payoff matrix
+# the unit asset payoff matrix
 UAP <- cbind(asset1, asset2)
 wt <- c(0.5, 0.25, 0.25) # weights
 
