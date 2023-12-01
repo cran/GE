@@ -68,8 +68,8 @@ ge$z
 ge$p
 
 #### an equivalent intertemporal model.
-gr <- 0.03
-rho.beta <- 0.8
+gr <- 0.03 # the growth rate of the labor supply
+rho.beta <- 0.8 # the subjective discount factor
 np <- 5 # the number of economic periods
 y1 <- 100 # the initial product supply
 

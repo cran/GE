@@ -70,8 +70,8 @@ ge <- sdm2(
   ),
   B = matrix(0, 2, 2, TRUE),
   S0Exg = matrix(c(
-    1, NA,
-    NA, 1
+    100, NA,
+    NA, 100
   ), 2, 2, TRUE),
   names.commodity = c("lab", "secy"),
   names.agent = c("age1", "age2"),
@@ -83,13 +83,13 @@ ge$D
 ge$DV
 ge$S
 
-#### population growth and demographic dividend.
+#### the population growth and demographic dividend.
 ## Suppose each consumer has a SCES intertemporal utility function.
-pgr <- 0.03 # population growth rate
+gr.lab <- 0.03 # the growth rate of population and labor supply
 
-beta2 <- 0.4  # share parameters of the SCES function
+# share parameters of the SCES function
+beta2 <- 0.4
 beta1 <- 1 - beta2
-
 es <- 0.5 # the elasticity of substitution in the SCES function
 
 dst.age1 <- node_new(
@@ -114,14 +114,14 @@ ge <- sdm2(
   ),
   B = matrix(0, 2, 2, TRUE),
   S0Exg = matrix(c(
-    1, NA,
-    NA, 1
+    100, NA,
+    NA, 100
   ), 2, 2, TRUE),
   names.commodity = c("lab", "secy"),
   names.agent = c("age1", "age2"),
   numeraire = "secy",
   policy = list(function(time, A, state) {
-    state$S[1, 1] <- (1 + pgr)^time
+    state$S[1, 1] <- 100 * (1 + gr.lab)^time
     p.lab.current <- state$p[1] / state$p[2]
 
     lambda <- 0.6
@@ -145,11 +145,11 @@ ge <- sdm2(
 matplot(growth_rate(ge$ts.p), type = "o", pch = 20)
 matplot(growth_rate(ge$ts.z), type = "o", pch = 20)
 ge$p
-dst.age1$rate[2] # beta2 / beta1 * (1 + pgr)^(es - 1)
+dst.age1$rate[2] # beta2 / beta1 * (1 + gr.lab)^(es - 1)
 dst.age1$p.lab.ratio.predicted.last
 
 plot(dst.age1$ts.saving.rate, type = "o", pch = 20)
-tail(dst.age1$ts.saving.rate,1) # beta2 / (beta2 + beta1 * (1 + pgr)^(1 - es))
+tail(dst.age1$ts.saving.rate,1) # beta2 / (beta2 + beta1 * (1 + gr.lab)^(1 - es))
 
 #### the basic overlapping generations (inefficient) exchange model.
 ## Here the lab2 is regarded as a financial instrument (saving instrument).
@@ -172,8 +172,8 @@ ge <- sdm2(
   A = list(dst.age1, dst.age2),
   B = matrix(0, 2, 2),
   S0Exg = matrix(c(
-    1, 1,
-    1, 0
+    50, 50,
+    50, 0
   ), 2, 2, TRUE),
   names.commodity = c("lab1", "lab2"),
   names.agent = c("age1", "age2"),

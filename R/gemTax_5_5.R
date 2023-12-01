@@ -79,13 +79,13 @@
 #' ge <- sdm2(
 #'   A = list(dst.firm1, dst.firm2, dst.laborer, dst.capital.owner, dst.government),
 #'   B = diag(c(1, 1, 0, 0, 0)),
-#'   S0Exg = {
-#'     S0Exg <- matrix(NA, 5, 5)
-#'     S0Exg[3, 3] <- 100
-#'     S0Exg[4, 4] <- 100
-#'     S0Exg[5, 5] <- 100
-#'     S0Exg
-#'   },
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA, NA, NA,
+#'     NA, NA, NA, NA, NA,
+#'     NA, NA, 100, NA, NA,
+#'     NA, NA, NA, 100, NA,
+#'     NA, NA, NA, NA, 100
+#'   ), 5, 5, TRUE),
 #'   names.commodity = c("prod1", "prod2", "lab", "cap", "tax"),
 #'   names.agent = c("firm1", "firm2", "laborer", "capital.owner", "government"),
 #'   numeraire = "lab"

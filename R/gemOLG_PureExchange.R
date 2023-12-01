@@ -4,7 +4,7 @@
 #' @description This is the basic overlapping generations pure exchange model.
 #' @param ... arguments to be passed to the function sdm2.
 #' @details As Samuelson (1958) wrote, break each life up into thirds.
-#' Agents get 100 units of payoff in period 1 and one unit in period 2; in period 3 they retire and get nothing.
+#' Agents get 50 units of payoff in period 1 and 50 units in period 2; in period 3 they retire and get nothing.
 #' Suppose there are three agents in each period, namely age1, age2 and age3.
 #' In the next period, the present age1 will become age2, the present age2 will become age3,
 #' the present age3 will disappear and a new age1 will appear.
@@ -38,7 +38,7 @@
 #'
 #' policy.supply <- function(time, state) {
 #'   pension <- (state$last.A[, 2] * state$last.z[2])[2]
-#'   if (time > 1) state$S[1, 2] <- 100 - pension
+#'   if (time > 1) state$S[1, 2] <- 50 - pension
 #'   state
 #' }
 #'
@@ -46,8 +46,8 @@
 #'   A = list(dst.age1, dst.age2),
 #'   B = matrix(0, 2, 2),
 #'   S0Exg = matrix(c(
-#'     100, 100,
-#'     100, 0
+#'     50, 50,
+#'     50, 0
 #'   ), 2, 2, TRUE),
 #'   names.commodity = c("payoff1", "payoff2"),
 #'   names.agent = c("age1", "age2"),
@@ -74,7 +74,7 @@
 #' # the exogenous supply matrix.
 #' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
 #' for (k in 1:m) {
-#'   S0Exg[k:(k + 1), k] <- 100
+#'   S0Exg[k:(k + 1), k] <- 50
 #' }
 #'
 #' dstl.consumer <- list()
@@ -109,7 +109,7 @@
 #'
 #' #### Assume that in the timeline model, each consumer lives for four periods or more.
 #' nl <- 4 # the number of life periods
-#' payoff <- c(rep(100, nl - 1), 1e-10) # the lifetime payoffs
+#' payoff <- c(rep(100 / (nl - 1), nl - 1), 1e-10) # the lifetime payoffs
 #' m <- 20 # the number of generations
 #' n <- m + nl - 1 # the number of commodity kinds
 #'

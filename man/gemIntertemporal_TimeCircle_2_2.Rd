@@ -26,10 +26,10 @@ Suppose that the amount returned is zeta times the amount borrowed.
 \donttest{
 #### an example with a Cobb-Douglas intertemporal utility function
 np <- 5 # the number of economic periods, firms.
-gr <- 0 #  # the growth rate of the labor supply
+gr <- 0 # the growth rate of the labor supply
 zeta <- 1.25 # the ratio of repayments to loans
 # zeta <- (1 + gr)^np
-rho.beta <- 1
+rho.beta <- 1 # the subjective discount factor
 
 n <- 2 * np # the number of commodity kinds
 m <- np + 1 # the number of agent kinds

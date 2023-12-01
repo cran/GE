@@ -1,6 +1,6 @@
 #' @export
 #' @title A 3-by-3 OLG Stochastic Sequential General Equilibrium Model
-#' @aliases gemOLGStochasticSequential_3_3
+#' @aliases gemOLG_StochasticSequential_3_3
 #' @description A 3-by-3 OLG stochastic sequential general equilibrium model.
 #' There are two-period lived consumers and a type of firm. There are three types of commodities, i.e. product, labor and security (i.e. paper asset, store of value).
 #'

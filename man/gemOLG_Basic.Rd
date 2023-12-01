@@ -13,7 +13,7 @@ gemOLG_Basic(...)
 Some examples of basic (timeline) OLG models with production.
 In these models there are two types of commodities (i.e., labor and product) and two types of economic agents (i.e., laborers and firms).
 Laborers (i.e., consumers) live for two or three periods.
-These models can be easily extended to include more types of consumers and firms, and to allow consumers to live for more periods.
+These models can be easily extended to include more types of commodities, consumers and firms, and to allow consumers to live for more periods.
 }
 \examples{
 \donttest{
@@ -113,8 +113,8 @@ ng <- 15
 alpha.firm <- 2
 beta.prod.firm <- 0.5
 beta.consumer <- c(1, 1, 1) / 3
-labor.first <- c(100, 100, 0)
-labor.last <- c(100, 100)
+labor.first <- c(50, 50, 0)
+labor.last <- c(50, 50)
 y1 <- 8
 gr.laborer <- 0
 f()

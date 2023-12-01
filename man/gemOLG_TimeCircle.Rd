@@ -113,7 +113,7 @@ names.commodity <- c(paste0("payoff", 1:np))
 names.agent <- paste0("gen", 1:np)
 
 index.comm <- c(1:np, 1:2)
-payoff <- c(100, 100, 0) # the payoffs of lifetime
+payoff <- c(50, 50, 0) # the payoffs of lifetime
 # the exogenous supply matrix.
 S0Exg <- matrix(0, np, np, dimnames = list(names.commodity, names.agent))
 for (k in 1:np) {
@@ -483,7 +483,7 @@ ge$DV
 
 ##
 beta.consumer <- c(1 / 3, 1 / 3, 1 / 3) # the share parameter of consumers
-labor.supply <- c(100, 100, 0) # the labor supply of lifetime
+labor.supply <- c(50, 50, 0) # the labor supply of lifetime
 ge <- f()
 ge$D
 ge$DV

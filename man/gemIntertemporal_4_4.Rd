@@ -17,103 +17,99 @@ There are four commodities in the model, namely wheat, iron, labor and land.
 \examples{
 \donttest{
 np <- 15 # the number of economic periods
-
 alpha.firm.wheat <- rep(5, np - 1)
-
 alpha.firm.iron <- rep(5, np - 1)
 
 rho.beta <- 0.97 # 1, 1.03 # the subjective discount factor of consumers
-
+eis <- 0.5 # the elasticity of intertemporal substitution  of consumers
 y1.wheat <- 100 # 126, 129.96
 y1.iron <- 30 # 40.59, 43.47
 
 gr <- 0 # the growth rate in the steady state equilibrium
-eis <- 0.5 # the elasticity of intertemporal substitution  of consumers
 
 last.beta.laborer <- 0
 last.beta.landowner <- 0
 
-n <- 4 * np - 2 # the number of commodity kinds
-m <- 2 * np # the number of agent kinds
-
-names.commodity <- c(
-  paste0("wheat", 1:np),
-  paste0("iron", 1:np),
-  paste0("lab", 1:(np - 1)),
-  paste0("land", 1:(np - 1))
-)
-
-names.agent <- c(
-  paste0("firm.wheat", 1:(np - 1)), paste0("firm.iron", 1:(np - 1)),
-  "laborer", "landowner"
-)
-
-# the exogenous supply matrix.
-S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
-S0Exg["wheat1", "laborer"] <- y1.wheat
-S0Exg["iron1", "landowner"] <- y1.iron
-S0Exg[paste0("lab", 1:(np - 1)), "laborer"] <- 100 * (1 + gr)^(0:(np - 2)) # the supply of labor
-S0Exg[paste0("land", 1:(np - 1)), "landowner"] <- 100 * (1 + gr)^(0:(np - 2)) # the supply of land
-
-# the output coefficient matrix.
-B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
-for (k in 1:(np - 1)) {
-  B[paste0("wheat", k + 1), paste0("firm.wheat", k)] <- 1
-  B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
-}
-
-dstl.firm.wheat <- dstl.firm.iron <- list()
-for (k in 1:(np - 1)) {
-  dstl.firm.wheat[[k]] <- node_new(
-    "prod",
-    type = "CES", es = 0.8,
-    alpha = alpha.firm.wheat[k], beta = c(0.2, 0.4, 0.4),
-    paste0("iron", k), paste0("lab", k), paste0("land", k)
-  )
-
-  dstl.firm.iron[[k]] <- node_new(
-    "prod",
-    type = "CES", es = 0.8,
-    alpha = alpha.firm.iron[k], beta = c(0.4, 0.4, 0.2),
-    paste0("iron", k), paste0("lab", k), paste0("land", k)
-  )
-}
-
-tmp.beta <- rho.beta^(1:(np - 1))
-tmp.beta <- tmp.beta / tmp.beta[np - 1]
-tmp.beta <- c(tmp.beta, last.beta.laborer)
-dst.laborer <- node_new(
-  "util",
-  type = "CES", es = eis,
-  alpha = 1, beta = prop.table(tmp.beta),
-  paste0("cc", 1:(np - 1)), paste0("wheat", np)
-)
-for (k in 1:(np - 1)) {
-  node_set(dst.laborer, paste0("cc", k),
-    type = "CES", es = 1,
-    alpha = 1, beta = c(0.4, 0.4, 0.2),
-    paste0("wheat", k), paste0("lab", k), paste0("land", k)
-  )
-}
-
-tmp.beta <- rho.beta^(1:(np - 1))
-tmp.beta <- tmp.beta / tmp.beta[np - 1]
-tmp.beta <- c(tmp.beta, last.beta.landowner)
-dst.landowner <- node_new(
-  "util",
-  type = "CES", es = eis,
-  alpha = 1, beta = prop.table(tmp.beta),
-  paste0("cc", 1:(np - 1)), paste0("iron", np)
-)
-for (k in 1:(np - 1)) {
-  node_set(dst.landowner, paste0("cc", k),
-    type = "CES", es = 1,
-    alpha = 1, beta = c(0.2, 0.4, 0.4),
-    paste0("wheat", k), paste0("lab", k), paste0("land", k)
-  )
-}
-
 f <- function(policy = NULL) {
+  n <- 4 * np - 2 # the number of commodity kinds
+  m <- 2 * np # the number of agent kinds
+
+  names.commodity <- c(
+    paste0("wheat", 1:np),
+    paste0("iron", 1:np),
+    paste0("lab", 1:(np - 1)),
+    paste0("land", 1:(np - 1))
+  )
+
+  names.agent <- c(
+    paste0("firm.wheat", 1:(np - 1)), paste0("firm.iron", 1:(np - 1)),
+    "laborer", "landowner"
+  )
+
+  # the exogenous supply matrix.
+  S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+  S0Exg["wheat1", "laborer"] <- y1.wheat
+  S0Exg["iron1", "landowner"] <- y1.iron
+  S0Exg[paste0("lab", 1:(np - 1)), "laborer"] <- 100 * (1 + gr)^(0:(np - 2)) # the supply of labor
+  S0Exg[paste0("land", 1:(np - 1)), "landowner"] <- 100 * (1 + gr)^(0:(np - 2)) # the supply of land
+
+  # the output coefficient matrix.
+  B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+  for (k in 1:(np - 1)) {
+    B[paste0("wheat", k + 1), paste0("firm.wheat", k)] <- 1
+    B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
+  }
+
+  dstl.firm.wheat <- dstl.firm.iron <- list()
+  for (k in 1:(np - 1)) {
+    dstl.firm.wheat[[k]] <- node_new(
+      "prod",
+      type = "CES", es = 0.8,
+      alpha = alpha.firm.wheat[k], beta = c(0.2, 0.4, 0.4),
+      paste0("iron", k), paste0("lab", k), paste0("land", k)
+    )
+
+    dstl.firm.iron[[k]] <- node_new(
+      "prod",
+      type = "CES", es = 0.8,
+      alpha = alpha.firm.iron[k], beta = c(0.4, 0.4, 0.2),
+      paste0("iron", k), paste0("lab", k), paste0("land", k)
+    )
+  }
+
+  tmp.beta <- rho.beta^(1:(np - 1))
+  tmp.beta <- tmp.beta / tmp.beta[np - 1]
+  tmp.beta <- c(tmp.beta, last.beta.laborer)
+  dst.laborer <- node_new(
+    "util",
+    type = "CES", es = eis,
+    alpha = 1, beta = prop.table(tmp.beta),
+    paste0("cc", 1:(np - 1)), paste0("wheat", np)
+  )
+  for (k in 1:(np - 1)) {
+    node_set(dst.laborer, paste0("cc", k),
+      type = "CES", es = 1,
+      alpha = 1, beta = c(0.4, 0.4, 0.2),
+      paste0("wheat", k), paste0("lab", k), paste0("land", k)
+    )
+  }
+
+  tmp.beta <- rho.beta^(1:(np - 1))
+  tmp.beta <- tmp.beta / tmp.beta[np - 1]
+  tmp.beta <- c(tmp.beta, last.beta.landowner)
+  dst.landowner <- node_new(
+    "util",
+    type = "CES", es = eis,
+    alpha = 1, beta = prop.table(tmp.beta),
+    paste0("cc", 1:(np - 1)), paste0("iron", np)
+  )
+  for (k in 1:(np - 1)) {
+    node_set(dst.landowner, paste0("cc", k),
+      type = "CES", es = 1,
+      alpha = 1, beta = c(0.2, 0.4, 0.4),
+      paste0("wheat", k), paste0("lab", k), paste0("land", k)
+    )
+  }
   ge <- sdm2(
     A = c(dstl.firm.wheat, dstl.firm.iron, Clone(dst.laborer), Clone(dst.landowner)),
     B = B,
@@ -138,10 +134,17 @@ f <- function(policy = NULL) {
   invisible(ge)
 }
 
-f()
+ge <- f()
+plot(2:(np - 1), ge$z[1:(np - 2)],
+     type = "o", pch = 20, ylab = "production output",
+     xlab = "time", ylim = range(ge$z[1:(2 * np - 2)])
+)
+lines(2:(np - 1), ge$z[np:(2 * np - 3)], type = "o", pch = 21)
+legend("bottom", c("wheat", "iron"), pch = 20:21)
 
 ## Compute the steady state based on head and tail adjustments.
 policyHeadAdjustment <- function(time, state) {
+  m <- 2 * np # the number of agent kinds
   if (time > 100) {
     state$S[1, m - 1] <- state$last.z[round(np / 2)] / (1 + gr)^(round(np / 2))
     state$S[np + 1, m] <- state$last.z[np - 1 + round(np / 2)] / (1 + gr)^(round(np / 2))
@@ -150,6 +153,7 @@ policyHeadAdjustment <- function(time, state) {
 }
 
 policyTailAdjustment <- function(A, state) {
+  m <- 2 * np # the number of agent kinds
   # wheat
   ratio.output.tail <- state$last.z[np - 1] / (state$last.z[np - 2] * (1 + gr))
   tmp.node <- A[[m - 1]]
@@ -173,16 +177,61 @@ f(list(policyHeadAdjustment, policyTailAdjustment))
 # f(policyHeadAdjustment)
 # f(policyTailAdjustment)
 
-### a structural transformation path
+## an anticipated technological shock
+# np <- 50 # the number of economic periods
+# alpha.firm.wheat <- rep(5, np - 1)
+# alpha.firm.iron <- rep(5, np - 1)
+# alpha.firm.iron[25] <- 10
+# ge <- f()
+# plot(2:(np - 1), ge$z[1:(np - 2)],
+#      type = "o", pch = 20, ylab = "production output",
+#      xlab = "time", ylim = range(ge$z[1:(2 * np - 2)])
+# )
+# lines(2:(np - 1), ge$z[np:(2 * np - 3)], type = "o", pch = 21)
+# legend("bottom", c("wheat", "iron"), pch = 20:21)
+# grid()
+
+# #### a structural transformation path
+# np <- 50
 # tax.rate <- 0.1 # the tax rate imposed on income from land and labor income.
 # tax.time <- 1
+#
+# alpha.firm.wheat <- rep(5, np - 1)
+# # Suppose the tax rate is high enough so that the iron
+# # producer's efficiency coefficient immediately rises to 10.
+# alpha.firm.iron <- c()
+# for (k in 1:(np - 1)) {
+#   alpha.firm.iron[k] <- ifelse(k <= tax.time, 5, 10)
+# }
+#
+# rho.beta <- 0.97 # 1, 1.03 # the subjective discount factor of consumers
+# eis <- 0.5 # the elasticity of intertemporal substitution  of consumers
+# y1.wheat <- 100
+# y1.iron <- 30
+# last.beta.laborer <- 0
+# last.beta.landowner <- 0
+#
+# n <- 4 * np - 2 # the number of commodity kinds
+# m <- 2 * np # the number of agent kinds
+#
+# names.commodity <- c(
+#   paste0("wheat", 1:np),
+#   paste0("iron", 1:np),
+#   paste0("lab", 1:(np - 1)),
+#   paste0("land", 1:(np - 1))
+# )
+#
+# names.agent <- c(
+#   paste0("firm.wheat", 1:(np - 1)), paste0("firm.iron", 1:(np - 1)),
+#   "laborer", "landowner"
+# )
 #
 # # the exogenous supply matrix.
 # S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
 # S0Exg["wheat1", "laborer"] <- y1.wheat
 # S0Exg["iron1", "landowner"] <- y1.iron
-# S0Exg[paste0("lab", 1:(np - 1)), "laborer"] <- 100 * (1 + gr)^(0:(np - 2)) # the supply of labor
-# S0Exg[paste0("land", 1:(np - 1)), "landowner"] <- 100 * (1 + gr)^(0:(np - 2)) # the supply of land
+# S0Exg[paste0("lab", 1:(np - 1)), "laborer"] <- 100 # the supply of labor
+# S0Exg[paste0("land", 1:(np - 1)), "landowner"] <- 100 # the supply of land
 #
 # S0Exg[paste0("lab", tax.time), paste0("firm.iron", tax.time)] <-
 #   S0Exg[paste0("lab", tax.time), "laborer"] * tax.rate
@@ -194,13 +243,81 @@ f(list(policyHeadAdjustment, policyTailAdjustment))
 # S0Exg[paste0("land", tax.time), "landowner"] <-
 #   S0Exg[paste0("land", tax.time), "landowner"] * (1 - tax.rate)
 #
-# # Suppose the tax rate is high enough so that the iron
-# # producer's efficiency coefficient immediately rises to 10.
+# # the output coefficient matrix.
+# B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
 # for (k in 1:(np - 1)) {
-#   dstl.firm.iron[[k]]$alpha <- ifelse(k <= tax.time, 5, 10)
+#   B[paste0("wheat", k + 1), paste0("firm.wheat", k)] <- 1
+#   B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
 # }
 #
-# f(policy=policyTailAdjustment)
-# f()
+# dstl.firm.wheat <- dstl.firm.iron <- list()
+# for (k in 1:(np - 1)) {
+#   dstl.firm.wheat[[k]] <- node_new(
+#     "prod",
+#     type = "CES", es = 0.8,
+#     alpha = alpha.firm.wheat[k], beta = c(0.2, 0.4, 0.4),
+#     paste0("iron", k), paste0("lab", k), paste0("land", k)
+#   )
+#
+#   dstl.firm.iron[[k]] <- node_new(
+#     "prod",
+#     type = "CES", es = 0.8,
+#     alpha = alpha.firm.iron[k], beta = c(0.4, 0.4, 0.2),
+#     paste0("iron", k), paste0("lab", k), paste0("land", k)
+#   )
+# }
+#
+# tmp.beta <- rho.beta^(1:(np - 1))
+# tmp.beta <- tmp.beta / tmp.beta[np - 1]
+# tmp.beta <- c(tmp.beta, last.beta.laborer)
+# dst.laborer <- node_new(
+#   "util",
+#   type = "CES", es = eis,
+#   alpha = 1, beta = prop.table(tmp.beta),
+#   paste0("cc", 1:(np - 1)), paste0("wheat", np)
+# )
+# for (k in 1:(np - 1)) {
+#   node_set(dst.laborer, paste0("cc", k),
+#            type = "CES", es = 1,
+#            alpha = 1, beta = c(0.4, 0.4, 0.2),
+#            paste0("wheat", k), paste0("lab", k), paste0("land", k)
+#   )
+# }
+#
+# tmp.beta <- rho.beta^(1:(np - 1))
+# tmp.beta <- tmp.beta / tmp.beta[np - 1]
+# tmp.beta <- c(tmp.beta, last.beta.landowner)
+# dst.landowner <- node_new(
+#   "util",
+#   type = "CES", es = eis,
+#   alpha = 1, beta = prop.table(tmp.beta),
+#   paste0("cc", 1:(np - 1)), paste0("iron", np)
+# )
+# for (k in 1:(np - 1)) {
+#   node_set(dst.landowner, paste0("cc", k),
+#            type = "CES", es = 1,
+#            alpha = 1, beta = c(0.2, 0.4, 0.4),
+#            paste0("wheat", k), paste0("lab", k), paste0("land", k)
+#   )
+# }
+# ge <- sdm2(
+#   A = c(dstl.firm.wheat, dstl.firm.iron, Clone(dst.laborer), Clone(dst.landowner)),
+#   B = B,
+#   S0Exg = S0Exg,
+#   names.commodity = names.commodity,
+#   names.agent = names.agent,
+#   numeraire = "lab1",
+#   ts = TRUE,
+#   maxIteration = 1,
+#   numberOfPeriods = 1000,
+#   priceAdjustmentVelocity = 0.05
+# )
+#
+# plot(2:(np - 1), ge$z[1:(np - 2)],
+#      type = "o", pch = 20, ylab = "production output",
+#      xlab = "time", ylim = range(ge$z[1:(2 * np - 2)])
+# )
+# lines(2:(np - 1), ge$z[np:(2 * np - 3)], type = "o", pch = 21)
+# legend("bottom", c("wheat", "iron"), pch = 20:21)
 }
 }

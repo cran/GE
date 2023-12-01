@@ -2,7 +2,6 @@
 % Please edit documentation in R/gemOLG_StochasticSequential_3_3.R
 \name{gemOLG_StochasticSequential_3_3}
 \alias{gemOLG_StochasticSequential_3_3}
-\alias{gemOLGStochasticSequential_3_3}
 \title{A 3-by-3 OLG Stochastic Sequential General Equilibrium Model}
 \usage{
 gemOLG_StochasticSequential_3_3(...)

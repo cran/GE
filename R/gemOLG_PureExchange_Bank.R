@@ -32,7 +32,7 @@
 #'     1, 0
 #'   ), 2, 2, TRUE),
 #'   S0Exg = matrix(c(
-#'     NA, 1,
+#'     NA, 100,
 #'     NA, NA
 #'   ), 2, 2, TRUE),
 #'   names.commodity = c("payoff1", "payoff2"),
@@ -71,8 +71,8 @@
 #'     0, 1, 0
 #'   ), 3, 3, TRUE),
 #'   S0Exg = matrix(c(
-#'     NA, NA, 1,
-#'     NA, NA, 1,
+#'     NA, NA, 50,
+#'     NA, NA, 50,
 #'     NA, NA, NA
 #'   ), 3, 3, TRUE),
 #'   names.commodity = c("payoff1", "payoff2", "payoff3"),
@@ -95,8 +95,8 @@
 #'     0, 1, 0
 #'   ), 3, 3, TRUE),
 #'   S0Exg = matrix(c(
-#'     NA, NA, 1,
-#'     NA, NA, 1,
+#'     NA, NA, 50,
+#'     NA, NA, 50,
 #'     NA, NA, NA
 #'   ), 3, 3, TRUE),
 #'   names.commodity = c("payoff1", "payoff2", "payoff3"),

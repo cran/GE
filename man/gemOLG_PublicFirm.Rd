@@ -10,11 +10,7 @@ gemOLG_PublicFirm(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of (timeline) OLG models with production and public firms.
-A public producer is akin to a consumer with an infinite lifespan. The public producer owns the products it manufactures.
-In each period, it exchanges the products it has produced for the inputs required for production.
-In the model, a public producer can be treated as multiple public firms that each only produces for a single period.
-Each public firm hands over its products to the public firm of the next period, which in turn uses these products for trading.
+Some examples of (timeline) OLG models with production and public firms (see \cite{\link{gemIntertemporal_PublicFirm}}).
 }
 \examples{
 \donttest{
@@ -23,9 +19,10 @@ alpha.firm <- 2 # the efficient parameter of firms
 beta.prod.firm <- 0.5 # the product (i.e. capital) share parameter of firms
 beta.consumer <- c(1 / 3, 1 / 3, 1 / 3) # the share parameter of consumers
 gr.laborer <- 0 # the population growth rate
-labor.first <- c(100, 100, 0) # the labor supply of the first generation
-labor.last <- 100 * (1 + gr.laborer)^((ng - 1):(ng + 1)) # the labor supply of the last generation
-y1 <- 350 # the initial product supply
+labor.first <- c(50, 50, 0) # the labor supply of the first generation
+# the labor supply of the last generation.
+labor.last <- 50 * (1 + gr.laborer)^((ng - 1):(ng + 1))
+y1 <- 100 # the initial product supply
 
 policy.PublicFirm <- function(state) {
   for (k in 1:(ng + 1)) {
@@ -45,7 +42,8 @@ f <- function(policy = policy.PublicFirm) {
   # the exogenous supply matrix.
   S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
   for (k in 1:(ng - 1)) {
-    S0Exg[paste0("lab", k:(k + 2)), paste0("consumer", k)] <- labor.first * (1 + gr.laborer)^(k - 1)
+    S0Exg[paste0("lab", k:(k + 2)), paste0("consumer", k)] <-
+      labor.first * (1 + gr.laborer)^(k - 1)
   }
   S0Exg[paste0("lab", ng:(ng + 2)), paste0("consumer", ng)] <- labor.last
   S0Exg["prod1", "firm1"] <- y1
@@ -100,7 +98,7 @@ growth_rate(ge$p[paste0("prod", 1:ng)]) + 1
 growth_rate(ge$p[paste0("lab", 1:ng)]) + 1
 
 ##
-labor.first <- c(200 / 3, 200 / 3, 200 / 3) # the labor supply of the first generation
+labor.first <- c(100 / 3, 100 / 3, 100 / 3) # the labor supply of the first generation
 ge <- f()
 
 ##
@@ -118,7 +116,10 @@ ge <- f(policy.PublicFirm.Tax)
 
 ##
 beta.consumer <- c(1 / 2, 1 / 2, 0) # the share parameter of consumers
-labor.first <- c(100, 10, 0) # the labor supply of the first generation
+labor.first <- c(90, 10, 0) # the labor supply of the first generation
 ge <- f()
 }
+}
+\seealso{
+\cite{\link{gemIntertemporal_PublicFirm}}
 }
