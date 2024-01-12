@@ -47,7 +47,7 @@ and 2 agents (i.e. a firm and a consumer). Labor is the numeraire.
 \donttest{
 gemCanonicalDynamicMacroeconomic_3_2()
 
-#### a market-clearing path (alias temporary equilibrium path)
+#### a spot market clearing path (alias instantaneous equilibrium path)
 ge <- gemCanonicalDynamicMacroeconomic_3_2(
   policy.price = policyMarketClearingPrice,
   ts = TRUE,
@@ -109,5 +109,5 @@ Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomi
 Li Xiangyang (2018, ISBN: 9787302497745) Dynamic Stochastic General Equilibrium (DSGE) Model: Theory, Methodology, and Dynare Practice. Tsinghua University Press. (In Chinese)
 }
 \seealso{
-The market clearing path (alias temporary equilibrium path, instantaneous equilibrium path) can be computed with the function \code{\link{policyMarketClearingPrice}}.
+The spot market clearing path (alias instantaneous equilibrium path) can be computed with the function \code{\link{policyMarketClearingPrice}}.
 }

@@ -21,12 +21,70 @@
 #' We need to compute the equilibrium activity levels and the equilibrium prices,
 #' which are also the solutions of the (dual) linear programming problems (i.e. the utility-maximizing problem of the consumer and the cost-minimizing problem of the producers).
 #' @return  A general equilibrium.
+#' @note
+#' Below is a simplified form of the von Neumann general equilibrium model (von Neumann, 1945; Kemeny, Morgenstern, Thompson, 1956):
+#' \deqn{\mathbf p^{T}\mathbf{A}  \geq \rho \mathbf p^{T}\mathbf{B} }
+#' \deqn{\mathbf{Az} \leq \rho \mathbf  {Bz}}
+#' The above model can be extended to the following general equilibrium model, namely the structural equilibrium model (Li, 2019, section 3.4):
+#' \deqn{\mathbf p^{T}\mathbf{A(p,u,z)}  \geq \rho \mathbf p^{T}\mathbf{B(p,u,z)} }
+#' \deqn{\mathbf{A(p,u,z)z} \leq \rho \mathbf  {B(p,u,z)z} }
+#'
+#' We explain the structural equilibrium model as follows:\cr
+#' (i) The vectors \eqn{\mathbf p} and \eqn{\mathbf z} reflect the prices of various commodities and the activity levels of various economic agents, respectively.\cr
+#' (ii) The vector \eqn{\mathbf u} reflects the utility levels of various consumers.
+#' In this model, the matrices \eqn{\mathbf A} and  \eqn{\mathbf B} are functions of prices, utilities, and activity levels.\cr
+#' (iii) When describing a static general equilibrium and a steady-state equilibrium without intertemporal decisions,
+#' the structural equilibrium model usually does not explicitly include time, while when describing an intertemporal general equilibrium,
+#' variables such as prices and activity levels explicitly include time, that is, they are labeled with time.\cr
+#' (iv) In a time-independent model, \eqn{\rho} is the discount factor \eqn{\frac{1}{1+\gamma}} corresponding to the steady-state growth rate \eqn{\gamma}.
+#' In a time-dependent model, \eqn{\rho} is usually equal to 1.\cr
+#' (v) The unit demand matrix \eqn{\mathbf{A(p,u,z)}}, the unit supply matrix \eqn{\mathbf {B(p,u,z)}} and the activity level vector \eqn{\mathbf z} in the structural equilibrium model are different from the input coefficient matrix A, the output coefficient matrix B and the purchase level vector z in the structural dynamic model.
+#' The input coefficient matrix A is equivalent to the unit demand matrix with utility levels equal to 1.
+#' The output coefficient matrix B, unlike the unit supply matrix, does not contain the exogenous supplies.
+#' In the structural equilibrium model, the elements corresponding to consumers in \eqn{\mathbf z} usually reflect the number of consumers,
+#' while in the structural dynamic model, they usually reflect the utility levels. \cr
+#'
+#' Now consider the following linear programming problem:
+#' \deqn{\max \quad \mathbf b^T\mathbf z \quad \text{s.t.} \quad \mathbf{Az\le e},\quad \mathbf{z \ge 0} }
+#' The dual linear programming problem is
+#' \deqn{\min \quad \mathbf p^T\mathbf e \quad \text{s.t.} \quad \mathbf p^T \mathbf{A\ge b},\quad \mathbf{p \ge 0} }
+#' In the example of Winston (2003), we have \eqn{\mathbf e=(48,20,8)^T}, \eqn{\mathbf b=(60,30,20)^T} and
+#' \deqn{
+#'   \mathbf A=\left[\begin{matrix}
+#'                8  &6&  1\\
+#'                4& 2& 1.5 \\
+#'                2& 1.5& 0.5\\
+#'                \end{matrix}\right]
+#' }
+#' The corresponding structural equilibrium model is
+#' \deqn{\mathbf p^{T}\mathbf A(u) \geq \mathbf p^{T}\mathbf B}
+#' \deqn{\mathbf A(u) \mathbf z \leq \mathbf  {Bz} }
+#' wherein \eqn{\mathbf p=(1,p_2,p_3,p_4)^T}, \eqn{\mathbf z=(z_1,z_2,z_3,1)^T},
+#' \deqn{
+#'   \mathbf A(u)=\left[\begin{matrix}
+#'                0& 0& 0& u\\
+#'                8  &6&  1&0 \\
+#'                4& 2& 1.5&0 \\
+#'                2& 1.5& 0.5&0\\
+#'                \end{matrix}\right]
+#' }
+#' and
+#' \deqn{
+#'   \mathbf B=\left[\begin{matrix}
+#'             60& 30& 20& 0\\
+#'             0 & 0&  0&48 \\
+#'             0 & 0&  0&20 \\
+#'             0 & 0&  0&8\\
+#'             \end{matrix}\right]
+#' }
+#'
+#' The following results are obtained by solving the above structural equilibrium model:
+#'
+#'\deqn{\mathbf p^*=(1, 0, 10, 10)^T, \quad \mathbf z^*=(2, 0, 8, 1)^T, \quad u^*=280}
+#' @references Kemeny, J. G., O. Morgenstern and G. L. Thompson (1956) A Generalization of the von Neumann Model of an Expanding Economy, Econometrica, 24, pp. 115-135.
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
+#' @references von Neumann, J. (1945) A Model of General Economic Equilibrium. The Review of Economic Studies, 13. pp. 1-9.
 #' @references Winston, Wayne L. (2003, ISBN: 9780534380588) Operations Research: Applications and Algorithms. Cengage Learning.
-#' @references http://web.mit.edu/15.053/www/AMP-Chapter-04.pdf
-#' @references https://web.stanford.edu/~ashishg/msande111/notes/chapter4.pdf
-#' @references https://utw11041.utweb.utexas.edu/ORMM/supplements/methods/lpmethod/S3_dual.pdf
-#' @references Stapel, Elizabeth. Linear Programming: Introduction. Purplemath. Available from https://www.purplemath.com/modules/linprog.htm
 #' @examples
 #' \donttest{
 #' #### the Dakota example of Winston (2003, section 6.3, 6.6 and 6.8)
@@ -67,7 +125,7 @@
 #' ge$z
 #' ge$p
 #'
-#' #### an example in the mit reference
+#' #### an example at http://web.mit.edu/15.053/www/AMP-Chapter-04.pdf.
 #' A <- matrix(c(
 #'   0, 0, 0, 1,
 #'   0.5, 2, 1, 0,
@@ -91,7 +149,7 @@
 #' ge$z
 #' ge$p / ge$p[1]
 #'
-#' #### an example in the stanford reference
+#' #### an example at https://web.stanford.edu/~ashishg/msande111/notes/chapter4.pdf.
 #' A <- matrix(c(
 #'   0, 0, 1,
 #'   4.44, 0, 0,
@@ -119,7 +177,7 @@
 #' ge$z
 #' ge$p / ge$p[1]
 #'
-#' #### an example in the utexas reference
+#' #### an example at https://utw11041.utweb.utexas.edu/ORMM/supplements/methods/lpmethod/S3_dual.pdf.
 #' A <- matrix(c(
 #'   0, 0, 1,
 #'   0, 1, 0,
@@ -229,7 +287,8 @@
 #' ge$p
 #' ge$z
 #'
-#' #### An example of Stapel (see the reference):
+#' #### An example of Elizabeth Stapel (Linear Programming: Introduction. Purplemath.
+#' ## Available from https://www.purplemath.com/modules/linprog.htm):
 #' ## Find the maximal value of 3x + 4y subject to the following constraints:
 #' ## x + 2y <= 14, 3x - y >= 0, x - y <= 2, x >= 0, y >= 0
 #'

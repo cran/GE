@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemResearchDevelopmentIntensity.R
 \name{gemResearchDevelopmentIntensity}
 \alias{gemResearchDevelopmentIntensity}
-\title{Some Examples of Market-Clearing Paths Illustrating Research and Development Intensity}
+\title{Some Examples of Spot Market Clearing Paths Illustrating Research and Development Intensity}
 \usage{
 gemResearchDevelopmentIntensity(...)
 }
@@ -10,10 +10,10 @@ gemResearchDevelopmentIntensity(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \value{
-A market-clearing path.
+A spot market clearing path.
 }
 \description{
-Some examples of market-clearing paths illustrating R&D intensity.
+Some examples of spot market clearing paths (alias instantaneous equilibrium paths) illustrating R&D intensity.
 R&D intensity of a firm is the ratio of expenditures by the firm on R&D to the firm's sales.
 }
 \details{

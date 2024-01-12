@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemLand_Labor_Capital_4_3.R
 \name{gemLand_Labor_Capital_4_3}
 \alias{gemLand_Labor_Capital_4_3}
-\title{Some Examples of Market Clearing Paths Involving Land, Labor and Capital}
+\title{Some Examples of Spot Market Clearing Paths Involving Land, Labor and Capital}
 \usage{
 gemLand_Labor_Capital_4_3(...)
 }
@@ -10,7 +10,7 @@ gemLand_Labor_Capital_4_3(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of market clearing paths involving land, labor and capital.
+Some examples of spot market clearing paths (alias instantaneous equilibrium paths) involving land, labor and capital.
 }
 \examples{
 \donttest{
@@ -69,7 +69,7 @@ ge1$DV
 ge1$SV
 matplot(ge1$ts.z, type = "l")
 
-## a market clearing path with population growth
+## a spot market clearing path with population growth
 policy.population.growth <- function(time, state) {
   if (time >= 5) {
     state$S[2, 2] <- 1.01^(time - 4)
@@ -88,7 +88,7 @@ ge2 <- f(
 matplot(ge2$ts.z, type = "o", pch = 40)
 matplot(growth_rate(ge2$ts.z), type = "o", pch = 20)
 
-## a market clearing path with technology progress
+## a spot market clearing path with technology progress
 policy.technology.progress <- function(time, A) {
   if (time >= 5) {
     A[[1]]$alpha <- 1.02^(time - 4)
@@ -107,7 +107,7 @@ ge3 <- f(
 matplot(ge3$ts.z, type = "o", pch = 20)
 matplot(growth_rate(ge3$ts.z), type = "o", pch = 20)
 
-## a market clearing path with population growth and technology progress
+## a spot market clearing path with population growth and technology progress
 ge4 <- f(
   policy = list(
     policy.population.growth,

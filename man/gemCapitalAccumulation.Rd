@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemCapitalAccumulation_3_3.R
 \name{gemCapitalAccumulation}
 \alias{gemCapitalAccumulation}
-\title{Some Examples of Market-Clearing Paths with Capital Accumulation}
+\title{Some Examples of Spot Market Clearing Paths with Capital Accumulation}
 \usage{
 gemCapitalAccumulation(...)
 }
@@ -10,7 +10,7 @@ gemCapitalAccumulation(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of market-clearing paths (MCP) with capital accumulation.
+Some examples of spot market clearing paths (alias instantaneous equilibrium paths) with capital accumulation.
 The economy contains a production firm, a capital-leasing firm and a consumer.
 }
 \examples{

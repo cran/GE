@@ -83,7 +83,7 @@
 #' ))
 #'
 #' #### structural transition: disequilibrium path and
-#' ## a market-clearing path (instantaneous equilibrium path)
+#' ## a spot market clearing path (alias instantaneous equilibrium path)
 #' dst.firm <- node_new("output",
 #'   type = "CD", alpha = 5,
 #'   beta = c(0.5, 0.5),
@@ -155,7 +155,7 @@
 #' ))$z
 #'
 #'
-#' ## structural transition: a market-clearing path
+#' ## structural transition: a spot market clearing path
 #' f(policy = list(
 #'   policy.technology,
 #'   policy.tax,

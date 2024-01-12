@@ -94,7 +94,7 @@
 #'   uf = list(
 #'     # the utility function of agent 1.
 #'     function(x) AMSDP(x, mp1, Cov1, gamma = 0.2, theta = 2),
-#'     function(x) AMSDP(x, mp2, Cov2) # the utility function of agent 2.
+#'     function(x) AMSDP(x, mp2, Cov2) # the utility function of agent 2
 #'   ),
 #'   maxIteration = 1,
 #'   numberOfPeriods = 1000,

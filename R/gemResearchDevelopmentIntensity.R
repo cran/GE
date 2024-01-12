@@ -1,7 +1,7 @@
 #' @export
-#' @title Some Examples of Market-Clearing Paths Illustrating Research and Development Intensity
+#' @title Some Examples of Spot Market Clearing Paths Illustrating Research and Development Intensity
 #' @aliases gemResearchDevelopmentIntensity
-#' @description Some examples of market-clearing paths illustrating R&D intensity.
+#' @description Some examples of spot market clearing paths (alias instantaneous equilibrium paths) illustrating R&D intensity.
 #' R&D intensity of a firm is the ratio of expenditures by the firm on R&D to the firm's sales.
 #' @param ... arguments to be passed to the function sdm2.
 #' @details The first example contains two kinds of commodities (namely product and labor) and three economic agents
@@ -11,7 +11,7 @@
 #' In the model, the firm allocates part of its output to the R&D centers for sale according to a given R&D intensity,
 #' which is equivalent to allocating part of the firm's sales revenue to the R&D center.
 #' At first, the economy is set in steady-state equilibrium without R&D activity. R&D activities begin in the fifth period.
-#' @return  A market-clearing path.
+#' @return  A spot market clearing path.
 #' @examples
 #' \donttest{
 #' #### a 2-by-3 example.

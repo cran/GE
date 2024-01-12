@@ -53,7 +53,7 @@ If the parameter A is a demand structure tree list, the values in names.commodit
 
 \item{p0}{an initial price n-vector.}
 
-\item{z0}{an m-vector consisting of the initial exchange levels (i.e. activity levels, production levels or utility levels).}
+\item{z0}{an m-vector consisting of the initial purchase levels (i.e. exchange levels) which indicate production levels or utility levels.}
 
 \item{GRExg}{an exogenous growth rate of the exogenous supplies in S0Exg.
 If GRExg is NA and some commodities have exogenous supply, then GRExg will be set to 0.}
@@ -112,7 +112,7 @@ A list usually containing the following components:
 \itemize{
 \item tolerance - the relative tolerance of the results.
 \item p - equilibrium prices.
-\item z- equilibrium exchange levels (i.e. activity levels, output levels or utility levels).
+\item z - equilibrium purchase levels (i.e. production levels or utility levels).
 \item S - the equilibrium supply matrix at the initial period.
 \item growthRate	- the endogenous equilibrium growth rate in a pure production economy.
 \item A - the equilibrium demand coefficient matrix.
@@ -122,7 +122,7 @@ A list usually containing the following components:
 \item DV - the demand value matrix.
 \item SV - the supply value matrix.
 \item ts.p	- the time series of prices in the last outer iteration.
-\item ts.z - the time series of exchange levels (i.e. activity levels, production levels or utility levels) in the last outer iteration.
+\item ts.z - the time series of purchase levels (i.e. production levels or utility levels) in the last outer iteration.
 \item ts.S - the time series of supply matrix in the last outer iteration.
 \item ts.q - the time series of sales rates in the last outer iteration.
 \item policy.data - the policy data.
@@ -143,8 +143,8 @@ Thirdly, policy functions (if any) are implemented.\cr
 Fourthly, the current input coefficient matrix is computed and the supplies are exchanged under market prices. The exchange vector and sales rate vector are obtained. Unsold goods constitute the inventories, which will undergo depreciation and become a portion of the supplies of the next period. The exchange vector determines the current outputs and utility levels.
 }
 \note{
-In the package CGE, the temporary equilibrium path (alias market clearing path, instantaneous equilibrium path) is computed by the function iep.
-In this package, the temporary equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
+In the package CGE, the spot market clearing path (alias instantaneous equilibrium path) is computed by the function iep.
+In this package, the instantaneous equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
 
 The order of implementation of various policies is critical.
 When a policy list contains a supply policy, a technology (i.e. dstl) policy, a price policy (e.g. a market-clearing-price policy) and a B policy

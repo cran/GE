@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemMarketClearingPath_2_2.R
 \name{gemMarketClearingPath_2_2}
 \alias{gemMarketClearingPath_2_2}
-\title{Some Examples of Market Clearing Paths}
+\title{Some Examples of Spot Market Clearing Paths}
 \usage{
 gemMarketClearingPath_2_2(...)
 }
@@ -10,7 +10,7 @@ gemMarketClearingPath_2_2(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of zero-dividend market clearing paths containing a firm and a laborer (consumer).
+Some examples of zero-dividend spot market clearing paths (alias instantaneous equilibrium paths) containing a firm and a laborer (consumer).
 }
 \examples{
 \donttest{

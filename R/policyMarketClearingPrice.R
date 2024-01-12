@@ -2,8 +2,8 @@
 #' @title Market-Clearing-Price Policy Function
 #' @aliases policyMarketClearingPrice
 #' @description This policy is to make the market clear every period.
-#' In this case, the path of the economy is the market clearing path (alias instantaneous equilibrium path, temporary equilibrium path).
-#' Generally, this function is passed to the function sdm2 as an argument to compute the market clearing path.
+#' In this case, the path of the economy is the spot market clearing path (alias instantaneous equilibrium path).
+#' Generally, this function is passed to the function sdm2 as an argument to compute the spot market clearing path.
 #' @param time the current time.
 #' @param A a demand structure tree list (i.e. dstl, see demand_coefficient), a demand coefficient n-by-m matrix (alias demand structure matrix) or a function A(state) which returns an n-by-m matrix.
 #' @param state the current state.

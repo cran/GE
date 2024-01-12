@@ -1,7 +1,7 @@
 #' @export
 #' @title A General Equilibrium Model with Endogenous Production Function
 #' @aliases gemstEndogenousProductionFunction_2_2
-#' @description This is an example of the market-clearing path with an endogenous production function.
+#' @description This is an example of the spot market clearing path (alias instantaneous equilibrium path) with an endogenous production function.
 #' The parameter of the production function will change with the output level.
 #'
 #' To deal with locally or globally increasing returns to scale, we can simply use an endogenous CES-type production function instead of a production function with a more complex form.

@@ -120,7 +120,7 @@
 #' ## a disequilibrium path
 #' de <- f(numberOfPeriods = 500)
 #'
-#' ## market-clearing path converging to equilibrium
+#' ## a spot market clearing path converging to equilibrium
 #' ge <- f(
 #'   policy = policyMarketClearingPrice,
 #'   numberOfPeriods = 40
@@ -128,7 +128,7 @@
 #' ge$p
 #' ge$z
 #'
-#' ## a market-clearing path with persisting fluctuations
+#' ## a spot market clearing path with persisting fluctuations
 #' de <- f(policy = list(
 #'   policy.credit,
 #'   policyMarketClearingPrice

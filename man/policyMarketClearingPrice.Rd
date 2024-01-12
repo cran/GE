@@ -20,8 +20,8 @@ A list consisting of p, S and B which specify the prices, supplies and supply co
 }
 \description{
 This policy is to make the market clear every period.
-In this case, the path of the economy is the market clearing path (alias instantaneous equilibrium path, temporary equilibrium path).
-Generally, this function is passed to the function sdm2 as an argument to compute the market clearing path.
+In this case, the path of the economy is the spot market clearing path (alias instantaneous equilibrium path).
+Generally, this function is passed to the function sdm2 as an argument to compute the spot market clearing path.
 }
 \examples{
 \donttest{

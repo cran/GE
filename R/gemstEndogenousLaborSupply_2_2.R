@@ -1,7 +1,7 @@
 #' @export
 #' @title A General Equilibrium Model with Endogenous Labor Supply
 #' @aliases gemstEndogenousLaborSupply_2_2
-#' @description This is an example of the market-clearing path with endogenous labor supply.
+#' @description This is an example of the spot market clearing path (alias instantaneous equilibrium path) with endogenous labor supply.
 #' Assume that as the level of utility increases, laborer will purchase or receive more education and training,
 #' resulting in an increase in human capital, which can be regarded as an increase in labor supply.
 #' That is to say, the utility level as an endogenous variable will affect the supply of labor.

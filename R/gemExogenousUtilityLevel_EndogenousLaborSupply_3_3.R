@@ -5,7 +5,7 @@
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
-#' ## a market-clearing path
+#' ## a spot market clearing path (alias instantaneous equilibrium path)
 #' utility.level.laborer <- 0.625
 #'
 #' dst.firm <- node_new("output",

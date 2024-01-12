@@ -1,7 +1,7 @@
 #' @export
-#' @title Some Examples of Market-Clearing Paths with Capital Accumulation
+#' @title Some Examples of Spot Market Clearing Paths with Capital Accumulation
 #' @aliases gemCapitalAccumulation
-#' @description Some examples of market-clearing paths (MCP) with capital accumulation.
+#' @description Some examples of spot market clearing paths (alias instantaneous equilibrium paths) with capital accumulation.
 #' The economy contains a production firm, a capital-leasing firm and a consumer.
 #' @param ... arguments to be passed to the function sdm2.
 #' @seealso {

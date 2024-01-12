@@ -10,84 +10,149 @@ gemTemporaryEquilibriumPath(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of temporary equilibrium paths with sticky decisions of a firm, that is,
-the firm adjusts its technology sluggishly when the prices change.
-
-Let's make a simple distinction between market clearing paths, instantaneous equilibrium paths, and temporary equilibrium paths.
-Under the assumption of (complete) rationality, economic agents will make decisions that are most beneficial to them based on the information they have.
-If the information does not change, then the decision will not change.
-The market clearing path (with finite or infinite length) under the assumption of complete rationality is the instantaneous equilibrium path.
-
-However, under the assumption of bounded rationality, the decisions made by economic agents may not be optimal.
-They may follow some simple rules-of-thumb and may just adjust the previous decisions sluggishly according to the changes in information even though they can adjust flexibly,
-so that the new decisions are better than the old ones under the new information.
-Hence the current decision is not necessarily the optimal decision.
-Even if the information does not change, it is still possible for agents to make further improvements to this decision in the next period.
-It can also be said that in this case, the decision maker's decision is sticky, that is, it only makes limited improvements to the previous decision based on new information,
-rather than directly adjusting to the optimal decision.
-A temporary equilibrium path is a market clearing path (with finite or infinite length) in which the economic agents can have complete rationality or bounded rationality.
-The instantaneous equilibrium path is a special case of the the temporary equilibrium path.
+Some examples of temporary equilibrium paths.
+The temporary equilibrium path consists of a series of temporary equilibria.
+Each temporary equilibrium achieves market clearing, and these markets may include futures markets in addition to spot markets.
+An instantaneous equilibrium path is a temporary equilibrium path that only includes spot markets.
 }
 \examples{
 \donttest{
-f <- function(stickiness.firm = 0) {
-  dst.firm <- node_new("output",
-    type = "Leontief", a = c(1 - stickiness.firm, stickiness.firm),
-    "cc1", "cc2"
-  )
-  node_set(dst.firm, "cc1",
-    type = "CD", alpha = 5,
-    beta = c(0.5, 0.5),
-    "prod", "lab"
-  )
-  node_set(dst.firm, "cc2",
-    type = "CD", alpha = 5,
-    beta = c(0.5, 0.5),
-    "prod", "lab"
-  )
+#### A pure exchange economy.
+## Consumers 1 and 2 each supply 50 units of payoff each period.
+## Consumers have limited foresight into the future and always expect
+## that the supply of consumer 1 will be 50 and the supply of
+## consumer 2 will be 40 in the next period.
+dst.consumer1 <- node_new("util",
+  type = "SCES", es = 2,
+  alpha = 1, beta = c(0.5, 0.5),
+  "payoff1", "payoff2"
+)
 
-  dst.consumer <- node_new("utility",
-    type = "CD", alpha = 1,
-    beta = c(0.5, 0.5),
-    "prod", "lab"
-  )
+dst.consumer2 <- node_new("util",
+  type = "SCES", es = 1,
+  alpha = 1, beta = c(0.5, 0.5),
+  "payoff1", "payoff2"
+)
+
+result <- list()
+for (time in 1:20) {
+  if (time == 1) {
+    S0Exg <- matrix(c(
+      50, 50,
+      50, 40
+    ), 2, 2, TRUE)
+  } else {
+    S0Exg <- rbind(ge$D[2, ] + c(0, 10), c(50, 40))
+  }
 
   ge <- sdm2(
-    A = list(dst.firm, dst.consumer),
-    B = diag(c(1, 0)),
-    S0Exg = {
-      S0Exg <- matrix(NA, 2, 2)
-      S0Exg[2, 2] <- 100
-      S0Exg
-    },
-    names.commodity = c("prod", "lab"),
-    names.agent = c("firm", "consumer"),
-    numeraire = "lab",
-    maxIteration = 1,
-    numberOfPeriods = 20,
-    policy = list(
-      function(time, A, state) {
-        if (time > 1) {
-          node_set(A[[1]], "cc2",
-            type = "Leontief", a = state$last.A[, 1]
-          )
-        }
-      },
-      policyMarketClearingPrice
-    ),
-    ts = TRUE
+    A = list(dst.consumer1, dst.consumer2),
+    B = matrix(0, 2, 2),
+    S0Exg = S0Exg,
+    names.commodity = c("payoff1", "payoff2"),
+    names.agent = c("consumer1", "consumer2"),
+    numeraire = "payoff1"
   )
 
-  print(ge$p)
-  print(ge$z)
-  par(mfrow = c(1, 2))
-  matplot(ge$ts.p, type = "l")
-  matplot(ge$ts.z, type = "l")
+  result[[time]] <- ge
 }
 
-f()
-f(stickiness.firm = 0.8)
+sapply(result, \(x) x$p)
+sapply(result, \(x) x$z)
+# lapply(result, \(x) x$D)
+# lapply(result, \(x) x$S)
 
+#### An economy with production.
+dst.consumer <- node_new("util",
+  type = "CD",
+  alpha = 1,
+  beta = c(1 / 3, 2 / 3), # beta = c(1/2, 1/2)
+  "prod1", "prod2"
+)
+
+dst.firm <- node_new("prod2",
+  type = "CD", alpha = 2, beta = c(0.5, 0.5),
+  "prod1", "lab"
+)
+
+result <- list()
+for (time in 1:20) {
+  if (time == 1) {
+    S0Exg <- matrix(c(
+      10, 0,
+      0, NA,
+      100, 0
+    ), 3, 2, TRUE)
+  } else {
+    S0Exg <- matrix(c(
+      ge$D[2, 1], 0,
+      0, NA,
+      100, 0
+    ), 3, 2, TRUE)
+  }
+
+  ge <- sdm2(
+    A = list(dst.consumer, dst.firm),
+    B = matrix(c(
+      0, 0,
+      0, 1,
+      0, 0
+    ), 3, 2, TRUE),
+    S0Exg = S0Exg,
+    names.commodity = c("prod1", "prod2", "lab"),
+    names.agent = c("consumer", "firm"),
+    numeraire = "prod1"
+  )
+
+  result[[time]] <- ge
+}
+
+
+sapply(result, \(x) x$p)
+sapply(result, \(x) x$z)
+# lapply(result, \(x) x$D)
+# lapply(result, \(x) x$S)
+
+##
+result <- list()
+last.output <- 10
+for (time in 1:30) {
+  if (time == 1) {
+    S0Exg <- matrix(c(
+      10, 0,
+      0, last.output,
+      100, 0
+    ), 3, 2, TRUE)
+  } else {
+    S0Exg <- rbind(
+      c(ge$D[2, 1], max(ge$z[2] - last.output, 0)),
+      c(0, last.output),
+      c(100, 0)
+    )
+
+    last.output <- ge$z[2]
+  }
+
+  ge <- sdm2(
+    A = list(dst.consumer, dst.firm),
+    B = matrix(c(
+      0, 0,
+      0, 1,
+      0, 0
+    ), 3, 2, TRUE),
+    # B = matrix(0, 3, 2),
+    S0Exg = S0Exg,
+    names.commodity = c("prod1", "prod2", "lab"),
+    names.agent = c("consumer", "firm"),
+    numeraire = "prod1"
+  )
+
+  result[[time]] <- ge
+}
+sapply(result, \(x) x$p)
+sapply(result, \(x) x$z)
+# lapply(result, \(x) x$D)
+# lapply(result, \(x) x$S)
 }
 }
 \references{

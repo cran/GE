@@ -15,7 +15,7 @@ Some examples with exogenous utility level and endogenous labor supply.
 }
 \examples{
 \donttest{
-## a market-clearing path
+## a spot market clearing path (alias instantaneous equilibrium path)
 utility.level.laborer <- 0.625
 
 dst.firm <- node_new("output",

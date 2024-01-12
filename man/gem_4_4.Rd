@@ -108,7 +108,7 @@ f <- function(n, policy = NULL, z0 = rep(100 * n, n), numberOfPeriods = 30,
 
 n <- 4
 f(n, n.firm = n - 2)
-## a market-clearing path
+## a spot market clearing path (alias instantaneous equilibrium path)
 ge <- f(n, policy = policyMarketClearingPrice, z0 = runif(n, 10 * n, 100 * n), n.firm = n - 2)
 matplot(ge$ts.z, type = "b", pch = 20)
 matplot(ge$ts.p, type = "b", pch = 20)

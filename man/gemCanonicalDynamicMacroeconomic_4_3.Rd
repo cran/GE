@@ -35,7 +35,7 @@ and 3 agents (i.e. a production firm, a consumer and a capital-leasing firm).
 }
 \examples{
 \donttest{
-#### a market-clearing path that converges to the steady-state equilibrium
+#### a spot market clearing path that converges to the steady-state equilibrium
 ge <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = 100,
   policy = policyMarketClearingPrice
@@ -44,7 +44,7 @@ ge <- gemCanonicalDynamicMacroeconomic_4_3(
 matplot(ge$ts.z, type = "o", pch = 20)
 matplot(ge$ts.p, type = "o", pch = 20)
 
-## population growth: a market-clearing path
+## population growth: a spot market clearing path
 ## that converges to a balanced growth path
 ge <- gemCanonicalDynamicMacroeconomic_4_3(
   numberOfPeriods = 100,
@@ -95,8 +95,8 @@ ge <- gemCanonicalDynamicMacroeconomic_4_3(
 matplot(ge$ts.z, type = "l")
 plot(ge$policy.data, type = "l") # tax rates
 
-#### a market-clearing path with a productivity shock
-nPeriod <- 100 # the number of periods of the market-clearing path
+#### a spot market-clearing path with a productivity shock
+nPeriod <- 100 # the number of periods of the spot market clearing path
 set.seed(1)
 alpha.shock <- rep(1, nPeriod)
 alpha.shock[11] <- exp(0.01)

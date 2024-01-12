@@ -25,7 +25,7 @@
 #' If the parameter A is a demand structure tree list, the values in names.commodity should be the names of those leaf nodes.
 #' @param names.agent names of agents.
 #' @param p0 an initial price n-vector.
-#' @param z0 an m-vector consisting of the initial exchange levels (i.e. activity levels, production levels or utility levels).
+#' @param z0 an m-vector consisting of the initial purchase levels (i.e. exchange levels) which indicate production levels or utility levels.
 #' @param GRExg an exogenous growth rate of the exogenous supplies in S0Exg.
 #' If GRExg is NA and some commodities have exogenous supply, then GRExg will be set to 0.
 #' @param pExg an n-vector indicating the exogenous prices (if any).
@@ -74,7 +74,7 @@
 #' \itemize{
 #' \item tolerance - the relative tolerance of the results.
 #' \item p - equilibrium prices.
-#' \item z- equilibrium exchange levels (i.e. activity levels, output levels or utility levels).
+#' \item z - equilibrium purchase levels (i.e. production levels or utility levels).
 #' \item S - the equilibrium supply matrix at the initial period.
 #' \item growthRate	- the endogenous equilibrium growth rate in a pure production economy.
 #' \item A - the equilibrium demand coefficient matrix.
@@ -84,13 +84,13 @@
 #' \item DV - the demand value matrix.
 #' \item SV - the supply value matrix.
 #' \item ts.p	- the time series of prices in the last outer iteration.
-#' \item ts.z - the time series of exchange levels (i.e. activity levels, production levels or utility levels) in the last outer iteration.
+#' \item ts.z - the time series of purchase levels (i.e. production levels or utility levels) in the last outer iteration.
 #' \item ts.S - the time series of supply matrix in the last outer iteration.
 #' \item ts.q - the time series of sales rates in the last outer iteration.
 #' \item policy.data - the policy data.
 #' }
-#' @note In the package CGE, the temporary equilibrium path (alias market clearing path, instantaneous equilibrium path) is computed by the function iep.
-#' In this package, the temporary equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
+#' @note In the package CGE, the spot market clearing path (alias instantaneous equilibrium path) is computed by the function iep.
+#' In this package, the instantaneous equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
 #' @note The order of implementation of various policies is critical.
 #' When a policy list contains a supply policy, a technology (i.e. dstl) policy, a price policy (e.g. a market-clearing-price policy) and a B policy
 #' (i.e. a policy adjusting the argument B), both the supply policy and the technology policy should be placed before the price policy,

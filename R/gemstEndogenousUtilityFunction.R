@@ -1,7 +1,7 @@
 #' @export
 #' @title Some General Equilibrium Models with Endogenous Utility Function
 #' @aliases gemstEndogenousUtilityFunction
-#' @description Some examples of the market-clearing path with an endogenous utility function.
+#' @description Some examples of the spot market clearing path (alias instantaneous equilibrium path) with an endogenous utility function.
 #' The parameters of the utility function will change with the utility level.
 #'
 #' To deal with non-homothetic preferences, we can simply use an endogenous CES-type utility function instead of a utility function with a more complex form.

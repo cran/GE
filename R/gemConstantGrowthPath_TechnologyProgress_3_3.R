@@ -1,7 +1,7 @@
 #' @export
 #' @title Constant Growth Paths with Technology Progress
 #' @aliases gemConstantGrowthPath_TechnologyProgress_3_3
-#' @description This is an example of a market-clearing path converging to a constant growth path.
+#' @description This is an example of a spot market clearing path (alias instantaneous equilibrium path) converging to a constant growth path.
 #' In a constant growth path, the supply of each commodity grows at a constant rate.
 #' The balanced growth path is a special case of the constant growth path.
 #' @param ... arguments to be passed to the function sdm2.
