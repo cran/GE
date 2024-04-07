@@ -34,7 +34,7 @@ n is the number of commodity types. m is the number of economic agents.
 The argument state is a list consisting of time (the current time), p (the current price vector),
 last.z (the output and utility vector of the previous period), w (the current wealth vector) and last.A (the demand coefficient matrix of the previous period).}
 
-\item{B}{an n-by-m matrix containing of the output coefficients (i.e. yield coefficients) of producers.
+\item{B}{an n-by-m matrix containing of the output coefficients of producers.
 Each producer produces one or more commodities.
 The output of each producer is equal to its activity level multiplied by the output coefficients.
 Columns corresponding to consumers are usually zeros.

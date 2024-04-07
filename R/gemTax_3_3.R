@@ -6,7 +6,7 @@
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
 #' @examples
 #' \donttest{
-#' #### the turnover tax.
+#' #### turnover tax.
 #' dst.firm <- node_new("prod",
 #'                      type = "FIN",
 #'                      rate = c(1, tax.rate = 0.25),
@@ -43,7 +43,7 @@
 #' ge.TT$D
 #' ge.TT$S
 #'
-#' #### the product tax.
+#' #### product tax.
 #' dst.taxed.prod <- node_new("taxed.prod",
 #'                            type = "FIN",
 #'                            rate = c(1, tax.rate = 0.25),
@@ -81,7 +81,7 @@
 #' ge.PT$D
 #' ge.PT$S
 #'
-#' #### the consumption tax.
+#' #### consumption tax.
 #' dst.firm <- node_new("output",
 #'                      type = "CD", alpha = 2,
 #'                      beta = c(0.5, 0.5),
@@ -118,7 +118,7 @@
 #' ge.CT$D
 #' ge.CT$S
 #'
-#' #### the value added tax.
+#' #### value added tax.
 #' dst.firm <- node_new("output",
 #'   type = "CD", alpha = 2,
 #'   beta = c(0.5, 0.5),
@@ -155,7 +155,7 @@
 #' ge.VAT$D
 #' ge.VAT$S
 #'
-#' #### the income tax.
+#' #### income tax.
 #' income.tax.rate <- 1 / 4
 #'
 #' dst.firm <- node_new("output",
@@ -188,7 +188,7 @@
 #' ge.IT$D
 #' ge.IT$S
 #'
-#' #### the turnover tax (Li, 2019, example 4.11).
+#' #### turnover tax (Li, 2019, example 4.11).
 #' dst.firm <- node_new("output",
 #'                      type = "FIN",
 #'                      rate = c(1, turnover.tax.rate = 1),
@@ -227,6 +227,51 @@
 #'
 #' ge.TT2$p
 #' ge.TT2$z
+#'
+#' #### commodity tax in a pure exchange economy.
+#' tax.rate <- 0.25
+#' es.consumer1 <- 0.5
+#' es.consumer2 <- 2
+#'
+#' dst.consumer1 <- node_new("util",
+#'                           type = "SCES", es = es.consumer1,
+#'                           alpha = 1, beta = c(0.5, 0.5),
+#'                           "comm1", "comm2"
+#' )
+#'
+#' dst.consumer2 <- node_new("util",
+#'                           type = "SCES", es = es.consumer2,
+#'                           alpha = 1, beta = c(0.5, 0.5),
+#'                           "taxed.comm1", "comm2"
+#' )
+#' node_set(dst.consumer2, "taxed.comm1",
+#'          type = "FIN",
+#'          rate = c(1, tax.rate = tax.rate),
+#'          "comm1", "tax"
+#' )
+#'
+#' dst.gov <- node_new("util",
+#'                     type = "SCES", es = 0,
+#'                     alpha = 1, beta = c(0.5, 0.5),
+#'                     "comm1", "comm2"
+#' )
+#'
+#' ge.CT <- sdm2(
+#'   A = list(dst.consumer1, dst.consumer2, dst.gov),
+#'   B = matrix(0, 3, 3),
+#'   S0Exg = matrix(c(
+#'     100, NA, NA,
+#'     NA, 100, NA,
+#'     NA, NA, 100
+#'   ), 3, 3, TRUE),
+#'   names.commodity = c("comm1", "comm2", "tax"),
+#'   names.agent = c("consumer1", "consumer2", "gov"),
+#'   numeraire = "comm1"
+#' )
+#'
+#' ge.CT$p
+#' ge.CT$z
+#' ge.CT$D
 #' }
 
 gemTax_3_3 <- function(...) sdm2(...)

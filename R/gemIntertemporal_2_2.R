@@ -6,8 +6,8 @@
 #'
 #' In these examples, there is an np-period-lived consumer maximizing intertemporal utility,
 #' and there is a type of firm which produces from period 1 to np-1.
-#' There are two commodities, i.e. product and labor.
-#' Suppose the consumer has some product in the first period.
+#' There are two types of commodities, i.e. product and labor.
+#' Assume the consumer has some product in the first period.
 #' That is, the product supply in the first period is an exogenous variable.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
@@ -90,12 +90,12 @@
 #'
 #' ## Assume that the consumer has a CES (i.e. CRRA) intertemporal utility function.
 #' # eis is the elasticity of intertemporal substitution.
-#' # rho.beta is the subjective discount factor.
-#' f2 <- function(eis = 1, rho.beta = 1, head.tail.adjustment = "none") {
+#' # Gamma.beta is the subjective discount factor.
+#' f2 <- function(eis = 1, Gamma.beta = 1, head.tail.adjustment = "none") {
 #'   dst.consumer <- node_new(
 #'     "util",
 #'     type = "CES", es = eis,
-#'     alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'     alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
 #'     paste0("prod", 1:np)
 #'   )
 #'
@@ -117,10 +117,10 @@
 #'   )
 #' }
 #'
-#' f2(rho.beta = 0.9)
-#' f2(rho.beta = 0.9, head.tail.adjustment = "both") # the steady state in the worldsheet
-#' f2(rho.beta = 1.25, head.tail.adjustment = "both") # the steady state in the worldsheet
-#' f2(eis = 2, rho.beta = 0.9)
+#' f2(Gamma.beta = 0.9)
+#' f2(Gamma.beta = 0.9, head.tail.adjustment = "both") # the steady state in the worldsheet
+#' f2(Gamma.beta = 1.25, head.tail.adjustment = "both") # the steady state in the worldsheet
+#' f2(eis = 2, Gamma.beta = 0.9)
 #' }
 
 

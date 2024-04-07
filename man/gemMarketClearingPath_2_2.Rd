@@ -99,7 +99,7 @@ matplot(ge.TP2$ts.z, type = "o", pch = 20)
 np <- 5 # the number of economic periods
 y1 <- 1 # the initial product supply
 eis <- 1 # elasticity of intertemporal substitution
-rho.beta <- 1 # the subjective discount factor
+Gamma.beta <- 1 # the subjective discount factor
 
 n <- 2 * np # the number of commodity kinds
 m <- np + 1 # the number of agent kinds
@@ -134,7 +134,7 @@ dst.consumer.CD <- node_new(
 dst.consumer <- node_new(
   "util",
   type = "CES", es = eis,
-  alpha = 1, beta = prop.table(rho.beta^(1:np)),
+  alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
   paste0("prod", 1:np)
 )
 

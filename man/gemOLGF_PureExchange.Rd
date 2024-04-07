@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemOLGF_PureExchange.R
 \name{gemOLGF_PureExchange}
 \alias{gemOLGF_PureExchange}
-\title{Overlapping Generations Financial Models for Pure Exchange Economies}
+\title{Overlapping Generations Financial Sequential Models for Pure Exchange Economies}
 \usage{
 gemOLGF_PureExchange(...)
 }
@@ -10,7 +10,7 @@ gemOLGF_PureExchange(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of overlapping generations models with financial instrument for pure exchange economies.
+Some examples of overlapping generations sequential models with financial instrument for pure exchange economies.
 
 In these examples, there is a financial instrument (namely security) which serves as saving means and can be regarded as money, the shares of a firm, etc.
 Consumers use this security for saving, and this is the only use of the security.

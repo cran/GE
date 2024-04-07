@@ -11,7 +11,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(
   beta.prod.firm = 0.35,
   depreciation.rate = 0.06,
   eis = 1,
-  rho.beta = 0.97,
+  Gamma.beta = 0.97,
   beta.prod.consumer = 0.4,
   es.prod.lab.consumer = 1,
   gr = 0,
@@ -31,7 +31,7 @@ The number of economic periods will be set to length(alpha.firm) .}
 
 \item{eis}{the elasticity of intertemporal substitution of the consumer.}
 
-\item{rho.beta}{the subjective discount factor of the consumer.}
+\item{Gamma.beta}{the subjective discount factor of the consumer.}
 
 \item{beta.prod.consumer}{the share parameter of the product in the period utility function.}
 
@@ -55,11 +55,11 @@ A canonical dynamic macroeconomic general equilibrium model in time-circle form 
 ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2()
 np <- 3
 eis <- 1
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0
 ge$p
 growth_rate(ge$p[1:np])
-1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 ge$z
 growth_rate(ge$z[1:np])
 ge$D
@@ -67,17 +67,17 @@ ge$S
 
 ##  Take the wage postpayment assumption.
 eis <- 0.8
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0.03
 ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(
   es.prod.lab.firm = 0.8,
-  eis = eis, rho.beta = rho.beta, es.prod.lab.consumer = 0.8,
+  eis = eis, Gamma.beta = Gamma.beta, es.prod.lab.consumer = 0.8,
   gr = gr
 )
 
 ge$p
 growth_rate(ge$p[1:np])
-1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 ge$z
 growth_rate(ge$z[1:np])
 ge$D
@@ -101,11 +101,11 @@ ge$S
 ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(wage.payment = "pre")
 np <- 3
 eis <- 1
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0
 ge$p
 growth_rate(ge$p[1:np])
-1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 ge$z
 growth_rate(ge$z[1:np])
 ge$D
@@ -113,19 +113,19 @@ ge$S
 
 ##  Take the wage prepayment assumption.
 eis <- 0.8
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0.03
 
 ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(
   es.prod.lab.firm = 0.8,
   eis = eis, es.prod.lab.consumer = 0.8,
-  rho.beta = rho.beta, gr = gr,
+  Gamma.beta = Gamma.beta, gr = gr,
   wage.payment = "pre"
 )
 
 ge$p
 growth_rate(ge$p[1:np])
-1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 ge$z
 growth_rate(ge$z[1:np])
 ge$D

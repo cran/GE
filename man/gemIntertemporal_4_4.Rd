@@ -20,7 +20,7 @@ np <- 15 # the number of economic periods
 alpha.firm.wheat <- rep(5, np - 1)
 alpha.firm.iron <- rep(5, np - 1)
 
-rho.beta <- 0.97 # 1, 1.03 # the subjective discount factor of consumers
+Gamma.beta <- 0.97 # 1, 1.03 # the subjective discount factor of consumers
 eis <- 0.5 # the elasticity of intertemporal substitution  of consumers
 y1.wheat <- 100 # 126, 129.96
 y1.iron <- 30 # 40.59, 43.47
@@ -77,7 +77,7 @@ f <- function(policy = NULL) {
     )
   }
 
-  tmp.beta <- rho.beta^(1:(np - 1))
+  tmp.beta <- Gamma.beta^(1:(np - 1))
   tmp.beta <- tmp.beta / tmp.beta[np - 1]
   tmp.beta <- c(tmp.beta, last.beta.laborer)
   dst.laborer <- node_new(
@@ -94,7 +94,7 @@ f <- function(policy = NULL) {
     )
   }
 
-  tmp.beta <- rho.beta^(1:(np - 1))
+  tmp.beta <- Gamma.beta^(1:(np - 1))
   tmp.beta <- tmp.beta / tmp.beta[np - 1]
   tmp.beta <- c(tmp.beta, last.beta.landowner)
   dst.landowner <- node_new(
@@ -142,7 +142,7 @@ plot(2:(np - 1), ge$z[1:(np - 2)],
 lines(2:(np - 1), ge$z[np:(2 * np - 3)], type = "o", pch = 21)
 legend("bottom", c("wheat", "iron"), pch = 20:21)
 
-## Compute the steady state based on head and tail adjustments.
+## Compute the steady-state equilibrium based on head and tail adjustments.
 policyHeadAdjustment <- function(time, state) {
   m <- 2 * np # the number of agent kinds
   if (time > 100) {
@@ -173,7 +173,74 @@ policyTailAdjustment <- function(A, state) {
   tmp.node$beta <- prop.table(c(tmp.node$beta[1:(tmp.n - 1)], tail.beta))
 }
 
-f(list(policyHeadAdjustment, policyTailAdjustment))
+f(list(policyHeadAdjustment, policyTailAdjustment))$z
+
+## the corresponding sequential model with the same steady-state equilibrium.
+dividend.rate <- sserr(eis, Gamma.beta, prepaid = TRUE)
+
+dst.firm.wheat <- node_new("prod",
+                           type = "FIN", rate = c(1, dividend.rate),
+                           "cc1", "equity.share.wheat"
+)
+node_set(dst.firm.wheat, "cc1",
+         type = "CES", es = 0.8,
+         alpha = 5, beta = c(0.2, 0.4, 0.4),
+         "iron", "lab", "land"
+)
+
+dst.firm.iron <- node_new("prod",
+                          type = "FIN", rate = c(1, dividend.rate),
+                          "cc1", "equity.share.iron"
+)
+node_set(dst.firm.iron, "cc1",
+         type = "CES", es = 0.8,
+         alpha = 5, beta = c(0.4, 0.4, 0.2),
+         "iron", "lab", "land"
+)
+
+dst.laborer <- node_new("util",
+                        type = "CES", es = 1,
+                        alpha = 1, beta = c(0.4, 0.4, 0.2),
+                        "wheat", "lab", "land"
+)
+
+dst.landowner <- node_new("util",
+                          type = "CES", es = 1,
+                          alpha = 1, beta = c(0.2, 0.4, 0.4),
+                          "wheat", "lab", "land"
+)
+
+ge <- sdm2(
+  A = list(dst.firm.wheat, dst.firm.iron, dst.laborer, dst.landowner),
+  B = matrix(c(
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  ), 6, 4, TRUE),
+  S0Exg = matrix(c(
+    NA, NA, NA, NA,
+    NA, NA, NA, NA,
+    NA, NA, 100, NA,
+    NA, NA, NA, 100,
+    NA, NA, 100, NA,
+    NA, NA, NA, 100
+  ), 6, 4, TRUE),
+  names.commodity = c(
+    "wheat", "iron", "lab", "land",
+    "equity.share.wheat", "equity.share.iron"
+  ),
+  names.agent = c("firm.wheat", "firm.iron", "laborer", "landowner"),
+  numeraire = "lab"
+)
+
+ge$p
+ge$z
+ge$D
+ge$S
+
 # f(policyHeadAdjustment)
 # f(policyTailAdjustment)
 
@@ -204,7 +271,7 @@ f(list(policyHeadAdjustment, policyTailAdjustment))
 #   alpha.firm.iron[k] <- ifelse(k <= tax.time, 5, 10)
 # }
 #
-# rho.beta <- 0.97 # 1, 1.03 # the subjective discount factor of consumers
+# Gamma.beta <- 0.97 # 1, 1.03 # the subjective discount factor of consumers
 # eis <- 0.5 # the elasticity of intertemporal substitution  of consumers
 # y1.wheat <- 100
 # y1.iron <- 30
@@ -267,7 +334,7 @@ f(list(policyHeadAdjustment, policyTailAdjustment))
 #   )
 # }
 #
-# tmp.beta <- rho.beta^(1:(np - 1))
+# tmp.beta <- Gamma.beta^(1:(np - 1))
 # tmp.beta <- tmp.beta / tmp.beta[np - 1]
 # tmp.beta <- c(tmp.beta, last.beta.laborer)
 # dst.laborer <- node_new(
@@ -284,7 +351,7 @@ f(list(policyHeadAdjustment, policyTailAdjustment))
 #   )
 # }
 #
-# tmp.beta <- rho.beta^(1:(np - 1))
+# tmp.beta <- Gamma.beta^(1:(np - 1))
 # tmp.beta <- tmp.beta / tmp.beta[np - 1]
 # tmp.beta <- c(tmp.beta, last.beta.landowner)
 # dst.landowner <- node_new(

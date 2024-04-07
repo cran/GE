@@ -16,18 +16,18 @@
 #'   "land", "lab"
 #' )
 #'
-#' dst.land.owner <- node_new(
+#' dst.landowner <- node_new(
 #'   "util",
 #'   type = "Leontief", a = 1,
 #'   "prod"
 #' )
 #'
-#' dst.laborer <- Clone(dst.land.owner)
+#' dst.laborer <- Clone(dst.landowner)
 #'
 #' ge <- sdm2(
 #'   A = list(
 #'     dst.firm,
-#'     dst.land.owner,
+#'     dst.landowner,
 #'     dst.laborer
 #'   ),
 #'   B = diag(3),
@@ -38,7 +38,7 @@
 #'   ), 3, 3, TRUE),
 #'   GRExg = 0,
 #'   names.commodity = c("prod", "land", "lab"),
-#'   names.agent = c("firm", "land.owner", "laborer"),
+#'   names.agent = c("firm", "landowner", "laborer"),
 #'   maxIteration = 1,
 #'   numberOfPeriods = 200,
 #'   depreciationCoef = 0,

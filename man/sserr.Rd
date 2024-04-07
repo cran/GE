@@ -4,12 +4,12 @@
 \alias{sserr}
 \title{Compute the Return Rate in the Steady State Equilibrium}
 \usage{
-sserr(eis, rho.beta, gr = 0, type = "CES", prepaid = FALSE)
+sserr(eis, Gamma.beta, gr = 0, type = "CES", prepaid = FALSE)
 }
 \arguments{
 \item{eis}{a positive scalar indicating the elasticity of intertemporal substitution in the intertemporal utility function.}
 
-\item{rho.beta}{a positive scalar indicating the subjective discount factor, which is typically no greater than 1.}
+\item{Gamma.beta}{a positive scalar indicating the subjective discount factor, which is typically no greater than 1.}
 
 \item{gr}{a non-negative scalar indicating the growth rate in the steady state equilibrium.}
 
@@ -23,12 +23,12 @@ Compute the (postpaid) return rate in the steady state equilibrium.
 }
 \examples{
 \donttest{
-sserr(eis = 1, rho.beta = 0.97, gr = 0)
-sserr(eis = 1, rho.beta = 1.25, gr = 0)
-sserr(eis = 1, rho.beta = 0.97, gr = 0, type = "SCES")
+sserr(eis = 1, Gamma.beta = 0.97, gr = 0)
+sserr(eis = 1, Gamma.beta = 1.25, gr = 0)
+sserr(eis = 1, Gamma.beta = 0.97, gr = 0, type = "SCES")
 
-sserr(eis = 0.5, rho.beta = 0.97, gr = 0)
-sserr(eis = 0.5, rho.beta = 0.97, gr = 0, type = "SCES")
+sserr(eis = 0.5, Gamma.beta = 0.97, gr = 0)
+sserr(eis = 0.5, Gamma.beta = 0.97, gr = 0, type = "SCES")
 }
 
 }

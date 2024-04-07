@@ -12,7 +12,7 @@
 #' np <- 15 # the number of economic periods, firms.
 #' gr <- 0  # the growth rate of the labor supply
 #' eis <- 0.5 # the elasticity of intertemporal substitution
-#' rho.beta <- 0.9 # the subjective discount factor
+#' Gamma.beta <- 0.9 # the subjective discount factor
 #' y1 <- 100 # the initial product supply
 #'
 #' n <- 2 * np # the number of commodity kinds
@@ -45,7 +45,7 @@
 #' dst.consumer <- node_new(
 #'   "util",
 #'   type = "CES", es = eis,
-#'   alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'   alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
@@ -105,6 +105,9 @@
 #'   maxIteration = 1
 #' )
 #'
+#' growth_rate(ge$p[paste0("prod", 1:np)]) + 1
+#' growth_rate(ge$p[paste0("lab", 1:np)]) + 1
+#' 1 / (1 + sserr(eis, Gamma.beta, gr))
 #' ge.seq$ts.z[, 1]
 #' }
 

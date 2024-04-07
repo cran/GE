@@ -485,6 +485,13 @@
 #' ge <- f()
 #' ge$D
 #' ge$DV
+#'
+#' ##
+#' gr.laborer <- 0
+#' df <- (1 + gr.laborer)^-np
+#' beta.prod.firm <- 0.5
+#' ge <- f()
+#' ge$z
 #' }
 
 gemOLG_TimeCircle <- function(...) sdm2(...)

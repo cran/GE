@@ -8,7 +8,7 @@
 #' @param beta.prod.firm  the share parameter of the product in the production function.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
 #' @param eis the elasticity of intertemporal substitution of the consumer.
-#' @param rho.beta the subjective discount factor of the consumer.
+#' @param Gamma.beta the subjective discount factor of the consumer.
 #' @param es.prod.lab.consumer the elasticity of substitution between product and labor in the CES-type period utility function of the consumer.
 #' @param beta.prod.consumer the share parameter of the product in the period utility function.
 #' @param gr the growth rate of the labor supply.
@@ -25,11 +25,11 @@
 #' ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2()
 #' np <- 3
 #' eis <- 1
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0
 #' ge$p
 #' growth_rate(ge$p[1:np])
-#' 1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+#' 1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 #' ge$z
 #' growth_rate(ge$z[1:np])
 #' ge$D
@@ -37,17 +37,17 @@
 #'
 #' ##  Take the wage postpayment assumption.
 #' eis <- 0.8
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0.03
 #' ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(
 #'   es.prod.lab.firm = 0.8,
-#'   eis = eis, rho.beta = rho.beta, es.prod.lab.consumer = 0.8,
+#'   eis = eis, Gamma.beta = Gamma.beta, es.prod.lab.consumer = 0.8,
 #'   gr = gr
 #' )
 #'
 #' ge$p
 #' growth_rate(ge$p[1:np])
-#' 1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+#' 1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 #' ge$z
 #' growth_rate(ge$z[1:np])
 #' ge$D
@@ -71,11 +71,11 @@
 #' ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(wage.payment = "pre")
 #' np <- 3
 #' eis <- 1
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0
 #' ge$p
 #' growth_rate(ge$p[1:np])
-#' 1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+#' 1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 #' ge$z
 #' growth_rate(ge$z[1:np])
 #' ge$D
@@ -83,19 +83,19 @@
 #'
 #' ##  Take the wage prepayment assumption.
 #' eis <- 0.8
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0.03
 #'
 #' ge <- gemCanonicalDynamicMacroeconomic_TimeCircle_2_2(
 #'   es.prod.lab.firm = 0.8,
 #'   eis = eis, es.prod.lab.consumer = 0.8,
-#'   rho.beta = rho.beta, gr = gr,
+#'   Gamma.beta = Gamma.beta, gr = gr,
 #'   wage.payment = "pre"
 #' )
 #'
 #' ge$p
 #' growth_rate(ge$p[1:np])
-#' 1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+#' 1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 #' ge$z
 #' growth_rate(ge$z[1:np])
 #' ge$D
@@ -106,14 +106,14 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
                                                             beta.prod.firm = 0.35,
                                                             depreciation.rate = 0.06,
                                                             eis = 1,
-                                                            rho.beta = 0.97,
+                                                            Gamma.beta = 0.97,
                                                             beta.prod.consumer = 0.4,
                                                             es.prod.lab.consumer = 1,
                                                             gr = 0,
                                                             wage.payment = "post",
                                                             ...) {
   np <- length(alpha.firm)
-  yield <- sserr(eis = eis, rho.beta = rho.beta, gr = gr, prepaid = TRUE)
+  yield <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
   zeta <- (1 + gr)^np # the ratio of repayments to loans
 
   n <- 2 * np + 2 # the number of commodity kinds
@@ -155,7 +155,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
   dst.consumer <- node_new(
     "util",
     type = "CES", es = eis,
-    alpha = 1, beta = prop.table(rho.beta^(1:np)),
+    alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
     paste0("cc", 1:np)
   )
   switch(wage.payment,

@@ -1,7 +1,7 @@
 #' @export
-#' @title Overlapping Generations Financial Models with One Firm
+#' @title Overlapping Generations Financial Sequential Models with One Firm
 #' @aliases gemOLGF_OneFirm
-#' @description Some examples of overlapping generations financial models with one firm.
+#' @description Some examples of overlapping generations financial sequential models with one firm.
 #'
 #' When there is a population growth, we will take the security-split assumption (see \code{\link{gemOLGF_PureExchange}}).
 #' @param ... arguments to be passed to the function sdm2.

@@ -7,7 +7,7 @@
 #' @param beta.prod.firm  the share parameter of the product in the production function.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
 #' @param eis the elasticity of intertemporal substitution of the consumer.
-#' @param rho.beta the subjective discount factor of the consumer.
+#' @param Gamma.beta the subjective discount factor of the consumer.
 #' @param es.prod.lab.consumer the elasticity of substitution between product and labor in the CES-type period utility function of the consumer.
 #' @param beta.prod.consumer the share parameter of the product in the period utility function.
 #' @param gr the growth rate of the labor supply.
@@ -56,7 +56,7 @@
 #' ge <- gemCanonicalDynamicMacroeconomic_Sequential_3_2(
 #'   beta.prod.firm = 0.36,
 #'   depreciation.rate = 0.025,
-#'   rho.beta = 0.99,
+#'   Gamma.beta = 0.99,
 #'   eis = 0.5,
 #'   beta.prod.consumer = 0.3,
 #' )
@@ -70,7 +70,7 @@ gemCanonicalDynamicMacroeconomic_Sequential_3_2 <- function(alpha.firm = 1,
                                                             beta.prod.firm = 0.35,
                                                             depreciation.rate = 0.06,
                                                             eis = 1,
-                                                            rho.beta = 0.97,
+                                                            Gamma.beta = 0.97,
                                                             es.prod.lab.consumer = 1,
                                                             beta.prod.consumer = 0.4,
                                                             gr = 0,
@@ -81,7 +81,7 @@ gemCanonicalDynamicMacroeconomic_Sequential_3_2 <- function(alpha.firm = 1,
             the function gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3 should be used instead of this function.")
   }
 
-  yield <- sserr(eis = eis, rho.beta = rho.beta, gr = gr, prepaid = TRUE)
+  yield <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
 
   switch(wage.payment ,
     "post" = {

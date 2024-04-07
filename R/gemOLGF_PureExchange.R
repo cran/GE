@@ -1,7 +1,7 @@
 #' @export
-#' @title Overlapping Generations Financial Models for Pure Exchange Economies
+#' @title Overlapping Generations Financial Sequential Models for Pure Exchange Economies
 #' @aliases gemOLGF_PureExchange
-#' @description Some examples of overlapping generations models with financial instrument for pure exchange economies.
+#' @description Some examples of overlapping generations sequential models with financial instrument for pure exchange economies.
 #'
 #' In these examples, there is a financial instrument (namely security) which serves as saving means and can be regarded as money, the shares of a firm, etc.
 #' Consumers use this security for saving, and this is the only use of the security.

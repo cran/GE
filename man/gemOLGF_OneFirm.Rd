@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemOLGF_OneFirm.R
 \name{gemOLGF_OneFirm}
 \alias{gemOLGF_OneFirm}
-\title{Overlapping Generations Financial Models with One Firm}
+\title{Overlapping Generations Financial Sequential Models with One Firm}
 \usage{
 gemOLGF_OneFirm(...)
 }
@@ -10,7 +10,7 @@ gemOLGF_OneFirm(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of overlapping generations financial models with one firm.
+Some examples of overlapping generations financial sequential models with one firm.
 
 When there is a population growth, we will take the security-split assumption (see \code{\link{gemOLGF_PureExchange}}).
 }

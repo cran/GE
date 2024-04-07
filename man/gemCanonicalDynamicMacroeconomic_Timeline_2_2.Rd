@@ -10,7 +10,7 @@ gemCanonicalDynamicMacroeconomic_Timeline_2_2(
   beta.prod.firm = 0.35,
   depreciation.rate = 0.06,
   eis = 1,
-  rho.beta = 0.97,
+  Gamma.beta = 0.97,
   beta.prod.consumer = 0.4,
   es.prod.lab.consumer = 1,
   gr = 0,
@@ -33,7 +33,7 @@ The number of economic periods will be set to length(alpha.firm) + 1.}
 
 \item{eis}{a positive scalar indicating the elasticity of intertemporal substitution of the consumer.}
 
-\item{rho.beta}{the subjective discount factor of the consumer.}
+\item{Gamma.beta}{the subjective discount factor of the consumer.}
 
 \item{beta.prod.consumer}{the share parameter of the product in the period utility function.}
 
@@ -48,7 +48,7 @@ The number of economic periods will be set to length(alpha.firm) + 1.}
 \item{wage.payment}{a character string specifying the wage payment method, must be one of "pre" or "post".}
 
 \item{beta.consumer}{NULL (the default) or a positive vector containing length(alpha.firm) + 1 elements specifying the consumer's intertemporal share parameter.
-If beta.consumer is not NULL, rho.beta will be ignored.}
+If beta.consumer is not NULL, Gamma.beta will be ignored.}
 
 \item{...}{arguments to be passed to the function sdm2.}
 }
@@ -62,30 +62,30 @@ The firm has a CESAK production function.
 ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2()
 np <- 5
 eis <- 1
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0
 ge$p
 ge$p[1:(np - 1)] / ge$p[2:np] - 1
 ge$p[(np + 1):(2 * np - 2)] / ge$p[(np + 2):(2 * np - 1)] - 1
-sserr(eis = eis, rho.beta = rho.beta, gr = gr) # the steady-state equilibrium return rate
+sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr) # the steady-state equilibrium return rate
 ge$z
 ge$D
 node_plot(ge$dst.consumer, TRUE)
 
 #### Take the wage postpayment assumption.
 eis <- 0.8
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0.03
 ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(
   es.prod.lab.firm = 0.8,
-  eis = eis, rho.beta = rho.beta, es.prod.lab.consumer = 0.8,
+  eis = eis, Gamma.beta = Gamma.beta, es.prod.lab.consumer = 0.8,
   gr = gr
 )
 
 np <- 5
 ge$p
 growth_rate(ge$p[1:np])
-1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 ge$z
 growth_rate(ge$z[1:(np - 1)])
 ge$D
@@ -184,12 +184,12 @@ ge$S
 ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(wage.payment = "pre")
 np <- 5
 eis <- 1
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0
 ge$p
 ge$p[1:(np - 1)] / ge$p[2:np] - 1
 ge$p[(np + 1):(2 * np - 2)] / ge$p[(np + 2):(2 * np - 1)] - 1
-sserr(eis = eis, rho.beta = rho.beta, gr = gr) # the steady-state equilibrium return rate
+sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr) # the steady-state equilibrium return rate
 ge$z
 ge$D
 node_plot(ge$dst.consumer, TRUE)
@@ -197,18 +197,18 @@ node_plot(ge$dst.consumer, TRUE)
 #### Take the wage prepayment assumption.
 np <- 5
 eis <- 0.8
-rho.beta <- 0.97
+Gamma.beta <- 0.97
 gr <- 0.03
 ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(
   es.prod.lab.firm = 0.8,
-  eis = eis, rho.beta = rho.beta, es.prod.lab.consumer = 0.8,
+  eis = eis, Gamma.beta = Gamma.beta, es.prod.lab.consumer = 0.8,
   gr = gr,
   wage.payment = "pre"
 )
 
 ge$p
 growth_rate(ge$p[1:np])
-1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 ge$z
 growth_rate(ge$z[1:(np - 1)])
 ge$D

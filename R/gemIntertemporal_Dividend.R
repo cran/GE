@@ -13,7 +13,7 @@
 #' \donttest{
 #' #### (1) a real timeline model with head-tail adjustment.
 #' eis <- 0.8 # the elasticity of intertemporal substitution
-#' rho.beta <- 0.8 # the subjective discount factor
+#' Gamma.beta <- 0.8 # the subjective discount factor
 #' gr <- 0.03 # the growth rate
 #' np <- 5 # the number of economic periods
 #'
@@ -47,7 +47,7 @@
 #' dst.consumer <- node_new(
 #'   "util",
 #'   type = "CES", es = eis,
-#'   alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'   alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
@@ -61,13 +61,13 @@
 #'   policy = makePolicyHeadTailAdjustment(gr = gr, np = np)
 #' )
 #'
-#' sserr(eis, rho.beta, gr) # the steady-state equilibrium return rate, 0.2970
+#' sserr(eis, Gamma.beta, gr) # the steady-state equilibrium return rate, 0.2970
 #' ge.tl$p[1:(np - 1)] / ge.tl$p[2:np] - 1
 #' ge.tl$z
 #'
 #' ## (2) a financial timeline model with dividend and head-tail adjustment.
 #' yield <- sserr(
-#'   eis = eis, rho.beta = rho.beta,
+#'   eis = eis, Gamma.beta = Gamma.beta,
 #'   gr = gr, prepaid = TRUE
 #' ) # the prepaid steady-state equilibrium return rate, 0.2593
 #'
@@ -105,7 +105,7 @@
 #' dst.consumer <- node_new(
 #'   "util",
 #'   type = "CES", es = 1,
-#'   alpha = 1, beta = prop.table(rep(1, np)), # prop.table(rho.beta^(1:np)),
+#'   alpha = 1, beta = prop.table(rep(1, np)), # prop.table(Gamma.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
@@ -240,7 +240,7 @@
 #'   beta.prod.firm = 0.5,
 #'   depreciation.rate = 1,
 #'   eis = 0.8,
-#'   rho.beta = 0.8,
+#'   Gamma.beta = 0.8,
 #'   beta.prod.consumer = 1,
 #'   es.prod.lab.consumer = 1,
 #'   gr = 0.03,

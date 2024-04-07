@@ -23,7 +23,7 @@
 #' gr <- 0 # the growth rate of the labor supply
 #' zeta <- 1.25 # the ratio of repayments to loans
 #' # zeta <- (1 + gr)^np
-#' rho.beta <- 1 # the subjective discount factor
+#' Gamma.beta <- 1 # the subjective discount factor
 #'
 #' n <- 2 * np # the number of commodity kinds
 #' m <- np + 1 # the number of agent kinds
@@ -53,7 +53,7 @@
 #'
 #' dst.consumer <- node_new(
 #'   "util",
-#'   type = "CD", alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'   type = "CD", alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'

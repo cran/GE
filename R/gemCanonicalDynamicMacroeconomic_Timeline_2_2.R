@@ -9,7 +9,7 @@
 #' @param beta.prod.firm  the share parameter of the product in the production function.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
 #' @param eis a positive scalar indicating the elasticity of intertemporal substitution of the consumer.
-#' @param rho.beta the subjective discount factor of the consumer.
+#' @param Gamma.beta the subjective discount factor of the consumer.
 #' @param es.prod.lab.consumer the elasticity of substitution between product and labor in the CES-type period utility function of the consumer.
 #' @param beta.prod.consumer the share parameter of the product in the period utility function.
 #' @param gr the growth rate of the labor supply.
@@ -17,7 +17,7 @@
 #' @param head.tail.adjustment  a character string specifying the type of the head-tail-adjustment policy, must be one of "both" (default), "head", "tail" or "none".
 #' @param wage.payment a character string specifying the wage payment method, must be one of "pre" or "post".
 #' @param beta.consumer NULL (the default) or a positive vector containing length(alpha.firm) + 1 elements specifying the consumer's intertemporal share parameter.
-#' If beta.consumer is not NULL, rho.beta will be ignored.
+#' If beta.consumer is not NULL, Gamma.beta will be ignored.
 #' @param ... arguments to be passed to the function sdm2.
 #' @references Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomic General Equilibrium Models (Second Edition). Vernon Press.
 #' @seealso \code{\link{gemCanonicalDynamicMacroeconomic_TimeCircle_2_2}},\cr
@@ -29,30 +29,30 @@
 #' ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2()
 #' np <- 5
 #' eis <- 1
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0
 #' ge$p
 #' ge$p[1:(np - 1)] / ge$p[2:np] - 1
 #' ge$p[(np + 1):(2 * np - 2)] / ge$p[(np + 2):(2 * np - 1)] - 1
-#' sserr(eis = eis, rho.beta = rho.beta, gr = gr) # the steady-state equilibrium return rate
+#' sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr) # the steady-state equilibrium return rate
 #' ge$z
 #' ge$D
 #' node_plot(ge$dst.consumer, TRUE)
 #'
 #' #### Take the wage postpayment assumption.
 #' eis <- 0.8
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0.03
 #' ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(
 #'   es.prod.lab.firm = 0.8,
-#'   eis = eis, rho.beta = rho.beta, es.prod.lab.consumer = 0.8,
+#'   eis = eis, Gamma.beta = Gamma.beta, es.prod.lab.consumer = 0.8,
 #'   gr = gr
 #' )
 #'
 #' np <- 5
 #' ge$p
 #' growth_rate(ge$p[1:np])
-#' 1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+#' 1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 #' ge$z
 #' growth_rate(ge$z[1:(np - 1)])
 #' ge$D
@@ -151,12 +151,12 @@
 #' ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(wage.payment = "pre")
 #' np <- 5
 #' eis <- 1
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0
 #' ge$p
 #' ge$p[1:(np - 1)] / ge$p[2:np] - 1
 #' ge$p[(np + 1):(2 * np - 2)] / ge$p[(np + 2):(2 * np - 1)] - 1
-#' sserr(eis = eis, rho.beta = rho.beta, gr = gr) # the steady-state equilibrium return rate
+#' sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr) # the steady-state equilibrium return rate
 #' ge$z
 #' ge$D
 #' node_plot(ge$dst.consumer, TRUE)
@@ -164,18 +164,18 @@
 #' #### Take the wage prepayment assumption.
 #' np <- 5
 #' eis <- 0.8
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0.03
 #' ge <- gemCanonicalDynamicMacroeconomic_Timeline_2_2(
 #'   es.prod.lab.firm = 0.8,
-#'   eis = eis, rho.beta = rho.beta, es.prod.lab.consumer = 0.8,
+#'   eis = eis, Gamma.beta = Gamma.beta, es.prod.lab.consumer = 0.8,
 #'   gr = gr,
 #'   wage.payment = "pre"
 #' )
 #'
 #' ge$p
 #' growth_rate(ge$p[1:np])
-#' 1 / (1 + sserr(eis = eis, rho.beta = rho.beta, gr = gr)) - 1
+#' 1 / (1 + sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)) - 1
 #' ge$z
 #' growth_rate(ge$z[1:(np - 1)])
 #' ge$D
@@ -187,7 +187,7 @@ gemCanonicalDynamicMacroeconomic_Timeline_2_2 <- function(alpha.firm = rep(1, 4)
                                                           beta.prod.firm = 0.35,
                                                           depreciation.rate = 0.06,
                                                           eis = 1,
-                                                          rho.beta = 0.97,
+                                                          Gamma.beta = 0.97,
                                                           beta.prod.consumer = 0.4,
                                                           es.prod.lab.consumer = 1,
                                                           gr = 0,
@@ -225,7 +225,7 @@ gemCanonicalDynamicMacroeconomic_Timeline_2_2 <- function(alpha.firm = rep(1, 4)
 
   if (is.null(beta.consumer)) {
     beta.consumer <- prop.table(c(
-      rho.beta^(1:(np - 1)),
+      Gamma.beta^(1:(np - 1)),
       ifelse(head.tail.adjustment %in% c("both", "tail"), 1, 1e-100)
     ))
   }

@@ -10,7 +10,7 @@
 #' initial.product.supply <- 20
 #' beta.prod.firm <- 0.35
 #' eis <- 1
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0.05
 #' alphaK <- 1.05
 #'
@@ -33,7 +33,7 @@
 #' dst.consumer <- node_new(
 #'   "util",
 #'   type = "CES", es = eis,
-#'   alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'   alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
@@ -55,7 +55,7 @@
 #' np <- 5
 #' initial.product.supply <- 20
 #' eis <- 1
-#' rho.beta <- 1
+#' Gamma.beta <- 1
 #' alphaK <- 1.25
 #'
 #' S0Exg <- matrix(NA, np, np)
@@ -75,7 +75,7 @@
 #' dst.consumer <- node_new(
 #'   "util",
 #'   type = "CES", es = eis,
-#'   alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'   alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'

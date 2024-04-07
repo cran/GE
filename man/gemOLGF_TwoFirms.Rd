@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemOLGF_TwoFirms.R
 \name{gemOLGF_TwoFirms}
 \alias{gemOLGF_TwoFirms}
-\title{Overlapping Generations Financial Models with Two Firms}
+\title{Overlapping Generations Financial Sequential Models with Two Firms}
 \usage{
 gemOLGF_TwoFirms(...)
 }
@@ -10,7 +10,7 @@ gemOLGF_TwoFirms(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of overlapping generations financial models with two firms.
+Some examples of overlapping generations financial sequential models with two firms.
 }
 \examples{
 \donttest{

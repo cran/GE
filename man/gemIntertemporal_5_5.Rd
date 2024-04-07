@@ -20,7 +20,7 @@ There are four commodities in the model, namely wheat, iron, iron leased out as 
 np <- 15 # the number of economic periods
 gr <- 0 # the growth rate in the steady state equilibrium
 eis <- 1 # the elasticity of intertemporal substitution  of consumers
-rho.beta <- 0.97 # the subjective discount factor of consumers
+Gamma.beta <- 0.97 # the subjective discount factor of consumers
 last.beta.laborer <- 0
 last.beta.landowner <- 0
 depreciation.rate <- 0.06
@@ -86,7 +86,7 @@ for (k in 1:(np - 1)) {
   )
 }
 
-tmp.beta <- rho.beta^(1:(np - 1))
+tmp.beta <- Gamma.beta^(1:(np - 1))
 tmp.beta <- tmp.beta / tmp.beta[np - 1]
 tmp.beta <- c(tmp.beta, last.beta.laborer)
 dst.laborer <- node_new(
@@ -103,7 +103,7 @@ for (k in 1:(np - 1)) {
   )
 }
 
-tmp.beta <- rho.beta^(1:(np - 1))
+tmp.beta <- Gamma.beta^(1:(np - 1))
 tmp.beta <- tmp.beta / tmp.beta[np - 1]
 tmp.beta <- c(tmp.beta, last.beta.landowner)
 dst.landowner <- node_new(

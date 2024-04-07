@@ -13,7 +13,7 @@
 #' @param beta.prod.firm  the share parameter of the product in the production function of firm 1.
 #' @param depreciation.rate the physical depreciation rate of capital stock of firm 1.
 #' @param eis the elasticity of intertemporal substitution of the consumer.
-#' @param rho.beta the subjective discount factor of the consumer.
+#' @param Gamma.beta the subjective discount factor of the consumer.
 #' @param es.prod.lab.consumer the elasticity of substitution between product and labor in the CES-type period utility function of the consumer.
 #' @param beta.prod.consumer the share parameter of the product in the period utility function.
 #' @param gr the growth rate of the labor supply.
@@ -28,16 +28,16 @@
 #'
 #' ####
 #' eis <- 0.8
-#' rho.beta <- 0.97
+#' Gamma.beta <- 0.97
 #' gr <- 0.03
 #' ge <- gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3(
 #'   es.prod.lab.firm = 0.8,
-#'   eis = eis, rho.beta = rho.beta, es.prod.lab.consumer = 0.8,
+#'   eis = eis, Gamma.beta = Gamma.beta, es.prod.lab.consumer = 0.8,
 #'   gr = gr
 #' )
 #'
 #' ge$p
-#' ge$p[1] * (sserr(eis = eis, rho.beta = rho.beta, gr = gr, prepaid = TRUE) + 1)
+#' ge$p[1] * (sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE) + 1)
 #' ge$z
 #' addmargins(ge$D, 2)
 #' addmargins(ge$S, 2)
@@ -49,12 +49,12 @@ gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3 <- function(alph
                                                                             beta.prod.firm = 0.35,
                                                                             depreciation.rate = 0.06,
                                                                             eis = 1,
-                                                                            rho.beta = 0.97,
+                                                                            Gamma.beta = 0.97,
                                                                             es.prod.lab.consumer = 1,
                                                                             beta.prod.consumer = 0.4,
                                                                             gr = 0,
                                                                             ...) {
-  yield <- sserr(eis = eis, rho.beta = rho.beta, gr = gr, prepaid = TRUE)
+  yield <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
 
   # Take the wage postpayment assumption.
   dst.firm1 <- node_new("output",

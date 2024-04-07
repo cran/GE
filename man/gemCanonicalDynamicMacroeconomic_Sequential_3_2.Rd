@@ -11,7 +11,7 @@ gemCanonicalDynamicMacroeconomic_Sequential_3_2(
   beta.prod.firm = 0.35,
   depreciation.rate = 0.06,
   eis = 1,
-  rho.beta = 0.97,
+  Gamma.beta = 0.97,
   es.prod.lab.consumer = 1,
   beta.prod.consumer = 0.4,
   gr = 0,
@@ -30,7 +30,7 @@ gemCanonicalDynamicMacroeconomic_Sequential_3_2(
 
 \item{eis}{the elasticity of intertemporal substitution of the consumer.}
 
-\item{rho.beta}{the subjective discount factor of the consumer.}
+\item{Gamma.beta}{the subjective discount factor of the consumer.}
 
 \item{es.prod.lab.consumer}{the elasticity of substitution between product and labor in the CES-type period utility function of the consumer.}
 
@@ -89,7 +89,7 @@ ge$S
 ge <- gemCanonicalDynamicMacroeconomic_Sequential_3_2(
   beta.prod.firm = 0.36,
   depreciation.rate = 0.025,
-  rho.beta = 0.99,
+  Gamma.beta = 0.99,
   eis = 0.5,
   beta.prod.consumer = 0.3,
 )

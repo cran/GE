@@ -17,14 +17,14 @@
 #'          "prod", "lab"
 #' )
 #'
-#' dst.laborer <- dst.money.owner <-
+#' dst.laborer <- dst.moneyOwner <-
 #'   node_new("util",
 #'            type = "FIN", rate = c(1, interest.rate),
 #'            "prod", "money"
 #'   )
 #'
 #' ge <- sdm2(
-#'   A = list(dst.firm, dst.laborer, dst.money.owner),
+#'   A = list(dst.firm, dst.laborer, dst.moneyOwner),
 #'   B = diag(c(1, 0, 0)),
 #'   S0Exg = matrix(c(
 #'     NA, NA, NA,
@@ -32,7 +32,7 @@
 #'     NA, NA, 100
 #'   ), 3, 3, TRUE),
 #'   names.commodity = c("prod", "lab", "money"),
-#'   names.agent = c("firm", "laborer", "money.owner"),
+#'   names.agent = c("firm", "laborer", "moneyOwner"),
 #'   numeraire = "prod"
 #' )
 #'
@@ -46,7 +46,7 @@
 #' ## Take money as numeraire, that is, let the asset price of money equal to 1,
 #' ## and let the interest per unit of money equal to the exogenous interest rate.
 #' ge2 <- sdm2(
-#'   A = list(dst.firm, dst.laborer, dst.money.owner),
+#'   A = list(dst.firm, dst.laborer, dst.moneyOwner),
 #'   B = diag(c(1, 0, 0)),
 #'   S0Exg = matrix(c(
 #'     NA, NA, NA,
@@ -54,7 +54,7 @@
 #'     NA, NA, 100
 #'   ), 3, 3, TRUE),
 #'   names.commodity = c("prod", "lab", "money"),
-#'   names.agent = c("firm", "laborer", "money.owner"),
+#'   names.agent = c("firm", "laborer", "moneyOwner"),
 #'   numeraire = c(money = interest.rate)
 #' )
 #'

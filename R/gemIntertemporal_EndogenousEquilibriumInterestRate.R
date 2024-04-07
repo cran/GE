@@ -1,0 +1,136 @@
+#' @export
+#' @title An Example Illustrating Endogenous Equilibrium Interest Rates in a (Timeline) Transitional Equilibrium Path
+#' @aliases gemIntertemporal_EndogenousEquilibriumInterestRate
+#' @description This example illustrates (endogenous) equilibrium interest rates in a transitional equilibrium path,
+#' which is an intertemporal path distinct from a steady-state equilibrium.
+#' There are three types of economic agents in the model: firms, a laborer, and a money owner.
+#' Suppose the laborer and the money owner need to use money to buy products, and firms need to use money to buy products and labor.
+#' Formally, the money owner borrows money from himself and pays interest to himself.
+#' @param ... arguments to be passed to the function sdm2.
+#' @examples
+#' \donttest{
+#' vm <- 1 # the velocity of money
+#' eis <- 0.8 # the elasticity of intertemporal substitution
+#' Gamma.beta <- 0.8 # the subjective discount factor
+#' gr <- 0 # the growth rate
+#' y1 <- 10 # the product supply in the first period
+#' np <- 20 # the number of economic periods
+#'
+#' f <- function(ir = rep(0.25, np - 1), return.ge = FALSE) {
+#'   n <- 2 * np # the number of commodity kinds
+#'   m <- np + 1 # the number of agent kinds
+#'
+#'   names.commodity <- c(
+#'     paste0("prod", 1:np),
+#'     paste0("lab", 1:(np - 1)),
+#'     "money"
+#'   )
+#'   names.agent <- c(
+#'     paste0("firm", 1:(np - 1)),
+#'     "laborer", "moneyOwner"
+#'   )
+#'
+#'   # the exogenous supply matrix.
+#'   S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#'   S0Exg[paste0("lab", 1:(np - 1)), "laborer"] <- 100 * (1 + gr)^(0:(np - 2))
+#'   S0Exg["money", "moneyOwner"] <- 100
+#'   S0Exg["prod1", "laborer"] <- y1
+#'
+#'   # the output coefficient matrix.
+#'   B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#'   for (k in 1:(np - 1)) {
+#'     B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+#'   }
+#'
+#'   dstl.firm <- list()
+#'   for (k in 1:(np - 1)) {
+#'     dstl.firm[[k]] <- node_new(
+#'       "prod",
+#'       type = "FIN", rate = c(1, ir[k] / vm),
+#'       "cc1", "money"
+#'     )
+#'     node_set(dstl.firm[[k]], "cc1",
+#'              type = "CD", alpha = 2, beta = c(0.5, 0.5),
+#'              paste0("prod", k), paste0("lab", k)
+#'     )
+#'   }
+#'
+#'   dst.laborer <- node_new(
+#'     "util",
+#'     type = "CES", es = eis,
+#'     alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
+#'     paste0("cc", 1:(np - 1)), paste0("prod", np)
+#'   )
+#'
+#'   for (k in 1:(np - 1)) {
+#'     node_set(dst.laborer, paste0("cc", k),
+#'       type = "FIN", rate = c(1, ir[k] / vm),
+#'       paste0("prod", k), "money"
+#'     )
+#'   }
+#'
+#'   dst.moneyOwner <- node_new(
+#'     "util",
+#'     type = "CES", es = eis,
+#'     alpha = 1, beta = prop.table(Gamma.beta^(1:(np - 1))),
+#'     paste0("cc", 1:(np - 1))
+#'   )
+#'   for (k in 1:(np - 1)) {
+#'     node_set(dst.moneyOwner, paste0("cc", k),
+#'              type = "FIN", rate = c(1, ir[k] / vm),
+#'              paste0("prod", k), "money"
+#'     )
+#'   }
+#'
+#'   ge <- sdm2(
+#'     A = c(dstl.firm, dst.laborer, dst.moneyOwner),
+#'     B = B,
+#'     S0Exg = S0Exg,
+#'     names.commodity = names.commodity,
+#'     names.agent = names.agent,
+#'     numeraire = "prod1",
+#'     policy = makePolicyHeadTailAdjustment(gr = gr, np = np, type = c("tail"))
+#'   )
+#'
+#'   tmp <- rowSums(ge$SV)
+#'   ts.supply.value <- tmp[paste0("prod", 1:(np - 1))] + tmp[paste0("lab", 1:(np - 1))]
+#'   ir.new <- ts.supply.value[1:(np - 2)] / ts.supply.value[2:(np - 1)] - 1
+#'   ir.new <- pmax(1e-6, ir.new)
+#'   ir.new[np - 1] <- ir.new[np - 2]
+#'
+#'   ir <- c(ir * ratio_adjust(ir.new / ir, 0.3))
+#'   cat("ir: ", ir, "\n")
+#'
+#'   if (return.ge) {
+#'     return(ge)
+#'   } else {
+#'     return(ir)
+#'   }
+#' }
+#'
+#' ## Calculate equilibrium interest rates.
+#' ## Warning: Running the program below takes about several minutes.
+#' # result <- iterate(rep(0.1, np - 1), f, times = 30)
+#' # sserr(eis, Gamma.beta, gr, prepaid = TRUE)
+#'
+#' ## Below are the calculated equilibrium interest rates.
+#' ir <- rep(0.25, np - 1)
+#' ir[1:14] <- c(0.4301, 0.3443, 0.3007, 0.2776, 0.2652, 0.2584, 0.2546,
+#'   0.2526, 0.2514, 0.2508, 0.2504, 0.2502, 0.2501, 0.2501)
+#'
+#' ge <- f(ir, TRUE)
+#'
+#' plot(ge$z[1:(np - 1)], type = "o")
+#' tmp <- rowSums(ge$SV)
+#' ts.supply.value <- tmp[paste0("prod", 1:(np - 1))] + tmp[paste0("lab", 1:(np - 1))]
+#' ts.supply.value[1:(np - 2)] / ts.supply.value[2:(np - 1)] - 1
+#' ir
+#'
+#' ## Calculate equilibrium interest rates.
+#' ## Warning: Running the program below takes about several minutes.
+#' # gr <- 0.03
+#' # result <- iterate(rep(0.1, np - 1), f, times = 30)
+#' # sserr(eis, Gamma.beta, gr, prepaid = TRUE)
+#' }
+
+gemIntertemporal_InterestRate <- function(...) sdm2(...)

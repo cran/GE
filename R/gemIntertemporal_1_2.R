@@ -7,7 +7,7 @@
 #' @examples
 #' \donttest{
 #' eis <- 0.5 # the elasticity of intertemporal substitution of the consumer
-#' rho.beta <- 0.97 # the subjective discount factor of the consumer
+#' Gamma.beta <- 0.97 # the subjective discount factor of the consumer
 #' alphaK <- 1.1 # the parameter of the AK production function
 #'
 #' np <- 5 # the number of economic periods
@@ -41,7 +41,7 @@
 #' dst.consumer <- node_new(
 #'   "util",
 #'   type = "CES", es = eis,
-#'   alpha = 1, beta = prop.table(rho.beta^(1:np)),
+#'   alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
 #'   paste0("prod", 1:np)
 #' )
 #'
@@ -59,7 +59,7 @@
 #' ge$D
 #' ge$S
 #' growth_rate(ge$D[, m])
-#' (rho.beta * alphaK)^eis - 1
+#' (Gamma.beta * alphaK)^eis - 1
 #' }
 
 gemIntertemporal_1_2 <- function(...) sdm2(...)

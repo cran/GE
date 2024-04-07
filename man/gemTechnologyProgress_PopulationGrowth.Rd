@@ -19,8 +19,8 @@ gr.e <- 0.03 # the population growth rate
 tpr <- 0.02 # the rate of technological progress
 gr <- (1 + gr.e) * (1 + tpr) - 1
 eis <- 0.8 # the elasticity of intertemporal substitution
-rho.beta <- 0.8 # the subjective discount factor
-yield <- (1 + gr)^(1 / eis - 1) / rho.beta - 1 # dividend yield
+Gamma.beta <- 0.8 # the subjective discount factor
+yield <- (1 + gr)^(1 / eis - 1) / Gamma.beta - 1 # dividend yield
 y1 <- 143.18115 # the initial product supply
 
 dst.firm <- node_new("output",
@@ -107,7 +107,7 @@ for (k in 1:(np - 1)) {
 dst.consumer <- node_new(
   "util",
   type = "CES",
-  alpha = 1, beta = prop.table(rho.beta^(1:np)), es = eis,
+  alpha = 1, beta = prop.table(Gamma.beta^(1:np)), es = eis,
   paste0("prod", 1:np)
 )
 
@@ -135,7 +135,7 @@ ge$z
 ge$D
 ge$S
 ge$p[1:3] / ge$p[2:4] - 1 # the steady-state equilibrium return rate
-sserr(eis = eis, rho.beta = rho.beta, gr = gr) # the steady-state equilibrium return rate
+sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr) # the steady-state equilibrium return rate
 
 ## a financial time-circle model
 zeta <- (1 + gr)^np # the ratio of repayments to loans

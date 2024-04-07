@@ -23,7 +23,7 @@ These models are as follows:
 \donttest{
 #### (1) a real timeline model with head-tail adjustment.
 eis <- 0.8 # the elasticity of intertemporal substitution
-rho.beta <- 0.8 # the subjective discount factor
+Gamma.beta <- 0.8 # the subjective discount factor
 gr.tech <- 0.02 # the technological progress rate
 gr.lab <- 0.03 # the growth rate of labor supply
 gr <- (1 + gr.lab) * (1 + gr.tech) - 1 # the growth rate
@@ -65,7 +65,7 @@ node_plot(dstl.firm[[np - 1]], TRUE)
 dst.consumer <- node_new(
   "util",
   type = "CES", es = eis,
-  alpha = 1, beta = prop.table(rho.beta^(1:np)),
+  alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
   paste0("prod", 1:np)
 )
 
@@ -79,13 +79,13 @@ ge <- sdm2(
   policy = makePolicyHeadTailAdjustment(gr = gr, np = np)
 )
 
-sserr(eis, rho.beta, gr) # the steady-state equilibrium return rate
+sserr(eis, Gamma.beta, gr) # the steady-state equilibrium return rate
 ge$p[1:(np - 1)] / ge$p[2:np] - 1 # the steady-state equilibrium return rate
 ge$z
 growth_rate(ge$z)
 
 ## (2) a financial timeline model with dividend and head-tail adjustment.
-yield <- (1 + gr)^(1 / eis - 1) / rho.beta - 1
+yield <- sserr(eis, Gamma.beta, gr, prepaid = TRUE)
 
 n <- 2 * np # the number of commodity kinds
 m <- np # the number of agent kinds
@@ -125,7 +125,7 @@ for (k in 1:(np - 1)) {
 dst.consumer <- node_new(
   "util",
   type = "CES", es = 1,
-  alpha = 1, beta = prop.table(rep(1, np)), # prop.table(rho.beta^(1:np)),
+  alpha = 1, beta = prop.table(rep(1, np)), # prop.table(Gamma.beta^(1:np)),
   paste0("prod", 1:np)
 )
 

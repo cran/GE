@@ -60,7 +60,7 @@ ge.seq <- sdm2(
     tmp
   },
   names.commodity = c("prod", "lab", "money", "dividend"),
-  names.agent = c("firm", "laborer", "money.owner", "shareholder"),
+  names.agent = c("firm", "laborer", "moneyOwner", "shareholder"),
   numeraire = "prod",
   GRExg = 0.1,
   z0 = c(9.30909, 0, 0, 0),

@@ -69,7 +69,7 @@ ge$p
 
 #### an equivalent intertemporal model.
 gr <- 0.03 # the growth rate of the labor supply
-rho.beta <- 0.8 # the subjective discount factor
+Gamma.beta <- 0.8 # the subjective discount factor
 np <- 5 # the number of economic periods
 y1 <- 100 # the initial product supply
 
@@ -103,7 +103,7 @@ for (k in 1:(np - 1)) {
 dst.consumer <- node_new(
   "util",
   type = "CES", es = 1,
-  alpha = 1,  beta = prop.table(rho.beta^(1:np)),
+  alpha = 1,  beta = prop.table(Gamma.beta^(1:np)),
   paste0("prod", 1:np)
 )
 

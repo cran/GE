@@ -29,17 +29,17 @@
 #'   "wheat"
 #' )
 #'
-#' dst.money.owner1 <- Clone(dst.laborer1)
+#' dst.moneyOwner1 <- Clone(dst.laborer1)
 #'
 #' dst.laborer2 <- Clone(dst.laborer1)
 #' node_replace(dst.laborer2, "money1", "money2")
 #'
-#' dst.money.owner2 <- Clone(dst.laborer2)
+#' dst.moneyOwner2 <- Clone(dst.laborer2)
 #'
 #' ge <- sdm2(
 #'   A = list(
-#'     dst.firm1, dst.laborer1, dst.money.owner1,
-#'     dst.firm2, dst.laborer2, dst.money.owner2
+#'     dst.firm1, dst.laborer1, dst.moneyOwner1,
+#'     dst.firm2, dst.laborer2, dst.moneyOwner2
 #'   ),
 #'   B = diag(c(1, 0, 0, 1, 0, 0)),
 #'   S0Exg = {
@@ -55,8 +55,8 @@
 #'     "iron", "lab2", "money2"
 #'   ),
 #'   names.agent = c(
-#'     "firm1", "laborer1", "money.owner1",
-#'     "firm2", "laborer2", "money.owner2"
+#'     "firm1", "laborer1", "moneyOwner1",
+#'     "firm2", "laborer2", "moneyOwner2"
 #'   ),
 #'   numeraire = c("money1" = 0.1) # interest.rate
 #' )

@@ -102,13 +102,13 @@ ge$DV
 np <- 3 # the number of economic periods
 gr.lab <- 0.03 # the growth rate of the labor supply
 eis <- 0.8 # the elasticity of intertemporal substitution
-rho.beta <- 0.8 # the subjective discount factor
-interest.rate <- sserr(eis, rho.beta, gr.lab, prepaid = TRUE) # 0.2593
+Gamma.beta <- 0.8 # the subjective discount factor
+interest.rate <- sserr(eis, Gamma.beta, gr.lab, prepaid = TRUE) # 0.2593
 
 dst.laborer <- node_new(
   "util",
   type = "CES", es = eis,
-  alpha = 1, beta = rho.beta^(0:(np - 1)),
+  alpha = 1, beta = Gamma.beta^(0:(np - 1)),
   paste0("cc", 1:np)
 )
 
@@ -122,10 +122,10 @@ for (k in 1:np) {
 
 node_plot(dst.laborer, TRUE)
 
-dst.money.owner <- Clone(dst.laborer)
+dst.moneyOwner <- Clone(dst.laborer)
 
 ge <- sdm2(
-  A = list(dst.laborer, dst.money.owner),
+  A = list(dst.laborer, dst.moneyOwner),
   B = matrix(0, 2 * np, 2),
   S0Exg = {
     tmp <- matrix(0, 2 * np, 2)
@@ -134,7 +134,7 @@ ge <- sdm2(
     tmp
   },
   names.commodity = c(paste0("lab", 1:np), paste0("money", 1:np)),
-  names.agent = c("laborer", "money.owner"),
+  names.agent = c("laborer", "moneyOwner"),
   numeraire = c(money1 = interest.rate)
 )
 
@@ -153,14 +153,14 @@ dst.laborer <- node_new(
 )
 node_set(dst.laborer, "cc1",
   type = "CES", es = eis,
-  alpha = 1, beta = rho.beta^(0:(np - 1)),
+  alpha = 1, beta = Gamma.beta^(0:(np - 1)),
   paste0("lab", 1:np)
 )
 
-dst.money.owner <- Clone(dst.laborer)
+dst.moneyOwner <- Clone(dst.laborer)
 
 ge <- sdm2(
-  A = list(dst.laborer, dst.money.owner),
+  A = list(dst.laborer, dst.moneyOwner),
   B = matrix(0, np + 1, 2),
   S0Exg = {
     tmp <- matrix(0, np + 1, 2)
@@ -169,7 +169,7 @@ ge <- sdm2(
     tmp
   },
   names.commodity = c(paste0("lab", 1:np), "money"),
-  names.agent = c("laborer", "money.owner"),
+  names.agent = c("laborer", "moneyOwner"),
   numeraire = c(money = interest.rate)
 )
 
@@ -212,10 +212,10 @@ node_set(dst.laborer, "cc2",
   "prod2", "money2"
 )
 
-dst.money.owner <- Clone(dst.laborer)
+dst.moneyOwner <- Clone(dst.laborer)
 
 ge <- sdm2(
-  A = list(dst.firm, dst.laborer, dst.money.owner),
+  A = list(dst.firm, dst.laborer, dst.moneyOwner),
   B = matrix(c(
     0, 0, 0,
     0, 0, 0,
@@ -231,7 +231,7 @@ ge <- sdm2(
     NA, NA, 100
   ), 5, 3, TRUE),
   names.commodity = c("prod1", "lab1", "money1", "prod2", "money2"),
-  names.agent = c("firm", "laborer", "money.owner"),
+  names.agent = c("firm", "laborer", "moneyOwner"),
   numeraire = c(money1 = interest.rate1)
 )
 

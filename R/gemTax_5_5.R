@@ -3,7 +3,7 @@
 #' @aliases gemTax_5_5
 #' @description A general equilibrium model with tax.
 #' The model contains 5 types of commodities (i.e. prod1, prod2, labor, capital and tax payment receipts)
-#' and 5 agents (i.e. firm1, firm2, laborer, capital.owner and government).
+#' and 5 agents (i.e. firm1, firm2, laborer, capital owner and government).
 #'
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
@@ -21,7 +21,7 @@
 #' beta.firm2 <- c(0.8, 0.2)
 #'
 #' beta.laborer <- c(0.5, 0.5)
-#' beta.capital.owner <- c(0.5, 0.5)
+#' beta.capitalOwner <- c(0.5, 0.5)
 #' beta.government <- c(0.8, 0.2)
 #'
 #' dst.firm1 <- node_new("prod",
@@ -64,9 +64,9 @@
 #'   "prod1", "prod2"
 #' )
 #'
-#' dst.capital.owner <- node_new("util",
+#' dst.capitalOwner <- node_new("util",
 #'   type = "SCES",
-#'   alpha = 1, beta = beta.capital.owner, es = es.prod,
+#'   alpha = 1, beta = beta.capitalOwner, es = es.prod,
 #'   "prod1", "prod2"
 #' )
 #'
@@ -77,7 +77,7 @@
 #' )
 #'
 #' ge <- sdm2(
-#'   A = list(dst.firm1, dst.firm2, dst.laborer, dst.capital.owner, dst.government),
+#'   A = list(dst.firm1, dst.firm2, dst.laborer, dst.capitalOwner, dst.government),
 #'   B = diag(c(1, 1, 0, 0, 0)),
 #'   S0Exg = matrix(c(
 #'     NA, NA, NA, NA, NA,
@@ -87,7 +87,7 @@
 #'     NA, NA, NA, NA, 100
 #'   ), 5, 5, TRUE),
 #'   names.commodity = c("prod1", "prod2", "lab", "cap", "tax"),
-#'   names.agent = c("firm1", "firm2", "laborer", "capital.owner", "government"),
+#'   names.agent = c("firm1", "firm2", "laborer", "capitalOwner", "government"),
 #'   numeraire = "lab"
 #' )
 #'

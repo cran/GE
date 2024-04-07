@@ -1,7 +1,7 @@
 #' @export
-#' @title Overlapping Generations Financial Models with Two Firms
+#' @title Overlapping Generations Financial Sequential Models with Two Firms
 #' @aliases gemOLGF_TwoFirms
-#' @description Some examples of overlapping generations financial models with two firms.
+#' @description Some examples of overlapping generations financial sequential models with two firms.
 #' @param ... arguments to be passed to the function sdm2.
 #' @seealso {
 #' \code{\link{gemOLGF_PureExchange}}
