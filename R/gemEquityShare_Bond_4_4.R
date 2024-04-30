@@ -7,7 +7,7 @@
 #' \donttest{
 #' dst.firm <- node_new("output",
 #'                      type = "FIN",
-#'                      rate = c(1, dividend.rate = 0.15, bond.yield = 0.1),
+#'                      rate = c(1, dividend.rate = 0.15, bond.yield.rate = 0.1),
 #'                      "cc1", "equity.share", "bond"
 #' )
 #' node_set(dst.firm, "cc1",

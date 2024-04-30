@@ -103,7 +103,7 @@ gemCanonicalDynamicMacroeconomic_4_3 <- function(discount.factor = 0.97,
                                                  beta.prod.firm = 0.35,
                                                  beta.prod.consumer = 0.4,
                                                  ...) {
-  yield <- 1 / discount.factor - 1
+  yield.rate <- 1 / discount.factor - 1
   depreciation.rate <- 0.06
 
   dst.firm1 <- node_new("prod",
@@ -113,7 +113,7 @@ gemCanonicalDynamicMacroeconomic_4_3 <- function(discount.factor = 0.97,
   )
 
   dst.firm2 <- node_new("cap",
-    type = "FIN", rate = c(1, yield),
+    type = "FIN", rate = c(1, yield.rate),
     "cc1", "equity.share"
   )
   node_set(dst.firm2, "cc1",

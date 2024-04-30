@@ -75,7 +75,7 @@ ge.tl$p[1:(np - 1)] / ge.tl$p[2:np] - 1
 ge.tl$z
 
 ## (2) a financial timeline model with dividend and head-tail adjustment.
-yield <- sserr(
+yield.rate <- sserr(
   eis = eis, Gamma.beta = Gamma.beta,
   gr = gr, prepaid = TRUE
 ) # the prepaid steady-state equilibrium return rate, 0.2593
@@ -102,7 +102,7 @@ dstl.firm <- list()
 for (k in 1:(np - 1)) {
   dstl.firm[[k]] <- node_new(
     "prod",
-    type = "FIN", rate = c(1, yield),
+    type = "FIN", rate = c(1, yield.rate),
     "cc1", "claim"
   )
   node_set(dstl.firm[[k]], "cc1",
@@ -133,7 +133,7 @@ ge.ftl$z
 ## (3) a financial sequential model with dividend.
 dst.firm <- node_new("output",
                      type = "FIN",
-                     rate = c(1, dividend.rate = yield),
+                     rate = c(1, dividend.rate = yield.rate),
                      "cc1", "equity.share"
 )
 node_set(dst.firm, "cc1",
@@ -213,7 +213,7 @@ B["prod1", paste0("firm", np)] <- 1 / zeta
 dstl.firm <- list()
 for (k in 1:np) {
   dstl.firm[[k]] <- node_new("output",
-                             type = "FIN", rate = c(1, yield),
+                             type = "FIN", rate = c(1, yield.rate),
                              "cc1", "claim"
   )
   node_set(dstl.firm[[k]], "cc1",

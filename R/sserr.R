@@ -7,7 +7,7 @@
 #' @param gr a non-negative scalar indicating the growth rate in the steady state equilibrium.
 #' @param type a character indicating the type of the intertemporal utility function, which may be CES (i.e. CRRA) or SCES.
 #' @param prepaid a logical value. If prepaid is FALSE, the return rate is returned.
-#' Otherwise the prepaid steady-state equilibrium return rate (i.e. the prepaid yield) is returned.
+#' Otherwise the prepaid steady-state equilibrium return rate (i.e. the current yield rate) is returned.
 #' @examples
 #' \donttest{
 #' sserr(eis = 1, Gamma.beta = 0.97, gr = 0)

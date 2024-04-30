@@ -20,12 +20,12 @@ tpr <- 0.02 # the rate of technological progress
 gr <- (1 + gr.e) * (1 + tpr) - 1
 eis <- 0.8 # the elasticity of intertemporal substitution
 Gamma.beta <- 0.8 # the subjective discount factor
-yield <- (1 + gr)^(1 / eis - 1) / Gamma.beta - 1 # dividend yield
+yield.rate <- (1 + gr)^(1 / eis - 1) / Gamma.beta - 1 # the dividend rate
 y1 <- 143.18115 # the initial product supply
 
 dst.firm <- node_new("output",
   type = "FIN",
-  rate = c(1, dividend.rate = yield),
+  rate = c(1, dividend.rate = yield.rate),
   "cc1", "equity.share"
 )
 node_set(dst.firm, "cc1",
@@ -111,13 +111,6 @@ dst.consumer <- node_new(
   paste0("prod", 1:np)
 )
 
-policy.tail.adjustment <- function(A, state) {
-  ratio.output <- state$last.z[1] * (1 + gr)^(np - 2) / state$last.z[np - 1]
-  tail.beta <- tail(A[[np]]$beta, 1)
-  tail.beta <- tail.beta * ratio.output
-  A[[np]]$beta <- prop.table(c(head(A[[np]]$beta, -1), tail.beta))
-}
-
 ge <- sdm2(
   A = c(dstl.firm, dst.consumer),
   B = B,
@@ -128,7 +121,10 @@ ge <- sdm2(
   maxIteration = 1,
   numberOfPeriods = 40,
   ts = TRUE,
-  policy = list(policy.tail.adjustment, policyMarketClearingPrice)
+  policy = list(
+    makePolicyTailAdjustment(ind = c(np - 1, np), gr = gr),
+    policyMarketClearingPrice
+  )
 )
 
 ge$z
@@ -161,7 +157,7 @@ B["prod1", paste0("firm", np)] <- 1 / zeta
 dstl.firm <- list()
 for (k in 1:np) {
   dstl.firm[[k]] <- node_new("output",
-                             type = "FIN", rate = c(1, yield),
+                             type = "FIN", rate = c(1, yield.rate),
                              "cc1", "claim"
   )
   node_set(dstl.firm[[k]], "cc1",

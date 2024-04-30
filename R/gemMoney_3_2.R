@@ -9,10 +9,10 @@
 #' The household only consumes the product. But money is also needed to buy the product.
 #' The household supplies labor and money. \cr
 #'
-#' In the calculation results, the price of the currency is the interest per unit of currency (i.e. the rent price, interest price).
+#' In the calculation results, the price of the currency is the interest per unit of currency (i.e., the rental price).
 #' It should be noted that the unit of currency can be arbitrarily selected.
 #' For example, a unit of currency may be two dollars or ten dollars.
-#' The interest price divided by the interest rate is the asset price of 1 unit of the currency.
+#' The rental price divided by the interest rate is the asset price of 1 unit of the currency.
 #'
 #' @param dstl the demand structure tree list.
 #' @param supply.labor the supply of labor.
@@ -25,9 +25,10 @@
 #' @examples
 #' #### Leontief-type firm
 #' interest.rate <- 0.25
+#' vm <- 1 # the velocity of money
 #'
 #' dst.Leontief.firm <- node_new("output",
-#'   type = "FIN", rate = c(1, interest.rate),
+#'   type = "FIN", rate = c(1, interest.rate / vm),
 #'   "cc1", "money"
 #' )
 #' node_set(dst.Leontief.firm, "cc1",
@@ -36,7 +37,7 @@
 #' )
 #'
 #' dst.household <- node_new("utility",
-#'   type = "FIN", rate = c(1, interest.rate),
+#'   type = "FIN", rate = c(1, interest.rate / vm),
 #'   "product", "money"
 #' )
 #'

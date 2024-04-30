@@ -85,7 +85,7 @@ ge$z
 growth_rate(ge$z)
 
 ## (2) a financial timeline model with dividend and head-tail adjustment.
-yield <- sserr(eis, Gamma.beta, gr, prepaid = TRUE)
+yield.rate <- sserr(eis, Gamma.beta, gr, prepaid = TRUE)
 
 n <- 2 * np # the number of commodity kinds
 m <- np # the number of agent kinds
@@ -109,7 +109,7 @@ dstl.firm <- list()
 for (k in 1:(np - 1)) {
   dstl.firm[[k]] <- node_new(
     "prod",
-    type = "FIN", rate = c(1, yield),
+    type = "FIN", rate = c(1, yield.rate),
     "cc1", "claim"
   )
   node_set(dstl.firm[[k]], "cc1",
@@ -144,7 +144,7 @@ ge$z
 ## (3) a financial sequential model with dividend.
 dst.firm <- node_new("output",
                      type = "FIN",
-                     rate = c(1, dividend.rate = yield),
+                     rate = c(1, dividend.rate = yield.rate),
                      "cc1", "equity.share"
 )
 node_set(dst.firm, "cc1",
@@ -219,7 +219,7 @@ B["prod1", paste0("firm", np)] <- 1 / zeta
 dstl.firm <- list()
 for (k in 1:np) {
   dstl.firm[[k]] <- node_new("output",
-                             type = "FIN", rate = c(1, yield),
+                             type = "FIN", rate = c(1, yield.rate),
                              "cc1", "claim"
   )
   node_set(dstl.firm[[k]], "cc1",

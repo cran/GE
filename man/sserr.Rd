@@ -16,7 +16,7 @@ sserr(eis, Gamma.beta, gr = 0, type = "CES", prepaid = FALSE)
 \item{type}{a character indicating the type of the intertemporal utility function, which may be CES (i.e. CRRA) or SCES.}
 
 \item{prepaid}{a logical value. If prepaid is FALSE, the return rate is returned.
-Otherwise the prepaid steady-state equilibrium return rate (i.e. the prepaid yield) is returned.}
+Otherwise the prepaid steady-state equilibrium return rate (i.e. the current yield rate) is returned.}
 }
 \description{
 Compute the (postpaid) return rate in the steady state equilibrium.

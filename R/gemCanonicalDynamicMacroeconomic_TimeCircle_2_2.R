@@ -113,7 +113,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
                                                             wage.payment = "post",
                                                             ...) {
   np <- length(alpha.firm)
-  yield <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
+  yield.rate <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
   zeta <- (1 + gr)^np # the ratio of repayments to loans
 
   n <- 2 * np + 2 # the number of commodity kinds
@@ -125,7 +125,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
   # the exogenous supply matrix.
   S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
   S0Exg[paste0("lab", 1:np), "consumer"] <- 100 * (1 + gr)^(0:(np - 1)) # the supply of labor
-  S0Exg["claim", "consumer"] <- 100 # the supply of financial claim
+  S0Exg["claim", "consumer"] <- 100 # the supply of ad valorem claim
 
   # the output coefficient matrix.
   B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
@@ -144,7 +144,7 @@ gemCanonicalDynamicMacroeconomic_TimeCircle_2_2 <- function(alpha.firm = rep(1, 
   }
 
   dst.bank <- node_new("prod",
-    type = "FIN", rate = c(1, (1 + yield)^np - 1),
+    type = "FIN", rate = c(1, (1 + yield.rate)^np - 1),
     "cc1", "claim"
   )
   node_set(dst.bank, "cc1",

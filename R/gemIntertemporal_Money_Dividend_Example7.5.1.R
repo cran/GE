@@ -6,7 +6,7 @@
 #' (2) a time-circle model;
 #' (3) a timeline model with head-tail adjustment.
 #'
-#' Stocks, fiat currencies, bonds, and taxes, etc. can be collectively referred to as (financial) claims.
+#' Stocks, fiat currencies, bonds, and taxes, etc. can be collectively referred to as ad valorem claims.
 #' Sometimes we do not need to differentiate between these financial instruments when modeling.
 #' Furthermore, sometimes we do not need to consider which period these financial instruments belong to.
 #' @param ... arguments to be passed to the function sdm2.
@@ -84,7 +84,7 @@
 #' # the exogenous supply matrix.
 #' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
 #' S0Exg[paste0("lab", 1:np), "consumer"] <- 100 * (1 + gr)^(0:(np - 1)) # the labor supply.
-#' S0Exg["claim", "consumer"] <- np * 100 # the financial claim supply.
+#' S0Exg["claim", "consumer"] <- np * 100 # the ad valorem claim supply.
 #'
 #' # the output coefficient matrix.
 #' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))

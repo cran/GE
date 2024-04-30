@@ -9,6 +9,8 @@
 #' If type=="none", NULL will be returned.
 #' @param gr the growth rate.
 #' @param np the number of economic periods.
+#' @note The statement policy = makePolicyHeadTailAdjustment(gr = gr, np = np) is equivalent to
+#' policy = list( makePolicyHeadAdjustment(ind = c(1, np, 2, 1), gr = gr), makePolicyTailAdjustment(ind = c(np - 1, np), gr = gr) ).
 #' @return A policy, which is often used as an argument of the function sdm2.
 #' @seealso {
 #' \code{\link{gemIntertemporal_Dividend}};

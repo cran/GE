@@ -1,8 +1,8 @@
 #' @export
-#' @title Some Intertemporal Models with Financial Claim
-#' @aliases gemIntertemporal_FinancialClaim
-#' @description  Some intertemporal models with financial claim (or long-term held securities).
-#' Financial claims may be equities, bonds, ad valorem taxation rights (ad valorem tax receipt), fiat money etc,
+#' @title Some Intertemporal Models with Ad Valorem Claim
+#' @aliases gemIntertemporal_AdValoremClaim
+#' @description  Some intertemporal models with ad valorem claim.
+#' Ad valorem claims may be equities, bonds, ad valorem taxation rights (ad valorem tax receipt), fiat money etc,
 #' which can be treated in the same way in models.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
@@ -22,7 +22,7 @@
 #' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
 #' S0Exg[paste0("lab", 1:np), "laborer"] <- 100 * (1 + gr.lab)^(0:(np - 1)) # the labor supply
 #' S0Exg["prod1", "laborer"] <- 10 # the product supply in the first period
-#' S0Exg["tax receipt", "government"] <- np * 100 # the supply of tax receipt (i.e. financial claim)
+#' S0Exg["tax receipt", "government"] <- np * 100 # the supply of tax receipt (i.e. ad valorem claim)
 #'
 #' # the output coefficient matrix.
 #' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
@@ -130,6 +130,7 @@
 #' )
 #'
 #' ge$p
+#' growth_rate(ge$p[1:3]) + 1
 #' ge$z
 #' addmargins(ge$D, 2)
 #' addmargins(ge$S, 2)
@@ -230,4 +231,4 @@
 #' ge$DV
 #' }
 
-gemIntertemporal_FinancialClaim <- function(...) sdm2(...)
+gemIntertemporal_AdValoremClaim <- function(...) sdm2(...)

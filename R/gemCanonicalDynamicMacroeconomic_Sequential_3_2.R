@@ -81,7 +81,7 @@ gemCanonicalDynamicMacroeconomic_Sequential_3_2 <- function(alpha.firm = 1,
             the function gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3 should be used instead of this function.")
   }
 
-  yield <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
+  yield.rate <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
 
   switch(wage.payment ,
     "post" = {
@@ -92,14 +92,14 @@ gemCanonicalDynamicMacroeconomic_Sequential_3_2 <- function(alpha.firm = 1,
         "cc1", "lab"
       )
       node_set(dst.firm, "cc1",
-        type = "FIN", rate = c(1, yield),
+        type = "FIN", rate = c(1, yield.rate),
         "prod", "equity.share"
       )
     },
     "pre" = {
       # Take the wage prepayment assumption.
       dst.firm <- node_new("output",
-        type = "FIN", rate = c(1, yield),
+        type = "FIN", rate = c(1, yield.rate),
         "cc1", "equity.share"
       )
       node_set(dst.firm, "cc1",

@@ -54,7 +54,7 @@ gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3 <- function(alph
                                                                             beta.prod.consumer = 0.4,
                                                                             gr = 0,
                                                                             ...) {
-  yield <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
+  yield.rate <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
 
   # Take the wage postpayment assumption.
   dst.firm1 <- node_new("output",
@@ -63,7 +63,7 @@ gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3 <- function(alph
     "cc1", "lab"
   )
   node_set(dst.firm1, "cc1",
-    type = "FIN", rate = c(1, yield),
+    type = "FIN", rate = c(1, yield.rate),
     "prod", "equity.share"
   )
 

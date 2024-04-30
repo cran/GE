@@ -1,13 +1,14 @@
 #' @export
-#' @title An Intertemporal Model with Land, Two Consumers, and Three Types of Firms
+#' @title Some Intertemporal (Timeline and Time-circle) Models with Land, Two Consumers, and Three Types of Firms
 #' @aliases gemIntertemporal_5_5
-#' @description An (intertemporal) timeline model with two consumers (i.e. a laborer and a landowner) and three types of firms
+#' @description Some intertemporal (timeline and time-circle) models with two consumers (i.e. a laborer and a landowner) and three types of firms
 #' (i.e. wheat producers, iron producers and iron leaser).
 #' Here the iron leasing firm is actually a quasi-firm, which does not require primary factors such as labor and land in its production process.
 #' There are four commodities in the model, namely wheat, iron, iron leased out as a capital good, labor and land.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
+#' #### a timeline model.
 #' np <- 15 # the number of economic periods
 #' gr <- 0 # the growth rate in the steady state equilibrium
 #' eis <- 1 # the elasticity of intertemporal substitution  of consumers
@@ -22,9 +23,6 @@
 #' y1.wheat <- 200
 #' y1.iron <- 100
 #'
-#' n <- 5 * np - 3 # the number of commodity kinds
-#' m <- 3 * np - 1 # the number of agent kinds
-#'
 #' names.commodity <- c(
 #'   paste0("wheat", 1:np),
 #'   paste0("iron", 1:np),
@@ -37,6 +35,9 @@
 #'   paste0("quasifirm.cap", 1:(np - 1)), # a quasifirm
 #'   "laborer", "landowner"
 #' )
+#'
+#' n <- length(names.commodity) # the number of commodity kinds, i.e. 5 * np - 3
+#' m <- length(names.agent) # the number of agent kinds, i.e. 3 * np - 1
 #'
 #' # the exogenous supply matrix.
 #' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
@@ -131,7 +132,247 @@
 #' plot(ge$z[2 * (np - 1) + (1:(np - 1))], type = "b", pch = 20)
 #' lines(1:(np - 1), ge$z[1:(np - 1)], type = "b", pch = 21)
 #' lines(1:(np - 1), ge$z[np - 1 + (1:(np - 1))], type = "b", pch = 22)
-#' legend("topleft", c("cap","wheat", "iron"), pch = 20:21)
+#' legend("topleft", c("cap","wheat", "iron"), pch = 20:22)
+#'
+#' #### a time-circle model.
+#' np <- 5 # the number of economic periods
+#' gr <- 0.03 # the growth rate in the steady state equilibrium
+#' eis <- 0.5 # the elasticity of intertemporal substitution  of consumers
+#' Gamma.beta <- 0.97 # the subjective discount factor of consumers
+#' es.firm <- 1
+#' depreciation.rate <- 0.06
+#' zeta <- (1 + gr)^np # the ratio of repayments to loans
+#' yield.rate <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr, prepaid = TRUE)
+#' captial.share.laborer <- 0.7795
+#' captial.share.landowner <- 1 - captial.share.laborer
+#'
+#' alpha.firm.wheat <- rep(5, np)
+#' alpha.firm.iron <- rep(5, np)
+#'
+#' names.commodity <- c(
+#'   paste0("wheat", 1:np),
+#'   paste0("iron", 1:np),
+#'   paste0("cap", 1:np),
+#'   paste0("lab", 1:np),
+#'   paste0("land", 1:np),
+#'   "claim"
+#' )
+#' names.agent <- c(
+#'   paste0("firm.wheat", 1:np), paste0("firm.iron", 1:np),
+#'   paste0("quasifirm.cap", 1:np), # a quasifirm
+#'   "laborer", "landowner"
+#' )
+#' n <- length(names.commodity) # the number of commodity kinds
+#' m <- length(names.agent) # the number of agent kinds
+#'
+#' # the exogenous supply matrix.
+#' S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' S0Exg[paste0("lab", 1:np), "laborer"] <- 100 * (1 + gr)^(0:(np - 1)) # the supply of labor
+#' S0Exg[paste0("land", 1:np), "landowner"] <- 100 * (1 + gr)^(0:(np - 1)) # the supply of land
+#' S0Exg["claim", "laborer"] <- 100 * captial.share.laborer
+#' S0Exg["claim", "landowner"] <- 100 * captial.share.landowner
+#'
+#' # the output coefficient matrix.
+#' B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' for (k in 1:(np - 1)) {
+#'   B[paste0("wheat", k + 1), paste0("firm.wheat", k)] <- 1
+#'   B[paste0("iron", k + 1), paste0("firm.iron", k)] <- 1
+#'   B[paste0("cap", k), paste0("quasifirm.cap", k)] <- 1
+#'   B[paste0("iron", k + 1), paste0("quasifirm.cap", k)] <- 1 - depreciation.rate
+#' }
+#' B[paste0("wheat", 1), paste0("firm.wheat", np)] <- 1 / zeta
+#' B[paste0("iron", 1), paste0("firm.iron", np)] <- 1 / zeta
+#' B[paste0("cap", np), paste0("quasifirm.cap", np)] <- 1
+#' B[paste0("iron", 1), paste0("quasifirm.cap", np)] <- (1 - depreciation.rate) / zeta
+#'
+#' dstl.firm.wheat <- dstl.firm.iron <- dstl.quasifirm.cap <- list()
+#' for (k in 1:(np - 1)) {
+#'   dstl.firm.wheat[[k]] <- node_new(
+#'     "prod",
+#'     type = "CES", es = es.firm,
+#'     alpha = alpha.firm.wheat[k], beta = c(0.2, 0.4, 0.4),
+#'     paste0("cap", k), paste0("lab", k), paste0("land", k)
+#'   )
+#'
+#'   dstl.firm.iron[[k]] <- node_new(
+#'     "prod",
+#'     type = "CES", es = es.firm,
+#'     alpha = alpha.firm.iron[k], beta = c(0.4, 0.4, 0.2),
+#'     paste0("cap", k), paste0("lab", k), paste0("land", k)
+#'   )
+#'
+#'   dstl.quasifirm.cap[[k]] <- node_new(
+#'     "output",
+#'     type = "Leontief", a = 1,
+#'     paste0("iron", k)
+#'   )
+#' }
+#'
+#' dstl.firm.wheat[[np]] <- node_new(
+#'   "prod",
+#'   type = "FIN", rate = c(1, (1 + yield.rate)^np - 1),
+#'   "cc1", "claim"
+#' )
+#' node_set(dstl.firm.wheat[[np]], "cc1",
+#'          type = "CES", es = es.firm,
+#'          alpha = alpha.firm.wheat[k], beta = c(0.2, 0.4, 0.4),
+#'          paste0("cap", np), paste0("lab", np), paste0("land", np)
+#' )
+#'
+#' dstl.firm.iron[[np]] <- node_new(
+#'   "prod",
+#'   type = "FIN", rate = c(1, (1 + yield.rate)^np - 1),
+#'   "cc1", "claim"
+#' )
+#' node_set(dstl.firm.iron[[np]], "cc1",
+#'          type = "CES", es = es.firm,
+#'          alpha = alpha.firm.wheat[k], beta = c(0.4, 0.4, 0.2),
+#'          paste0("cap", np), paste0("lab", np), paste0("land", np)
+#' )
+#'
+#' return.rate <- sserr(eis = eis, Gamma.beta = Gamma.beta, gr = gr)
+#' fund.occupancy.rate <- (1 - depreciation.rate) / (1 + return.rate)
+#' # The prepaid rent rate (i.e. the prepaid-rent-to-price ratio) of
+#' # the capital good is equal to 1 minus fund.occupancy.rate.
+#'
+#' dstl.quasifirm.cap[[np]] <- node_new(
+#'   "prod",
+#'   type = "FIN", rate = c(1, ((1 + yield.rate)^np - 1) * fund.occupancy.rate),
+#'   "cc1", "claim"
+#' )
+#' node_set(dstl.quasifirm.cap[[np]], "cc1",
+#'          type = "Leontief", a = 1,
+#'          paste0("iron", np)
+#' )
+#'
+#' dst.laborer <- node_new(
+#'   "util",
+#'   type = "CES", es = eis,
+#'   alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
+#'   paste0("cc", 1:np)
+#' )
+#' for (k in 1:np) {
+#'   node_set(dst.laborer, paste0("cc", k),
+#'            type = "CES", es = 1,
+#'            alpha = 1, beta = c(0.4, 0.4, 0.2),
+#'            paste0("wheat", k), paste0("lab", k), paste0("land", k)
+#'   )
+#' }
+#'
+#' dst.landowner <- node_new(
+#'   "util",
+#'   type = "CES", es = eis,
+#'   alpha = 1, beta = prop.table(Gamma.beta^(1:np)),
+#'   paste0("cc", 1:np)
+#' )
+#' for (k in 1:np) {
+#'   node_set(dst.landowner, paste0("cc", k),
+#'            type = "CES", es = 1,
+#'            alpha = 1, beta = c(0.2, 0.4, 0.4),
+#'            paste0("wheat", k), paste0("lab", k), paste0("land", k)
+#'   )
+#' }
+#'
+#' ge.tc <- sdm2(
+#'   A = c(
+#'     dstl.firm.wheat, dstl.firm.iron, dstl.quasifirm.cap,
+#'     dst.laborer, dst.landowner
+#'   ),
+#'   B = B,
+#'   S0Exg = S0Exg,
+#'   names.commodity = names.commodity,
+#'   names.agent = names.agent,
+#'   numeraire = "lab1",
+#'   numberOfPeriods = 1000,
+#'   priceAdjustmentVelocity = 0.03
+#' )
+#'
+#' ge.tc$p
+#' growth_rate(ge.tc$p)
+#' ge.tc$z
+#' growth_rate(ge.tc$z)
+#'
+#' ## the corresponding sequential model with the same steady-state equilibrium.
+#' dst.firm.wheat <- node_new("prod",
+#'                            type = "FIN", rate = c(1, yield.rate),
+#'                            "cc1", "equity.share.wheat"
+#' )
+#' node_set(dst.firm.wheat, "cc1",
+#'          type = "CES", es = es.firm,
+#'          alpha = 5, beta = c(0.2, 0.4, 0.4),
+#'          "cap", "lab", "land"
+#' )
+#'
+#' dst.firm.iron <- node_new("prod",
+#'                           type = "FIN", rate = c(1, yield.rate),
+#'                           "cc1", "equity.share.iron"
+#' )
+#' node_set(dst.firm.iron, "cc1",
+#'          type = "CES", es = es.firm,
+#'          alpha = 5, beta = c(0.4, 0.4, 0.2),
+#'          "cap", "lab", "land"
+#' )
+#'
+#' dst.quasifirm.cap <- node_new("prod",
+#'                               type = "FIN", rate = c(1, yield.rate * fund.occupancy.rate),
+#'                               "cc1", "equity.share.cap"
+#' )
+#' node_set(dst.quasifirm.cap, "cc1",
+#'          type = "Leontief", a = 1,
+#'          "iron"
+#' )
+#'
+#' dst.laborer <- node_new("util",
+#'                         type = "CES", es = 1,
+#'                         alpha = 1, beta = c(0.4, 0.4, 0.2),
+#'                         "wheat", "lab", "land"
+#' )
+#'
+#' dst.landowner <- node_new("util",
+#'                           type = "CES", es = 1,
+#'                           alpha = 1, beta = c(0.2, 0.4, 0.4),
+#'                           "wheat", "lab", "land"
+#' )
+#'
+#' ge.seq <- sdm2(
+#'   A = list(
+#'     dst.firm.wheat, dst.firm.iron, dst.quasifirm.cap,
+#'     dst.laborer, dst.landowner
+#'   ),
+#'   B = matrix(c(
+#'     1, 0, 0, 0, 0,
+#'     0, 1, 1 - depreciation.rate, 0, 0,
+#'     0, 0, 1 + gr, 0, 0,
+#'     0, 0, 0, 0, 0,
+#'     0, 0, 0, 0, 0,
+#'     0, 0, 0, 0, 0,
+#'     0, 0, 0, 0, 0,
+#'     0, 0, 0, 0, 0
+#'   ), 8, 5, TRUE),
+#'   S0Exg = matrix(c(
+#'     NA, NA, NA, NA, NA,
+#'     NA, NA, NA, NA, NA,
+#'     NA, NA, NA, NA, NA,
+#'     NA, NA, NA, 100, NA,
+#'     NA, NA, NA, NA, 100,
+#'     NA, NA, NA, 100 * captial.share.laborer, 100 * captial.share.landowner,
+#'     NA, NA, NA, 100 * captial.share.laborer, 100 * captial.share.landowner,
+#'     NA, NA, NA, 100 * captial.share.laborer, 100 * captial.share.landowner
+#'   ), 8, 5, TRUE),
+#'   names.commodity = c(
+#'     "wheat", "iron", "cap", "lab", "land",
+#'            "equity.share.wheat", "equity.share.iron", "equity.share.cap"
+#'   ),
+#'   names.agent = c("firm.wheat", "firm.iron", "quasifirm.cap", "laborer", "landowner"),
+#'   numeraire = "lab",
+#'   numberOfPeriods = 2000,
+#'   priceAdjustmentVelocity = 0.03,
+#'   GRExg = gr
+#' )
+#'
+#' ge.seq$p
+#' ge.seq$z
+#' ge.tc$z
 #' }
 
 gemIntertemporal_5_5 <- function(...) sdm2(...)

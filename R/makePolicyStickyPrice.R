@@ -14,8 +14,8 @@
 #' The exploratory prices are computed based on the prices and sales rates of the previous period.
 #' In economic reality, the market clearing prices are unknown, so exploratory prices are more realistic.
 #' @note
-#' When the stickiness value is positive and the priceAdjustmentVelocity parameter in sdm2 is set to 0 (meaning
-#' the current prices are equal to those from the previous period), executing the sticky-price policy will yield
+#' When the stickiness value is positive and the priceAdjustmentVelocity parameter in sdm2 is set to 0
+#' (indicating that current prices remain unchanged from the previous period), implementing the sticky-price policy results in
 #' current prices that are the weighted average of the market-clearing prices and the prices from the previous period.
 #' Typically, this function should be utilized in this manner.
 #' @seealso \code{\link{sdm2}}
