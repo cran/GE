@@ -2,14 +2,14 @@
 #' @title An Example Illustrating Endogenous Equilibrium Interest Rates and Foreign Exchange Rates in a Two-country (Timeline) Transitional Equilibrium Path
 #' @aliases gemIntertemporal_EndogenousEquilibriumInterestRate_ForeignExchangeRate
 #' @description This example illustrates (endogenous) equilibrium primitive interest rates and foreign exchange rates in a two-country transitional equilibrium path.
+#' Assume that the velocity of money is equal to one, that is, money circulates once per period.
 #' @param ... arguments to be passed to the function sdm2.
 #' @seealso \code{\link{gemIntertemporal_EndogenousEquilibriumInterestRate}}
 #' @examples
 #' \donttest{
-#' vm <- 1 # the velocity of money
 #' eis <- 0.8 # the elasticity of intertemporal substitution
 #' Gamma.beta <- 10 / 11 # the subjective discount factor
-#' gr <- 0 # the growth rate
+#' gr <- 0 # the steady-state growth rate
 #' money1.supply <- 600
 #' money2.supply <- 100
 #' np <- 20 # the number of economic periods
@@ -63,7 +63,7 @@
 #'   for (k in 1:(np - 1)) {
 #'     dstl.firm.wheat[[k]] <- node_new(
 #'       "prod",
-#'       type = "FIN", rate = c(1, ir1[k] / vm),
+#'       type = "FIN", rate = c(1, ir1[k]),
 #'       "cc1", "money1"
 #'     )
 #'     node_set(dstl.firm.wheat[[k]], "cc1",
@@ -73,7 +73,7 @@
 #'
 #'     dstl.firm.iron[[k]] <- node_new(
 #'       "prod",
-#'       type = "FIN", rate = c(1, ir2[k] / vm),
+#'       type = "FIN", rate = c(1, ir2[k]),
 #'       "cc1", "money2"
 #'     )
 #'     node_set(dstl.firm.iron[[k]], "cc1",
@@ -90,7 +90,7 @@
 #'   )
 #'   for (k in 1:(np - 1)) {
 #'     node_set(dst.laborer1, paste0("cc", k),
-#'       type = "FIN", rate = c(1, ir1[k] / vm),
+#'       type = "FIN", rate = c(1, ir1[k]),
 #'       paste0("wheat", k), "money1"
 #'     )
 #'   }
@@ -103,7 +103,7 @@
 #'   )
 #'   for (k in 1:(np - 1)) {
 #'     node_set(dst.moneyOwner1, paste0("cc", k),
-#'       type = "FIN", rate = c(1, ir1[k] / vm),
+#'       type = "FIN", rate = c(1, ir1[k]),
 #'       paste0("wheat", k), "money1"
 #'     )
 #'   }
@@ -117,7 +117,7 @@
 #'
 #'   for (k in 1:(np - 1)) {
 #'     node_set(dst.laborer2, paste0("cc", k),
-#'       type = "FIN", rate = c(1, ir2[k] / vm),
+#'       type = "FIN", rate = c(1, ir2[k]),
 #'       paste0("wheat", k), "money2"
 #'     )
 #'   }
@@ -130,7 +130,7 @@
 #'   )
 #'   for (k in 1:(np - 1)) {
 #'     node_set(dst.moneyOwner2, paste0("cc", k),
-#'       type = "FIN", rate = c(1, ir2[k] / vm),
+#'       type = "FIN", rate = c(1, ir2[k]),
 #'       paste0("wheat", k), "money2"
 #'     )
 #'   }
@@ -210,7 +210,7 @@
 #' ir <- dividend.rate <- 0.1
 #'
 #' dst.firm.wheat <- node_new("output",
-#'   type = "FIN", rate = c(1, ir / vm, (1 + ir) * dividend.rate),
+#'   type = "FIN", rate = c(1, ir, (1 + ir) * dividend.rate),
 #'   "cc1", "money1", "equity.share.wheat"
 #' )
 #' node_set(dst.firm.wheat, "cc1",
@@ -220,7 +220,7 @@
 #' )
 #'
 #' dst.firm.iron <- node_new("output",
-#'   type = "FIN", rate = c(1, ir / vm, (1 + ir) * dividend.rate),
+#'   type = "FIN", rate = c(1, ir, (1 + ir) * dividend.rate),
 #'   "cc1", "money2", "equity.share.iron"
 #' )
 #' node_set(dst.firm.iron, "cc1",
@@ -296,7 +296,7 @@
 #' ## See also CGE::Example7.6.
 #' eis <- 1 # the elasticity of intertemporal substitution
 #' Gamma.beta <- 1 # the subjective discount factor
-#' gr <- 0 # the growth rate
+#' gr <- 0 # the steady-state growth rate
 #' money1.supply <- 600
 #' money2.supply <- 100
 #' np <- 20 # the number of economic periods

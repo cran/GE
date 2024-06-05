@@ -3,6 +3,8 @@
 #' @aliases gemIntertemporal_EndogenousEquilibriumInterestRate
 #' @description This example illustrates (endogenous) equilibrium primitive interest rates in a transitional equilibrium path,
 #' which is an intertemporal path distinct from a steady-state equilibrium.
+#' Assume that the velocity of money is equal to one, that is, money circulates once per period.
+#'
 #' The interest rate calculated here is adjusted from the nominal interest rate based on the growth rate of the money supply,
 #' which is equal to the nominal interest rate when the money stock remains unchanged.
 #' We refer to this kind of interest rate as the primitive interest rate,
@@ -14,10 +16,9 @@
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{
-#' vm <- 1 # the velocity of money
 #' eis <- 0.8 # the elasticity of intertemporal substitution
 #' Gamma.beta <- 0.8 # the subjective discount factor
-#' gr <- 0 # the growth rate
+#' gr <- 0 # the steady-state growth rate
 #' np <- 20 # the number of economic periods
 #'
 #' f <- function(ir = rep(0.25, np - 1), return.ge = FALSE,
@@ -53,7 +54,7 @@
 #'   for (k in 1:(np - 1)) {
 #'     dstl.firm[[k]] <- node_new(
 #'       "prod",
-#'       type = "FIN", rate = c(1, ir[k] / vm),
+#'       type = "FIN", rate = c(1, ir[k]),
 #'       "cc1", "money"
 #'     )
 #'     node_set(dstl.firm[[k]], "cc1",
@@ -71,7 +72,7 @@
 #'
 #'   for (k in 1:(np - 1)) {
 #'     node_set(dst.laborer, paste0("cc", k),
-#'              type = "FIN", rate = c(1, ir[k] / vm),
+#'              type = "FIN", rate = c(1, ir[k]),
 #'              paste0("prod", k), "money"
 #'     )
 #'   }
@@ -84,7 +85,7 @@
 #'   )
 #'   for (k in 1:(np - 1)) {
 #'     node_set(dst.moneyOwner, paste0("cc", k),
-#'              type = "FIN", rate = c(1, ir[k] / vm),
+#'              type = "FIN", rate = c(1, ir[k]),
 #'              paste0("prod", k), "money"
 #'     )
 #'   }
@@ -146,7 +147,7 @@
 #' dividend.rate <- ir <- sserr(eis, Gamma.beta, prepaid = TRUE)
 #'
 #' dst.firm <- node_new("prod",
-#'                      type = "FIN", rate = c(1, ir / vm, (1 + ir / vm) * dividend.rate),
+#'                      type = "FIN", rate = c(1, ir, (1 + ir) * dividend.rate),
 #'                      "cc1", "money", "equity.share"
 #' )
 #' node_set(dst.firm, "cc1",
@@ -156,12 +157,12 @@
 #' )
 #'
 #' dst.laborer <- node_new("util",
-#'                         type = "FIN", rate = c(1, ir / vm),
+#'                         type = "FIN", rate = c(1, ir),
 #'                         "prod", "money"
 #' )
 #'
 #' dst.moneyOwner <- node_new("util",
-#'                            type = "FIN", rate = c(1, ir / vm),
+#'                            type = "FIN", rate = c(1, ir),
 #'                            "prod", "money"
 #' )
 #'
