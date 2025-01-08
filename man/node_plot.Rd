@@ -11,7 +11,7 @@ node_plot(node, param = FALSE, ...)
 
 \item{param}{If TRUE, those parameters such as alpha, beta, es etc. will be shown.}
 
-\item{...}{arguments to be to be passed to the function plot.Node.}
+\item{...}{arguments to be passed to the function plot.Node.}
 }
 \description{
 A wrapper of the function plot.Node of the packages data.tree.

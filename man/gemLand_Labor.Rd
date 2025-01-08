@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemLand_Labor.R
 \name{gemLand_Labor}
 \alias{gemLand_Labor}
-\title{Some Examples of Spot Market Clearing Paths Involving Land and Labor}
+\title{Some Examples of Spot Equilibrium Paths Involving Land and Labor}
 \usage{
 gemLand_Labor(...)
 }
@@ -10,8 +10,8 @@ gemLand_Labor(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of spot market clearing paths (alias instantaneous equilibrium paths) involving land and labor.
-The labor supply may increase from the fifth period.
+Some examples of spot equilibrium paths involving land and labor.
+The labor supply may begin to increase starting from the fifth period.
 }
 \examples{
 \donttest{

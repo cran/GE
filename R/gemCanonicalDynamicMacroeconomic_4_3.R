@@ -1,19 +1,19 @@
 #' @export
 #' @title A Canonical Dynamic Macroeconomic General Equilibrium Model (see Torres, 2016)
 #' @aliases gemCanonicalDynamicMacroeconomic_4_3
-#' @description A canonical dynamic macroeconomic general equilibrium model (see Torres, 2016, Table 2.1 and 2.2).
-#' @details A general equilibrium model with 4 commodities (i.e. product, labor, capital and equity shares)
-#' and 3 agents (i.e. a production firm, a consumer and a capital-leasing firm).
+#' @description This is a function used to calculate the steady state of a canonical dynamic macroeconomic general equilibrium model (see Torres, 2016, Table 2.1 and Table 2.2).
+#' The model consists of four commodities (i.e., product, labor, capital, and equity shares) and three agents (i.e., a production firm, a consumer, and a capital-leasing firm).
+#' It can also compute the spot equilibrium path based on the steady-state return rate.
 #' @param discount.factor the intertemporal discount factor.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
 #' @param beta.prod.firm the share parameter of the product in the Cobb-Douglas production function of the production firm.
 #' @param beta.prod.consumer the share parameter of the product in the Cobb-Douglas period utility function of the consumer.
-#' @param ... arguments to be to be passed to the function sdm2.
+#' @param ... arguments to be passed to the function sdm2.
 #' @return A general equilibrium (see \code{\link{sdm2}})
 #' @references Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomic General Equilibrium Models (Second Edition). Vernon Press.
 #' @examples
 #' \donttest{
-#' #### a spot market clearing path that converges to the steady-state equilibrium
+#' #### (A) A spot equilibrium path that converges to the steady-state equilibrium.
 #' ge <- gemCanonicalDynamicMacroeconomic_4_3(
 #'   numberOfPeriods = 100,
 #'   policy = policyMarketClearingPrice
@@ -22,7 +22,7 @@
 #' matplot(ge$ts.z, type = "o", pch = 20)
 #' matplot(ge$ts.p, type = "o", pch = 20)
 #'
-#' ## population growth: a spot market clearing path
+#' ## population growth: a spot equilibrium path
 #' ## that converges to a balanced growth path
 #' ge <- gemCanonicalDynamicMacroeconomic_4_3(
 #'   numberOfPeriods = 100,
@@ -34,7 +34,7 @@
 #' matplot((ge$ts.z), type = "l")
 #' matplot(growth_rate(ge$ts.z), type = "l")
 #'
-#' #### a disequilibrium path and the steady-state equilibrium
+#' #### (B) A disequilibrium path and the steady-state equilibrium.
 #' ge <- gemCanonicalDynamicMacroeconomic_4_3(
 #'   numberOfPeriods = 5000,
 #'   priceAdjustmentVelocity = 0.03,
@@ -57,7 +57,7 @@
 #'   }
 #' )
 #'
-#' #### business cycles
+#' #### (C) Business cycles.
 #' de <- gemCanonicalDynamicMacroeconomic_4_3(
 #'   numberOfPeriods = 1000,
 #'   priceAdjustmentVelocity = 0.15
@@ -73,8 +73,8 @@
 #' matplot(ge$ts.z, type = "l")
 #' plot(ge$policy.data, type = "l") # tax rates
 #'
-#' #### a spot market-clearing path with a productivity shock
-#' nPeriod <- 100 # the number of periods of the spot market clearing path
+#' #### (D) A spot equilibrium path with a productivity shock.
+#' nPeriod <- 100 # the number of periods of the spot equilibrium path
 #' set.seed(1)
 #' alpha.shock <- rep(1, nPeriod)
 #' alpha.shock[11] <- exp(0.01)

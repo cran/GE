@@ -24,7 +24,7 @@ gemMoney_3_2(
 
 \item{names.agent}{names of agents.}
 
-\item{...}{arguments to be to be passed to the function sdm2.}
+\item{...}{arguments to be passed to the function sdm2.}
 }
 \value{
 A general equilibrium (see \code{\link{sdm2}})

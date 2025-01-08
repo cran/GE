@@ -91,7 +91,7 @@ f(policy = list(
 ))
 
 #### structural transition: disequilibrium path and
-## a spot market clearing path (alias instantaneous equilibrium path)
+## a spot equilibrium path
 dst.firm <- node_new("output",
   type = "CD", alpha = 5,
   beta = c(0.5, 0.5),
@@ -163,7 +163,7 @@ f(policy = list(
 ))$z
 
 
-## structural transition: a spot market clearing path
+## structural transition: a spot equilibrium path
 f(policy = list(
   policy.technology,
   policy.tax,

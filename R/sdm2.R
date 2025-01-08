@@ -89,16 +89,22 @@
 #' \item ts.q - the time series of sales rates in the last outer iteration.
 #' \item policy.data - the policy data.
 #' }
-#' @note In the package CGE, the spot market clearing path (alias instantaneous equilibrium path) is computed by the function iep.
-#' In this package, the instantaneous equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
+#' @note In the package CGE, the spot equilibrium path (alias instantaneous equilibrium path) is computed by the function iep.
+#' The spot equilibrium path includes only spot market transactions, with no intertemporal transactions.
+#' In this package, the spot equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
 #' @note The order of implementation of various policies is critical.
 #' When a policy list contains a supply policy, a technology (i.e. dstl) policy, a price policy (e.g. a market-clearing-price policy) and a B policy
 #' (i.e. a policy adjusting the argument B), both the supply policy and the technology policy should be placed before the price policy,
 #' and the B policy should be placed after the price policy.
 #' The reason is that the calculation of the current prices may require the use of supply and technology,
 #' while the calculation of B may require the use of the current prices.
+#' @note In general equilibrium models, decreasing returns to scale can be transformed into constant returns to scale;
+#' therefore, we usually assume constant returns to scale.
+#' The decreasing-returns-to-scale feature of the technology is presumably due to the presence of a fixed factor.
+#' This factor is often referred to as "land" and measured in units so that the total amount of land is 1 (Varian, 1992, p. 353).
 #' @references LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
 #' @references LI Wu (2010) A Structural Growth Model and its Applications to Sraffa's System. http://www.iioa.org/conferences/18th/papers/files/104_20100729011_AStructuralGrowthModelanditsApplicationstoSraffasSstem.pdf
+#' @references Varian, Hal R. (1992, ISBN: 0393957357) Microeconomic Analysis. W. W. Norton & Company.
 #' @examples
 #' \donttest{
 #' dst.firm <- node_new("output",

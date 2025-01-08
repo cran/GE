@@ -75,7 +75,7 @@ addmargins(ge$DV)
 addmargins(ge$SV)
 
 ## Suppose consumers consume product and labor (i.e. service) and
-## age1 and age2 may have different instantaneous utility functions.
+## age1 and age2 may have different period utility functions.
 dst.age1 <- node_new(
   "util",
   type = "FIN",

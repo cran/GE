@@ -1,7 +1,7 @@
 #' @export
-#' @title Some Examples of Instantaneous Equilibrium Paths with Sticky Decisions
-#' @aliases gemInstantaneousEquilibriumPath_StickyDecisions
-#' @description Some examples of instantaneous equilibrium paths with sticky decisions of a firm, that is,
+#' @title Some Examples of Spot Equilibrium Paths with Sticky Decisions
+#' @aliases gemSpotEquilibriumPath_StickyDecisions
+#' @description Some examples of spot equilibrium paths with sticky decisions of a firm, that is,
 #' the firm sluggishly adjusts its technology in response to price changes.
 #'
 #' Under the assumption of (complete) rationality, economic agents will make decisions that are most beneficial to them based on the information they have.
@@ -80,4 +80,4 @@
 #'
 #' }
 
-gemInstantaneousEquilibriumPath_StickyDecisions <- function(...) sdm2(...)
+gemSpotEquilibriumPath_StickyDecisions <- function(...) sdm2(...)

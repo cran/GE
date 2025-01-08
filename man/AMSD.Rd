@@ -28,15 +28,15 @@ weighted.mean(x, wt) - (gamma * sd.p(x, wt))^theta / theta.
 }
 \section{Functions}{
 \itemize{
-\item \code{AMSD}: Computes the utility function mean(x) - (gamma * sd.p(x))^theta / theta or
+\item \code{AMSD()}: Computes the utility function mean(x) - (gamma * sd.p(x))^theta / theta or
 weighted.mean(x, wt) - (gamma * sd.p(x, wt))^theta / theta. When theta == 2, it is the additive mean-variance utility function (i.e.
 the function AMV).
 When theta == 1 (the default value), it is the additive mean and standard deviation utility function.
 
-\item \code{AMV}: Compute the additive mean-variance utility function mean(x) - 0.5 * gamma * var.p(x) or
+\item \code{AMV()}: Compute the additive mean-variance utility function mean(x) - 0.5 * gamma * var.p(x) or
 weighted.mean(x, wt) - 0.5 * gamma * var.p(x, wt).
-}}
 
+}}
 \examples{
 \donttest{
 AMSD(1:2, gamma = 0.05)

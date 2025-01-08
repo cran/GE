@@ -22,11 +22,11 @@ The function var.p computes a population variance. The function sd.p computes a 
 }
 \section{Functions}{
 \itemize{
-\item \code{var.p}: Population variance.
+\item \code{var.p()}: Population variance.
 
-\item \code{sd.p}: Population standard deviation.
+\item \code{sd.p()}: Population standard deviation.
+
 }}
-
 \examples{
 var.p(1:6)
 

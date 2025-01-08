@@ -51,11 +51,11 @@ A canonical dynamic macroeconomic general equilibrium model in sequential form (
 }
 \note{
 In the timeline model and the time-circle model, we refer to the labor provided in period t as labor t,
-and the product produced by using labor t as product t+1.
-When the consumer's period utility function simultaneously includes labor (or leisure) and product,
-we can choose from one of two assumptions: it can be assumed that the period utility function of the consumer in period $t$
-includes labor $t$ and product $t$, or it can be assumed that it includes labor $t$ and product $t+1$.
-These two assumptions are respectively referred to as the wage prepayment assumption and the wage postpayment assumption.
+and the product produced using labor t as product t+1.
+When the consumer's period utility function simultaneously includes both labor (or leisure) and product,
+we can adopt one of two assumptions: either we assume that the period utility function of the consumer in period t
+includes labor t and product t, or we assume it includes labor t and product t+1.
+These two assumptions are referred to as the wage prepayment assumption and the wage postpayment assumption, respectively.
 }
 \examples{
 \donttest{

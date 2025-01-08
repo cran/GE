@@ -1,8 +1,8 @@
 #' @export
-#' @title Some Examples of Spot Market Clearing Paths with Persistent Technological Progress
+#' @title Some Examples of Spot Equilibrium Paths with Persistent Technological Progress
 #' @aliases gemPersistentTechnologicalProgress
-#' @description Some examples of spot market clearing paths (alias instantaneous equilibrium paths) with persistent technological progress.
-#' From the fifth period, technological progress occurs.
+#' @description Some examples of spot equilibrium paths with persistent technological progress.
+#' Technological progress starts from the fifth period.
 #' @param ... arguments to be passed to the function sdm2.
 #' @seealso {
 #' \code{\link{gemCapitalAccumulation}}

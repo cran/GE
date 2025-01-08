@@ -43,8 +43,8 @@ In each period, the young determines the saving rate based on the expected gross
 
 In each period the young adopts the following anticipation method for the gross rate of return of the savings: First, determine the two types of gross rates of return (Raa, Rab or Rbb, Rba) that need to be predicted according to the current state. Both interest rates are then forecasted using the adaptive expectation method.
 
-A spot market clearing path (alias instantaneous equilibrium path) and a disequilibrium path will be calculated below.
-The spot market clearing path will converge to the stochastic equilibrium consisting of two equilibrium states, and the disequilibrium paths not.
+A spot equilibrium path and a disequilibrium path will be calculated below.
+The spot equilibrium path will converge to the stochastic equilibrium consisting of two equilibrium states, and the disequilibrium paths not.
 }
 \examples{
 \donttest{
@@ -136,7 +136,7 @@ S0Exg <- matrix(c(
   NA, NA, 1
 ), 3, 3, TRUE)
 
-## a spot market clearing path.
+## a spot equilibrium path.
 set.seed(1)
 ge <- sdm2(
   A = dstl, B = B, S0Exg = S0Exg,

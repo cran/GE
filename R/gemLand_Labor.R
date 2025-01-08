@@ -1,8 +1,8 @@
 #' @export
-#' @title Some Examples of Spot Market Clearing Paths Involving Land and Labor
+#' @title Some Examples of Spot Equilibrium Paths Involving Land and Labor
 #' @aliases gemLand_Labor
-#' @description Some examples of spot market clearing paths (alias instantaneous equilibrium paths) involving land and labor.
-#' The labor supply may increase from the fifth period.
+#' @description Some examples of spot equilibrium paths involving land and labor.
+#' The labor supply may begin to increase starting from the fifth period.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{

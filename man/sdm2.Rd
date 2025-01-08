@@ -143,8 +143,9 @@ Thirdly, policy functions (if any) are implemented.\cr
 Fourthly, the current input coefficient matrix is computed and the supplies are exchanged under market prices. The exchange vector and sales rate vector are obtained. Unsold goods constitute the inventories, which will undergo depreciation and become a portion of the supplies of the next period. The exchange vector determines the current outputs and utility levels.
 }
 \note{
-In the package CGE, the spot market clearing path (alias instantaneous equilibrium path) is computed by the function iep.
-In this package, the instantaneous equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
+In the package CGE, the spot equilibrium path (alias instantaneous equilibrium path) is computed by the function iep.
+The spot equilibrium path includes only spot market transactions, with no intertemporal transactions.
+In this package, the spot equilibrium path can be computed by the function sdm2 with the parameter policy equal to \code{\link{policyMarketClearingPrice}}.\cr
 
 The order of implementation of various policies is critical.
 When a policy list contains a supply policy, a technology (i.e. dstl) policy, a price policy (e.g. a market-clearing-price policy) and a B policy
@@ -152,6 +153,11 @@ When a policy list contains a supply policy, a technology (i.e. dstl) policy, a 
 and the B policy should be placed after the price policy.
 The reason is that the calculation of the current prices may require the use of supply and technology,
 while the calculation of B may require the use of the current prices.
+
+In general equilibrium models, decreasing returns to scale can be transformed into constant returns to scale;
+therefore, we usually assume constant returns to scale.
+The decreasing-returns-to-scale feature of the technology is presumably due to the presence of a fixed factor.
+This factor is often referred to as "land" and measured in units so that the total amount of land is 1 (Varian, 1992, p. 353).
 }
 \examples{
 \donttest{
@@ -387,4 +393,6 @@ matplot(growth_rate(de.Sraffa$ts.z), type = "l")
 LI Wu (2019, ISBN: 9787521804225) General Equilibrium and Structural Dynamics: Perspectives of New Structural Economics. Beijing: Economic Science Press. (In Chinese)
 
 LI Wu (2010) A Structural Growth Model and its Applications to Sraffa's System. http://www.iioa.org/conferences/18th/papers/files/104_20100729011_AStructuralGrowthModelanditsApplicationstoSraffasSstem.pdf
+
+Varian, Hal R. (1992, ISBN: 0393957357) Microeconomic Analysis. W. W. Norton & Company.
 }

@@ -1,27 +1,28 @@
 #' @export
 #' @title A Canonical Dynamic Macroeconomic General Equilibrium Model (see Torres, 2016)
 #' @aliases gemCanonicalDynamicMacroeconomic_3_2
-#' @description A canonical dynamic macroeconomic general equilibrium model (see Torres, 2016, Table 2.1 and 2.2).
-#' @details A general equilibrium model with 3 commodities (i.e. product, labor and equity shares)
-#' and 2 agents (i.e. a firm and a consumer). Labor is the numeraire.
+#' @description This is a function used to calculate the steady state of a canonical dynamic macroeconomic general equilibrium model (see Torres, 2016, Table 2.1 and Table 2.2).
+#' The model consists of three commodities (i.e., product, labor, and equity shares) and two agents (i.e., a firm and a consumer), with labor serving as the numeraire.
+#' It can also compute the spot equilibrium path based on the steady-state return rate.
+#' The spot equilibrium path includes only spot market transactions, with no intertemporal transactions.
 #' @param discount.factor the intertemporal discount factor.
 #' @param depreciation.rate the physical depreciation rate of capital stock.
 #' @param beta.prod.firm  the share parameter of the product in the Cobb-Douglas production function.
 #' @param beta.prod.consumer the share parameter of the product in the Cobb-Douglas period utility function.
-#' This parameter represents the individual's preferences regarding consumption-leisure decisions.
+#' This parameter represents an individual's preferences for consumption-leisure choices.
 #' @param policy.supply a policy function or a policy function list which adjusts the supplies.
 #' @param policy.technology a policy function or a policy function list which adjusts the technology.
 #' @param policy.price a policy function or a policy function list which adjusts the prices.
-#' @param ... arguments to be to be passed to the function sdm2.
+#' @param ... arguments to be passed to the function sdm2.
 #' @return A general equilibrium (see \code{\link{sdm2}}).
 #' @references Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomic General Equilibrium Models (Second Edition). Vernon Press.
 #' @references Li Xiangyang (2018, ISBN: 9787302497745) Dynamic Stochastic General Equilibrium (DSGE) Model: Theory, Methodology, and Dynare Practice. Tsinghua University Press. (In Chinese)
-#' @seealso The spot market clearing path (alias instantaneous equilibrium path) can be computed with the function \code{\link{policyMarketClearingPrice}}.
+#' @seealso The spot equilibrium path can be computed with the function \code{\link{policyMarketClearingPrice}}.
 #' @examples
 #' \donttest{
 #' gemCanonicalDynamicMacroeconomic_3_2()
 #'
-#' #### a spot market clearing path (alias instantaneous equilibrium path)
+#' #### (A) A spot equilibrium path.
 #' ge <- gemCanonicalDynamicMacroeconomic_3_2(
 #'   policy.price = policyMarketClearingPrice,
 #'   ts = TRUE,
@@ -34,7 +35,7 @@
 #' matplot(ge$ts.z, type = "o", pch = 20)
 #' matplot(ge$ts.p, type = "o", pch = 20)
 #'
-#' #### technology change in a market-clearing path
+#' #### (B) Technology change in a spot equilibrium path.
 #' policyTechnologyChange <- function(time, A) {
 #'   alpha <- 1.2 # The original value is 1.
 #'   time.win <- c(50, 50)
@@ -68,7 +69,7 @@
 #' matplot(ge$ts.z, type = "o", pch = 20)
 #' matplot(ge$ts.p, type = "o", pch = 20)
 #'
-#' #### an example on page 46 of Li Xiangyang (2018)
+#' #### (C) An example on page 46 in Li Xiangyang (2018).
 #' ge <- gemCanonicalDynamicMacroeconomic_3_2(
 #'   discount.factor = 0.99,
 #'   depreciation.rate = 0.025,

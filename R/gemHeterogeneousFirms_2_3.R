@@ -1,7 +1,7 @@
 #' @export
-#' @title Instantaneous equilibrium paths with Heterogeneous Firms
+#' @title Spot equilibrium paths with Heterogeneous Firms
 #' @aliases gemHeterogeneousFirms_2_3
-#' @description This is an example of instantaneous equilibrium paths with heterogeneous firms.
+#' @description This is an example of spot equilibrium paths with heterogeneous firms.
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{

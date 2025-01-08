@@ -45,20 +45,20 @@ The displaced CES utility function and the displaced CES demand function (Fuller
 }
 \section{Functions}{
 \itemize{
-\item \code{DCES}: Compute the displaced CES utility function (Fullerton, 1989),
+\item \code{DCES()}: Compute the displaced CES utility function (Fullerton, 1989),
 e.g. (beta1 ^ (1 / es) * (x1 - xi1) ^ (1 - 1 / es) +
 beta2 ^ (1 / es) * (x2 - xi2) ^ (1 - 1 / es)) ^ (es / (es - 1)
 wherein beta1 + beta2 == 1.
 
 When es==1, the DCES utility function becomes the Stone-Geary utility function.
 
-\item \code{DCES_demand}: The displaced CES demand function (Fullerton, 1989).
+\item \code{DCES_demand()}: The displaced CES demand function (Fullerton, 1989).
 
-\item \code{DCES_compensated_demand}: The displaced CES compensated demand function (Fullerton, 1989).
+\item \code{DCES_compensated_demand()}: The displaced CES compensated demand function (Fullerton, 1989).
 
-\item \code{DCES_indirect}: The displaced CES indirect utility function (Fullerton, 1989).
+\item \code{DCES_indirect()}: The displaced CES indirect utility function (Fullerton, 1989).
+
 }}
-
 \examples{
 \donttest{
 es <- 0.99

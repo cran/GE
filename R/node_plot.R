@@ -6,7 +6,7 @@
 #' If a non-leaf node has a type attribute, then the attribute will be shown.
 #' @param node a tree (i.e. a Node object).
 #' @param param If TRUE, those parameters such as alpha, beta, es etc. will be shown.
-#' @param ... arguments to be to be passed to the function plot.Node.
+#' @param ... arguments to be passed to the function plot.Node.
 #' @seealso \code{\link{demand_coefficient}}
 
 node_plot <- function(node, param = FALSE, ...) {

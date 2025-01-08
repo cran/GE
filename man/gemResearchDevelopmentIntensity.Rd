@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemResearchDevelopmentIntensity.R
 \name{gemResearchDevelopmentIntensity}
 \alias{gemResearchDevelopmentIntensity}
-\title{Some Examples of Spot Market Clearing Paths Illustrating Research and Development Intensity}
+\title{Some Examples of Spot Equilibrium Paths Illustrating Research and Development Intensity}
 \usage{
 gemResearchDevelopmentIntensity(...)
 }
@@ -10,20 +10,21 @@ gemResearchDevelopmentIntensity(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \value{
-A spot market clearing path.
+A spot equilibrium path.
 }
 \description{
-Some examples of spot market clearing paths (alias instantaneous equilibrium paths) illustrating R&D intensity.
+Some examples of spot equilibrium paths illustrating R&D intensity.
 R&D intensity of a firm is the ratio of expenditures by the firm on R&D to the firm's sales.
 }
 \details{
 The first example contains two kinds of commodities (namely product and labor) and three economic agents
-(namely a firm, a R&D center of the firm and a laborer).
+(namely a firm, an R&D center of the firm and a laborer).
 Since the R&D center does not produce products, the R&D center is regarded as a consumer-type agent in the model.
 The utility level of the R&D center (that is, the R&D level) will affect the technological progress rate of the firm.
 In the model, the firm allocates part of its output to the R&D centers for sale according to a given R&D intensity,
 which is equivalent to allocating part of the firm's sales revenue to the R&D center.
-At first, the economy is set in steady-state equilibrium without R&D activity. R&D activities begin in the fifth period.
+Initially, the economy is in steady-state equilibrium without R&D activity.
+R&D activities begin in the fifth period.
 }
 \examples{
 \donttest{

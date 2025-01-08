@@ -2,7 +2,7 @@
 % Please edit documentation in R/gemPersistentTechnologicalProgress.R
 \name{gemPersistentTechnologicalProgress}
 \alias{gemPersistentTechnologicalProgress}
-\title{Some Examples of Spot Market Clearing Paths with Persistent Technological Progress}
+\title{Some Examples of Spot Equilibrium Paths with Persistent Technological Progress}
 \usage{
 gemPersistentTechnologicalProgress(...)
 }
@@ -10,8 +10,8 @@ gemPersistentTechnologicalProgress(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of spot market clearing paths (alias instantaneous equilibrium paths) with persistent technological progress.
-From the fifth period, technological progress occurs.
+Some examples of spot equilibrium paths with persistent technological progress.
+Technological progress starts from the fifth period.
 }
 \examples{
 \donttest{

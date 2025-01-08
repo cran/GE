@@ -98,7 +98,7 @@ ge <- sdm2(
   numeraire = "payoff1"
 )
 
-#### an instantaneous sequential model
+#### a spot sequential model
 dst.firm <- node_new("output",
   type = "StickyLinear",
   beta = c(1, 1),

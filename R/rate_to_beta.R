@@ -9,8 +9,8 @@
 #' which may be equal to the interest rate, the tax rate, the dividend rate, etc.
 #' The beta vector indicates the proportions of expenditures on various commodities.
 #' @describeIn rate_to_beta Convert a rate vector to a beta vector.
-#' @param x a vector.
-#' @return A vector.
+#' @param x a numeric vector, which is usually positive.
+#' @return A numeric vector.
 #' @examples
 #' \donttest{
 #' rate_to_beta(c(1, 1 / 3, 1 / 4))

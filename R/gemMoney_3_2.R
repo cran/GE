@@ -19,7 +19,7 @@
 #' @param supply.money the supply of money.
 #' @param names.commodity names of commodities.
 #' @param names.agent names of agents.
-#' @param ... arguments to be to be passed to the function sdm2.
+#' @param ... arguments to be passed to the function sdm2.
 #' @return A general equilibrium (see \code{\link{sdm2}})
 #'
 #' @examples

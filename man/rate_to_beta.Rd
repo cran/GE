@@ -10,10 +10,10 @@ rate_to_beta(x)
 beta_to_rate(x)
 }
 \arguments{
-\item{x}{a vector.}
+\item{x}{a numeric vector, which is usually positive.}
 }
 \value{
-A vector.
+A numeric vector.
 }
 \description{
 Conversion between an expenditure rate vector and a beta vector (i.e. an expenditure proportion vector).
@@ -25,12 +25,12 @@ The beta vector indicates the proportions of expenditures on various commodities
 }
 \section{Functions}{
 \itemize{
-\item \code{rate_to_beta}: Convert a rate vector to a beta vector.
+\item \code{rate_to_beta()}: Convert a rate vector to a beta vector.
 
-\item \code{beta_to_rate}: Convert a beta vector to a rate vector.
+\item \code{beta_to_rate()}: Convert a beta vector to a rate vector.
 When converting the beta vector into a rate vector, it will be assumed that the first element of these two vectors is the same.
-}}
 
+}}
 \examples{
 \donttest{
 rate_to_beta(c(1, 1 / 3, 1 / 4))

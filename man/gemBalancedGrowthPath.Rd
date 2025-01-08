@@ -10,7 +10,7 @@ gemBalancedGrowthPath(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of spot market clearing paths (alias instantaneous equilibrium paths) which converge to balanced growth paths.
+Some examples of spot equilibrium paths that converge to balanced growth paths.
 }
 \examples{
 \donttest{

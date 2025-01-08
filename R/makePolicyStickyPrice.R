@@ -45,13 +45,13 @@
 makePolicyStickyPrice <- function(stickiness = 0.5, time.win = c(1, Inf), tolCond = 1e-6) {
   function(time, state, A) {
     if (time >= time.win[1] && time <= time.win[2]) {
-      instantaneous.equilibrium <- sdm2(A,
+      spot.equilibrium <- sdm2(A,
         B = 0 * state$S, S0Exg = state$S,
         names.commodity = state$names.commodity,
         names.agent = state$names.agent,
         tolCond = tolCond
       )
-      p.market.clearing <- instantaneous.equilibrium$p
+      p.market.clearing <- spot.equilibrium$p
       state$p <- state$p * stickiness + (1 - stickiness) * p.market.clearing
     }
 

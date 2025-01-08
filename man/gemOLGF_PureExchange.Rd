@@ -10,22 +10,17 @@ gemOLGF_PureExchange(...)
 \item{...}{arguments to be passed to the function sdm2.}
 }
 \description{
-Some examples of overlapping generations sequential models with financial instrument for pure exchange economies.
+Some examples of overlapping generations sequential models with security for pure exchange economies.
 
-In these examples, there is a financial instrument (namely security) which serves as saving means and can be regarded as money, the shares of a firm, etc.
-Consumers use this security for saving, and this is the only use of the security.
-As Samuelson (1958) wrote, society by using money (i.e. security) will go from the non-optimal configuration
-to the optimal configuration.
+In these examples, a security (e.g., fiat money, public bond, shares of a firm, etc) serves as a means of saving (see Samuelson, 1958).
+Consumers use these securities to transfer value across time, enabling intertemporal allocation of resources.
 
 Here financial demand structure trees are used, which contain financial nodes.
-A financial demand structure tree reflects the demand structure of a consumer
-who has a demand for financial instruments.
-Although CD-type nodes can be used instead of financial-type nodes in the consumer's demand structure tree,
-the use of financial-type nodes will make the demand structure tree easier to understand.
+A financial demand structure tree reflects the demand structure of a consumer who has a demand for financial instruments.
 
-When there is a population growth, we will take the security-split assumption.
-That is, assume that in each period the security will be split just like share split,
-and the growth rate of the quantity of the security is equal to the growth rate of the population.
+When experiencing population growth, we adopt the security-split assumption.
+Specifically, we assume that in each period, the security undergoes a split similar to a stock split,
+with the quantity of the security growing at a rate equal to the population growth rate.
 Obviously, this assumption will not affect the calculation results essentially.
 And with this assumption, the equilibrium price vector can keep constant in each period, and
 the nominal rates of profit and interest will equal the real rates of profit and interest (i.e. the population growth rate).
@@ -34,28 +29,28 @@ equal the population growth rate.
 }
 \note{
 As can be seen from the first example below, in a pure exchange economy with two-period-lived consumers,
-if age1 (i.e. young) has one unit of labor and age2 (i.e. old) does not,
-then the optimal allocation can be obtained by introducing securities.
-Here it is assumed that each consumer consumes one unit of labor in total.
+if the young (i.e., age 1) has labor and the old (i.e., age 2) does not,
+then the optimal steady-state allocation can be obtained by introducing securities as a store of value.
 
-However, if age2 (i.e. adult) has one unit of labor and age1 (i.e. child) does not,
-we cannot get the optimal allocation by introducing securities.
-So we need the family system.
+However, if the old (i.e., age 2) has 1 unit of labor and the young (i.e., age 1) does not,
+then the optimal steady-state allocation cannot be obtained by introducing securities as a store of value.
+Therefore, we need to introduce the family system, or in other words, grant the young the right to tax the old.
 }
 \examples{
 \donttest{
-#### an OLGF pure exchange economy with two-period-lived consumers.
-## Suppose each consumer has one unit of labor in her first period
-## and she has a C-D intertemporal utility function
-## (1 - beta) * log(c1) + beta * log(c2) and a constant saving rate beta.
-beta <- 0.5
-ratio.saving.consumption <- beta / (1 - beta)
+#### (A) An OLG pure exchange economy with two-period-lived consumers.
+## To simplify the analysis, we assume that the savings rate of the
+## young consumer is an exogenous value. The consumer's utility
+## function that corresponds to this savings rate can be constructed
+## based on the steady-state equilibrium results.
+
+sr <- 0.5
 
 dst.age1 <- node_new(
   "util",
   type = "FIN",
-  rate = c(1, ratio.saving.consumption),
-  "lab", "secy" # security, the financial instrument
+  rate = c(1, ratio.saving.consumption <- sr / (1 - sr)),
+  "lab", "secy"
 )
 
 dst.age2 <- node_new(
@@ -70,8 +65,8 @@ ge <- sdm2(
   ),
   B = matrix(0, 2, 2, TRUE),
   S0Exg = matrix(c(
-    100, NA,
-    NA, 100
+    100, 0,
+    0, 100
   ), 2, 2, TRUE),
   names.commodity = c("lab", "secy"),
   names.agent = c("age1", "age2"),
@@ -83,7 +78,63 @@ ge$D
 ge$DV
 ge$S
 
-#### the population growth and demographic dividend.
+##
+sr <- 0.375
+dst.age1 <- node_new(
+  "util",
+  type = "FIN",
+  rate = c(1, ratio.saving.consumption <- sr / (1 - sr)),
+  "lab", "secy"
+)
+
+ge <- sdm2(
+  A = list(
+    dst.age1, dst.age2
+  ),
+  B = matrix(0, 2, 2, TRUE),
+  S0Exg = matrix(c(
+    80, 20,
+    0, 100
+  ), 2, 2, TRUE),
+  names.commodity = c("lab", "secy"),
+  names.agent = c("age1", "age2"),
+  numeraire = "secy"
+)
+
+ge$p
+ge$D
+ge$DV
+ge$S
+
+##
+sr <- 0.4
+dst.age1 <- node_new(
+  "util",
+  type = "FIN",
+  rate = c(1, ratio.saving.consumption <- sr / (1 - sr)),
+  "lab", "secy"
+)
+
+ge <- sdm2(
+  A = list(
+    dst.age1, dst.age2
+  ),
+  B = matrix(0, 2, 2, TRUE),
+  S0Exg = matrix(c(
+    100, 20,
+    0, 100
+  ), 2, 2, TRUE),
+  names.commodity = c("lab", "secy"),
+  names.agent = c("age1", "age2"),
+  numeraire = "secy"
+)
+
+ge$p
+ge$D
+ge$DV
+ge$S
+
+####  (B) The population growth and demographic dividend.
 ## Suppose each consumer has a SCES intertemporal utility function.
 gr.lab <- 0.03 # the growth rate of population and labor supply
 
@@ -96,7 +147,7 @@ dst.age1 <- node_new(
   "util",
   type = "FIN",
   rate = c(1, ratio.saving.consumption = 0.1),
-  "lab", "secy", # security, the financial instrument
+  "lab", "secy",
   p.lab.last = 1,
   p.lab.ratio.predicted.last = 1,
   ts.saving.rate = numeric(0)
@@ -151,7 +202,7 @@ dst.age1$p.lab.ratio.predicted.last
 plot(dst.age1$ts.saving.rate, type = "o", pch = 20)
 tail(dst.age1$ts.saving.rate,1) # beta2 / (beta2 + beta1 * (1 + gr.lab)^(1 - es))
 
-#### the basic overlapping generations (inefficient) exchange model.
+#### (C) The basic overlapping generations (inefficient) exchange model.
 ## Here the lab2 is regarded as a financial instrument (saving instrument).
 ## See gemOLG_PureExchange.
 dst.age1 <- node_new(
@@ -190,7 +241,7 @@ ge$S
 ge$D
 ge$DV
 
-#### the basic financial overlapping generations exchange model (see Samuelson, 1958).
+#### (D) the basic financial overlapping generations exchange model (see Samuelson, 1958).
 ## Suppose each consumer has a utility function log(c1) + log(c2) + log(c3).
 GRExg <- 0.03 # the population growth rate
 rho <- 1 / (1 + GRExg)
@@ -229,7 +280,7 @@ ge <- sdm2(
   names.agent = c("age1", "age2", "age3"),
   numeraire = "lab",
   policy = function(time, state) {
-    # Assume that unsold security will be void.
+    # Assume that unsold public bond will be void.
     last.Demand <- state$last.A \%*\% dg(state$last.z)
     secy.holding <- prop.table(last.Demand[2, ])
     if (time > 1) {
@@ -243,7 +294,7 @@ ge$p
 ge$S
 ge$D
 
-#### a pure exchange economy with three-period-lived consumers.
+#### (E) a pure exchange economy with three-period-lived consumers.
 ## Suppose each consumer has a Leontief-type utility function min(c1, c2, c3).
 GRExg <- 0.03 # the population growth rate
 igr <- 1 + GRExg

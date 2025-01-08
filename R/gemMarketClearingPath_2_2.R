@@ -1,7 +1,7 @@
 #' @export
-#' @title Some Examples of Spot Market Clearing Paths
+#' @title Some Examples of Spot Equilibrium Paths
 #' @aliases gemMarketClearingPath_2_2
-#' @description Some examples of zero-dividend spot market clearing paths (alias instantaneous equilibrium paths) containing a firm and a laborer (consumer).
+#' @description Some examples of zero-dividend spot equilibrium paths, involving a firm and a laborer (consumer)
 #' @param ... arguments to be passed to the function sdm2.
 #' @examples
 #' \donttest{

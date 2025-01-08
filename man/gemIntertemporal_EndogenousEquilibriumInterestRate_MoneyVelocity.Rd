@@ -12,7 +12,8 @@ gemIntertemporal_EndogenousEquilibriumInterestRate_MoneyVelocity(...)
 }
 \description{
 This example illustrates (endogenous) equilibrium primitive interest rates and the velocity of money in a transitional equilibrium path.
-The (primitive) interest rate here can be divided into two types, namely the interest rate in the case of lump-sum interest payment and the interest rate in the case of installment interest payment.
+There are two types of interest rates involved here, namely the (primitive) period interest rate and the (primitive) intraperiod interest rate
+(see \code{\link{convert_ir}}).
 }
 \examples{
 \donttest{
@@ -22,7 +23,7 @@ Gamma.beta <- 0.8 # the subjective discount factor
 gr <- 0 # the steady-state growth rate
 np <- 20 # the number of economic periods
 
-f <- function(ir.installment = rep(0.25, np - 1), return.ge = FALSE,
+f <- function(ir.intraperiod = rep(0.25, np - 1), return.ge = FALSE,
               y1 = 10, # the product supply in the first period
               alpha.firm = rep(2, np - 1) # the efficiency parameters of firms
 ) {
@@ -55,7 +56,7 @@ f <- function(ir.installment = rep(0.25, np - 1), return.ge = FALSE,
   for (k in 1:(np - 1)) {
     dstl.firm[[k]] <- node_new(
       "prod",
-      type = "FIN", rate = c(1, ir.installment[k] / vm),
+      type = "FIN", rate = c(1, ir.intraperiod[k] / vm),
       "cc1", "money"
     )
     node_set(dstl.firm[[k]], "cc1",
@@ -73,7 +74,7 @@ f <- function(ir.installment = rep(0.25, np - 1), return.ge = FALSE,
 
   for (k in 1:(np - 1)) {
     node_set(dst.laborer, paste0("cc", k),
-      type = "FIN", rate = c(1, ir.installment[k] / vm),
+      type = "FIN", rate = c(1, ir.intraperiod[k] / vm),
       paste0("prod", k), "money"
     )
   }
@@ -86,7 +87,7 @@ f <- function(ir.installment = rep(0.25, np - 1), return.ge = FALSE,
   )
   for (k in 1:(np - 1)) {
     node_set(dst.moneyOwner, paste0("cc", k),
-      type = "FIN", rate = c(1, ir.installment[k] / vm),
+      type = "FIN", rate = c(1, ir.intraperiod[k] / vm),
       paste0("prod", k), "money"
     )
   }
@@ -103,66 +104,66 @@ f <- function(ir.installment = rep(0.25, np - 1), return.ge = FALSE,
 
   tmp <- rowSums(ge$SV)
   ts.exchange.value <- tmp[paste0("prod", 1:(np - 1))] + tmp[paste0("lab", 1:(np - 1))]
-  # The lump-sum interest rate equals the yield rate of money.
-  ir.lumpsum <- ts.exchange.value[1:(np - 2)] / ts.exchange.value[2:(np - 1)] - 1
-  ir.lumpsum <- pmax(1e-6, ir.lumpsum)
-  ir.lumpsum[np - 1] <- ir.lumpsum[np - 2]
-  ir.installment.new <- 1 / (1 / ir.lumpsum + 1 - 1 / vm)
+  # The period interest rate equals the yield rate of money.
+  ir.period <- ts.exchange.value[1:(np - 2)] / ts.exchange.value[2:(np - 1)] - 1
+  ir.period <- pmax(1e-6, ir.period)
+  ir.period[np - 1] <- ir.period[np - 2]
+  ir.intraperiod.new <- convert_ir(ir.period, vm, "intraperiod")
 
-  ir.installment <- c(ir.installment * ratio_adjust(ir.installment.new / ir.installment, 0.3))
-  cat("ir.installment: ", ir.installment, "\n")
+  ir.intraperiod <- c(ir.intraperiod * ratio_adjust(ir.intraperiod.new / ir.intraperiod, 0.3))
+  cat("ir.intraperiod: ", ir.intraperiod, "\n")
 
   if (return.ge) {
     ge$ts.exchange.value <- ts.exchange.value
     return(ge)
   } else {
-    return(ir.installment)
+    return(ir.intraperiod)
   }
 }
 
-## Calculate equilibrium installment interest rates.
+## Calculate equilibrium intraperiod interest rates.
 ## Warning: Running the program below takes about several minutes.
-## mat.ir.installment <- iterate(rep(0.1, np - 1), f, tol = 1e-4)
-## # the lump-sum interest rate in the steady-state equilibrium.
-## ir.lumpsum.steadyState <- sserr(eis, Gamma.beta, gr, prepaid = TRUE)
-## # the installment interest rate in the steady-state equilibrium.
-## 1 / (1 / ir.lumpsum.steadyState + 1 - 1 / vm)
+## mat.ir.intraperiod <- iterate(rep(0.1, np - 1), f, tol = 1e-4)
+## # the period interest rate in the steady-state equilibrium.
+## ir.period.steadyState <- sserr(eis, Gamma.beta, gr, prepaid = TRUE)
+## # the intraperiod interest rate in the steady-state equilibrium.
+## convert_ir(ir.period.steadyState, vm, "intraperiod")
 
-## Below are the calculated equilibrium installment interest rates.
-(ir.installment <- c(
+## Below are the calculated equilibrium intraperiod interest rates.
+(ir.intraperiod <- c(
   0.3723, 0.2981, 0.2580, 0.2363, 0.2245, 0.2181, 0.2147,
   0.2128, 0.2118, 0.2112, 0.2109, 0.2107, 0.2106, 0.2106,
   0.2106, 0.2105, 0.2105, 0.2106, 0.2106
 ))
 
-ge <- f(ir.installment, TRUE)
+ge <- f(ir.intraperiod, TRUE)
 
 plot(ge$z[1:(np - 1)], type = "o")
 
-# The yield rate is the interest rate for a lump-sum payment.
-(ir.lumpsum <- ge$ts.exchange.value[1:(np - 2)] / ge$ts.exchange.value[2:(np - 1)] - 1)
-1 / (1 / ir.lumpsum + 1 - 1 / vm) # consistent with the installment interest rates
-# consistent with the lump-sum interest rates.
-ir.installment / (1 + ir.installment / vm - ir.installment)
+# The yield rate of money is equal to the primitive period interest rate.
+(ir.period <- ge$ts.exchange.value[1:(np - 2)] / ge$ts.exchange.value[2:(np - 1)] - 1)
+convert_ir(ir.period, vm, "intraperiod") # consistent with ir.intraperiod
+# consistent with ir.period.
+convert_ir(ir.intraperiod, vm, "period")
 
 ## Calculate the growth rate of the money supply and the equilibrium nominal
-## lump-sum interest rates when the current price of the product remains constant.
-price.money <- 1 / c(1, cumprod(ir.installment + 1))
+## period interest rates when the current price of the product remains constant.
+price.money <- 1 / c(1, cumprod(ir.intraperiod + 1))
 currentPrice.prod <- ge$p[1:np] / price.money
 gr.moneySupply <- unname(growth_rate(1 / currentPrice.prod))
-# the equilibrium nominal lump-sum interest rates
-(1 + ir.lumpsum) * (gr.moneySupply[2:(np - 1)] + 1) - 1
-(1 + ir.installment / (1 + ir.installment / vm - ir.installment)) * (gr.moneySupply[2:np] + 1) - 1
+# the equilibrium nominal period interest rates
+(1 + ir.period) * (gr.moneySupply[2:(np - 1)] + 1) - 1
+(1 + convert_ir(ir.intraperiod, vm, "period")) * (gr.moneySupply[2:np] + 1) - 1
 
 ## the corresponding sequential model with the same steady-state equilibrium.
 dividend.rate <- sserr(eis, Gamma.beta, prepaid = TRUE)
-ir.installment <- 1 / (1 / dividend.rate + 1 - 1 / vm)
+ir.intraperiod <- convert_ir(dividend.rate, vm, "intraperiod")
 
 np <- 5
-ge.ss <- f(ir.installment = rep(ir.installment, np - 1), return.ge = TRUE, y1 = 152)
+ge.ss <- f(ir.intraperiod = rep(ir.intraperiod, np - 1), return.ge = TRUE, y1 = 152)
 
 dst.firm <- node_new("prod",
-  type = "FIN", rate = c(1, ir.installment / vm, (1 + ir.installment / vm) * dividend.rate),
+  type = "FIN", rate = c(1, ir.intraperiod / vm, (1 + ir.intraperiod / vm) * dividend.rate),
   "cc1", "money", "equity.share"
 )
 node_set(dst.firm, "cc1",
@@ -172,12 +173,12 @@ node_set(dst.firm, "cc1",
 )
 
 dst.laborer <- node_new("util",
-  type = "FIN", rate = c(1, ir.installment / vm),
+  type = "FIN", rate = c(1, ir.intraperiod / vm),
   "prod", "money"
 )
 
 dst.moneyOwner <- node_new("util",
-  type = "FIN", rate = c(1, ir.installment / vm),
+  type = "FIN", rate = c(1, ir.intraperiod / vm),
   "prod", "money"
 )
 
@@ -199,14 +200,23 @@ ge2 <- sdm2(
     "prod", "lab", "money", "equity.share"
   ),
   names.agent = c("firm", "laborer", "moneyOwner"),
-  numeraire = "prod"
+  numeraire = c("money" = ir.intraperiod)
 )
 
 ge2$p
+ge.ss$p
+ge2$p / ge2$p["prod"]
+
 ge.ss$z[np - 1]
 ge2$z
+
 ge.ss$D[paste0("prod", np - 1), c("laborer", "moneyOwner")]
 ge2$D
+
+# The total value of the product and labor is equal to 400, which
+# is equal to the money stock multiplied by the velocity of money.
+addmargins(ge2$SV)
+addmargins(ge2$DV)
 }
 }
 \seealso{

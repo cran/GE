@@ -12,8 +12,8 @@ gemTemporaryEquilibriumPath(...)
 \description{
 Some examples of temporary equilibrium paths.
 The temporary equilibrium path consists of a series of temporary equilibria.
-Each temporary equilibrium achieves market clearing, and these markets may include futures markets in addition to spot markets.
-An instantaneous equilibrium path is a temporary equilibrium path that only includes spot markets.
+Each temporary equilibrium achieves market clearing and may involve futures markets in addition to spot markets.
+A spot equilibrium path is a temporary equilibrium path that only involves spot market transactions.
 }
 \examples{
 \donttest{
