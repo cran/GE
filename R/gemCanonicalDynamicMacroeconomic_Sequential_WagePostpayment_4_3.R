@@ -21,7 +21,7 @@
 #' @return A general equilibrium (see \code{\link{sdm2}}).
 #' @seealso \code{\link{gemCanonicalDynamicMacroeconomic_Timeline_2_2}},\cr
 #' \code{\link{gemCanonicalDynamicMacroeconomic_TimeCircle_2_2}},\cr
-#' \code{\link{gemCanonicalDynamicMacroeconomic_Sequential_3_2}}.
+#' \code{\link{gemDynamicMacroeconomic_SpotTrading_3_2}}.
 #' @examples
 #' \donttest{
 #' gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3()

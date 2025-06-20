@@ -1,7 +1,7 @@
 #' @export
-#' @title A Disequilibrium Model Illustrating Insufficient Effective Demand (Supply-demand Structural Mismatch)
-#' @aliases demInsufficientEffectiveDemand_3_3
-#' @description  A disequilibrium model illustrating supply-demand structural mismatch and insufficient effective demand.
+#' @title A Disequilibrium Model Illustrating Insufficient Demand (Supply-demand Structural Mismatch)
+#' @aliases demInsufficientDemand_3_3
+#' @description  A disequilibrium model illustrating supply-demand structural mismatch and insufficient demand.
 #' Assume that from the 5th period, the producer expects the sales rate of products to decline,
 #' so he reduces investment in production and increases the demand for value storage means (such as foreign assets, gold, etc.);
 #' the laborer expects the unemployment rate to rise, so he reduces consumption and increases the demand for value storage means.
@@ -76,4 +76,4 @@
 #' matplot(ge$ts.q, type = "o", pch = 20)
 #' }
 
-demInsufficientEffectiveDemand_3_3 <- function(...) sdm2(...)
+demInsufficientDemand_3_3 <- function(...) sdm2(...)

@@ -77,5 +77,5 @@ ge$S[1, 1] * (1 + gr)
 \seealso{
 \code{\link{gemCanonicalDynamicMacroeconomic_Timeline_2_2}},\cr
 \code{\link{gemCanonicalDynamicMacroeconomic_TimeCircle_2_2}},\cr
-\code{\link{gemCanonicalDynamicMacroeconomic_Sequential_3_2}}.
+\code{\link{gemDynamicMacroeconomic_SpotTrading_3_2}}.
 }

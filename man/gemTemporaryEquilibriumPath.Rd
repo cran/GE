@@ -57,10 +57,10 @@ for (time in 1:20) {
   result[[time]] <- ge
 }
 
-sapply(result, \(x) x$p)
-sapply(result, \(x) x$z)
-# lapply(result, \(x) x$D)
-# lapply(result, \(x) x$S)
+sapply(result, function(x) x$p)
+sapply(result, function(x) x$z)
+# lapply(result, function(x) x$D)
+# lapply(result, function(x) x$S)
 
 #### An economy with production.
 dst.consumer <- node_new("util",
@@ -108,10 +108,10 @@ for (time in 1:20) {
 }
 
 
-sapply(result, \(x) x$p)
-sapply(result, \(x) x$z)
-# lapply(result, \(x) x$D)
-# lapply(result, \(x) x$S)
+sapply(result, function(x) x$p)
+sapply(result, function(x) x$z)
+# lapply(result, function(x) x$D)
+# lapply(result, function(x) x$S)
 
 ##
 result <- list()
@@ -149,10 +149,10 @@ for (time in 1:30) {
 
   result[[time]] <- ge
 }
-sapply(result, \(x) x$p)
-sapply(result, \(x) x$z)
-# lapply(result, \(x) x$D)
-# lapply(result, \(x) x$S)
+sapply(result, function(x) x$p)
+sapply(result, function(x) x$z)
+# lapply(result, function(x) x$D)
+# lapply(result, function(x) x$S)
 }
 }
 \references{

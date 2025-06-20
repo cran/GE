@@ -1,7 +1,7 @@
 #' @export
-#' @title A Canonical Dynamic Macroeconomic General Equilibrium Model in Sequential Form (see Torres, 2016)
-#' @aliases gemCanonicalDynamicMacroeconomic_Sequential_3_2
-#' @description A canonical dynamic macroeconomic general equilibrium model in sequential form (see Torres, 2016, Table 2.1 and 2.2).
+#' @title A Dynamic Macroeconomic General Equilibrium Model with Spot Trading
+#' @aliases gemDynamicMacroeconomic_SpotTrading_3_2
+#' @description A dynamic macroeconomic general equilibrium model in sequential form.
 #' @param alpha.firm a positive scalar, indicating the efficiency parameter of the firm.
 #' @param es.prod.lab.firm the elasticity of substitution between product and labor in the production function of firm 1.
 #' @param beta.prod.firm  the share parameter of the product in the production function.
@@ -27,21 +27,21 @@
 #' @examples
 #' \donttest{
 #' #### Take the wage postpayment assumption.
-#' ge <- gemCanonicalDynamicMacroeconomic_Sequential_3_2()
+#' ge <- gemDynamicMacroeconomic_SpotTrading_3_2()
 #' ge$p
 #' ge$z
 #' addmargins(ge$D, 2)
 #' addmargins(ge$S, 2)
 #'
 #' #### Take the wage prepayment assumption.
-#' ge <- gemCanonicalDynamicMacroeconomic_Sequential_3_2(wage.payment  = "pre")
+#' ge <- gemDynamicMacroeconomic_SpotTrading_3_2(wage.payment  = "pre")
 #' ge$p
 #' ge$z
 #' ge$D
 #' ge$S
 #'
 #' #### Take the wage prepayment assumption.
-#' ge <- gemCanonicalDynamicMacroeconomic_Sequential_3_2(
+#' ge <- gemDynamicMacroeconomic_SpotTrading_3_2(
 #'   es.prod.lab.firm = 0.8,
 #'   eis = 0.8, es.prod.lab.consumer = 0.8, gr = 0.03,
 #'   wage.payment  = "pre"
@@ -53,7 +53,7 @@
 #'
 #' #### an example of steady-state equilibrium at
 #' # http://gecon.r-forge.r-project.org/models/rbc.pdf
-#' ge <- gemCanonicalDynamicMacroeconomic_Sequential_3_2(
+#' ge <- gemDynamicMacroeconomic_SpotTrading_3_2(
 #'   beta.prod.firm = 0.36,
 #'   depreciation.rate = 0.025,
 #'   Gamma.beta = 0.99,
@@ -65,7 +65,7 @@
 #' addmargins(ge$D, 2)
 #' addmargins(ge$S, 2)
 #' }
-gemCanonicalDynamicMacroeconomic_Sequential_3_2 <- function(alpha.firm = 1,
+gemDynamicMacroeconomic_SpotTrading_3_2 <- function(alpha.firm = 1,
                                                             es.prod.lab.firm = 1,
                                                             beta.prod.firm = 0.35,
                                                             depreciation.rate = 0.06,

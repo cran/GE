@@ -137,6 +137,6 @@ Torres, Jose L. (2016, ISBN: 9781622730452) Introduction to Dynamic Macroeconomi
 }
 \seealso{
 \code{\link{gemCanonicalDynamicMacroeconomic_Timeline_2_2}},\cr
-\code{\link{gemCanonicalDynamicMacroeconomic_Sequential_3_2}},\cr
+\code{\link{gemDynamicMacroeconomic_SpotTrading_3_2}},\cr
 \code{\link{gemCanonicalDynamicMacroeconomic_Sequential_WagePostpayment_4_3}}.
 }

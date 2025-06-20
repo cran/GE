@@ -52,10 +52,10 @@
 #'   result[[time]] <- ge
 #' }
 #'
-#' sapply(result, \(x) x$p)
-#' sapply(result, \(x) x$z)
-#' # lapply(result, \(x) x$D)
-#' # lapply(result, \(x) x$S)
+#' sapply(result, function(x) x$p)
+#' sapply(result, function(x) x$z)
+#' # lapply(result, function(x) x$D)
+#' # lapply(result, function(x) x$S)
 #'
 #' #### An economy with production.
 #' dst.consumer <- node_new("util",
@@ -103,10 +103,10 @@
 #' }
 #'
 #'
-#' sapply(result, \(x) x$p)
-#' sapply(result, \(x) x$z)
-#' # lapply(result, \(x) x$D)
-#' # lapply(result, \(x) x$S)
+#' sapply(result, function(x) x$p)
+#' sapply(result, function(x) x$z)
+#' # lapply(result, function(x) x$D)
+#' # lapply(result, function(x) x$S)
 #'
 #' ##
 #' result <- list()
@@ -145,10 +145,10 @@
 #'   result[[time]] <- ge
 #' }
 
-#' sapply(result, \(x) x$p)
-#' sapply(result, \(x) x$z)
-#' # lapply(result, \(x) x$D)
-#' # lapply(result, \(x) x$S)
+#' sapply(result, function(x) x$p)
+#' sapply(result, function(x) x$z)
+#' # lapply(result, function(x) x$D)
+#' # lapply(result, function(x) x$S)
 #' }
 
 gemTemporaryEquilibriumPath <- function(...) sdm2(...)

@@ -1,16 +1,19 @@
 #' @export
 #' @title A General Equilibrium Model with Endogenous Production Function
 #' @aliases gemstEndogenousProductionFunction_2_2
-#' @description This is an example of the spot equilibrium path with an endogenous production function.
-#' The parameter of the production function will change with the output level.
+#' @description
+#' These are examples of spot-trading dynamic equilibria with endogenous production functions.
+#' In these models, the parameters of the production functions vary with the output level in the previous period.
 #'
-#' To deal with locally or globally increasing returns to scale, we can simply use an endogenous CES-type production function instead of a production function with a more complex form.
+#' To address locally or globally increasing returns to scale, we can use an endogenous CES-type production function with constant returns to scale, instead of adopting a more complex functional form.
+#'
 #' @param ... arguments to be passed to the function sdm2.
+#' @seealso \code{\link{gemstIntertemporal_EndogenousProductionFunction_2_2}}
 #' @examples
 #' \donttest{
 #' dst.firm <- node_new(
 #'   "output",
-#'   type = "CD", alpha = 5, beta = c(0.5, 0.5),
+#'   type = "CD", alpha = NA, beta = c(0.5, 0.5),
 #'   "prod", "lab"
 #' )
 #'
@@ -47,6 +50,50 @@
 #' )
 #'
 #' matplot(ge$ts.z, type = "o", pch = 20)
+#'
+#' # #### An example of a spot-trading dynamic equilibrium with corrective taxation.
+#' # tau <- 0.2
+#' #
+#' # dst.firm <- node_new(
+#' #   "output",
+#' #   type = "CD", alpha = NA, beta = c(0.5, 0.5),
+#' #   "prod", "lab"
+#' # )
+#' #
+#' # dst.consumer <- node_new(
+#' #   "util",
+#' #   type = "Leontief", a = 1,
+#' #   "prod"
+#' # )
+#' #
+#' # ge <- sdm2(
+#' #   A = list(dst.firm, dst.consumer),
+#' #   B = matrix(c(
+#' #     1, 0,
+#' #     0, 0
+#' #   ), 2, 2, TRUE),
+#' #   S0Exg = matrix(c(
+#' #     NA, NA,
+#' #     100 * tau, 100 * (1 - tau)
+#' #   ), 2, 2, TRUE),
+#' #   names.commodity = c("prod", "lab"),
+#' #   names.agent = c("firm", "consumer"),
+#' #   numeraire = "lab",
+#' #   z0 = c(100, 100),
+#' #   p0 = c(1, 1),
+#' #   ts = TRUE,
+#' #   policy = list(
+#' #     function(A, state) {
+#' #       A[[1]]$alpha <- 2 * state$last.z[1]^0.1
+#' #     },
+#' #     policyMarketClearingPrice
+#' #   ),
+#' #   numberOfPeriods = 40,
+#' #   maxIteration = 1
+#' # )
+#' #
+#' # matplot(ge$ts.z, type = "o", pch = 20)
+#' # ge$z
 #' }
 
 gemstEndogenousProductionFunction_2_2 <- function(...) sdm2(...)

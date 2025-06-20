@@ -1,0 +1,72 @@
+#' @export
+#' @title An Intertemporal Equilibrium Model with Endogenous Production Function
+#' @aliases gemstIntertemporal_EndogenousProductionFunction_2_2
+#' @description
+#' This is an example of an intertemporal equilibrium model with an endogenous production function.
+#'
+#' @param ... arguments to be passed to the function sdm2.
+#' @seealso \code{\link{gemstEndogenousProductionFunction_2_2}}
+#' @examples
+#' \donttest{
+#' # np <- 50 # the number of economic periods
+#' # y1 <- 100 # the initial product supply
+#' #
+#' # n <- 2 * np - 1 # the number of commodity kinds
+#' # m <- np # the number of agent kinds
+#' #
+#' # names.commodity <- c(paste0("prod", 1:np), paste0("lab", 1:(np - 1)))
+#' # names.agent <- c(paste0("firm", 1:(np - 1)), "consumer")
+#' #
+#' # # the exogenous supply matrix.
+#' # S0Exg <- matrix(NA, n, m, dimnames = list(names.commodity, names.agent))
+#' # S0Exg[paste0("lab", 1:(np - 1)), "consumer"] <- 100
+#' # S0Exg["prod1", "consumer"] <- y1
+#' #
+#' # # the output coefficient matrix.
+#' # B <- matrix(0, n, m, dimnames = list(names.commodity, names.agent))
+#' # for (k in 1:(np - 1)) {
+#' #   B[paste0("prod", k + 1), paste0("firm", k)] <- 1
+#' # }
+#' #
+#' # dstl.firm <- list()
+#' # for (k in 1:(np - 1)) {
+#' #   dstl.firm[[k]] <- node_new(
+#' #     "prod",
+#' #     type = "CD",
+#' #     alpha = 2, beta = c(0.5, 0.5),
+#' #     paste0("prod", k), paste0("lab", k)
+#' #   )
+#' # }
+#' # dstl.firm[[1]]$alpha <- y1^0.1 * dstl.firm[[1]]$alpha
+#' #
+#' # dst.consumer.CD <- node_new(
+#' #   "util",
+#' #   type = "CD",
+#' #   alpha = 1, beta = prop.table(rep(1, np)),
+#' #   paste0("prod", 1:np)
+#' # )
+#' #
+#' # ge <-sdm2(
+#' #     A = c(dstl.firm, dst.consumer.CD),
+#' #     B = B,
+#' #     S0Exg = S0Exg,
+#' #     names.commodity = names.commodity,
+#' #     names.agent = names.agent,
+#' #     numeraire = "prod1",
+#' #     maxIteration = 1,
+#' #     numberOfPeriods = 2000,
+#' #     policy = list(
+#' #       function(A, state) {
+#' #         for (k in 2:(np - 1)) {
+#' #           A[[k]]$alpha <- 2 * state$last.z[k - 1]^0.1
+#' #         }
+#' #       }
+#' #     ),
+#' #     ts = TRUE
+#' #   )
+#' #
+#' # plot(ge$z[1:(np - 1)], type = "o", xlab = "time", ylab = "output")
+#' # grid()
+#' }
+
+gemstIntertemporal_EndogenousProductionFunction_2_2 <- function(...) sdm2(...)
